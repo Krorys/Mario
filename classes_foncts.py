@@ -47,6 +47,7 @@ class Mario(pygame.sprite.Sprite):
     def move(self):
         self.x += self.changeX
         if self.rect.collidelist(sols):
+        #if pygame.sprite.spritecollide(self, block_list, False):
             self.y += self.changeY
 
     def jump(self):
@@ -80,15 +81,16 @@ class Block(pygame.sprite.Sprite):
 
 
 class Sol(Block):
-    def __init__(self, sprite):
+    def __init__(self, sprite, x, y):
         Block.__init__(self, sprite)
+        self.x = x
+        self.y = y
+        self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
         #sol_list.add(self)
 
 block_list = pygame.sprite.Group()
 
-bloc1 = Sol("bloc.jpg")
-bloc1.x = 100
-bloc1.y = 250
+bloc1 = Sol("bloc.jpg", 100, 250)
 
 class Niveau:
     def __init__(self, fichier):
@@ -132,9 +134,8 @@ class Niveau:
 
                 if sprite == 'b':  #m = Mur
                     #screen.blit(bloc, (x, y))
-                    mur = Sol("bloc.jpg")
-                    mur.x = x
-                    mur.y = y
+                    mur = Sol("bloc.jpg", x, y)
+                    #mur.update()
                     block_list.add(mur)
                     #mur.draw()
 

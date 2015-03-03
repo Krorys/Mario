@@ -126,6 +126,7 @@ while continuer:
         niveau = Niveau(choix)
         niveau.generer()
         niveau.afficher(screen)
+        #block_list.update()
         block_list.draw(screen)
         bloc1.draw()
         mario.draw()
