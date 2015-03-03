@@ -28,7 +28,7 @@ class Perso():
         pygame.draw.rect(screen, rouge, self.rect)
     def move(self):
         self.x += self.changeX
-        if self.rect.collidelist(sols): #Si le perso NE TOUCHE PAS de murs
+        if self.rect.collidelist(sols): #Si le perso NE TOUCHE PAS aucun des murs
             self.y += self.changeY
     def jump(self):
         pass
