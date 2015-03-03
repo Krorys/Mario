@@ -50,7 +50,12 @@ class Mario(pygame.sprite.Sprite):
             self.y += self.changeY
 
     def jump(self):
-        pass
+        self.y -= 30
+
+    def left(self):
+        self.x -= 5
+    def right(self):
+        self.x +=5
 
     def death(self):
         pass

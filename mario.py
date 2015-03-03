@@ -10,7 +10,7 @@ menu_music.play()
 
 #Variables
 menu_curseur_actuel, levelselection_curseur_actuel = 1, 1
-continuer, menu, optionsOn, levelselection, jeu_en_cours = 1, 1, 0, 0, 1
+continuer, menu, optionsOn, levelselection, jeu_en_cours = 1, 1, 0, 0, 0
 level_current = 0
 #y = 0
 
@@ -121,6 +121,9 @@ while continuer:
                 levelselection, menu = 0, 1
                 levelselection_curseur_actuel = 1
     #Niveaux
+    if jeu_en_cours == 1:
+        pygame.key.set_repeat(10, 10)
+        jeu_en_cours =0
     if level_current == 1 :
         level1_cons()
         niveau = Niveau(choix)
@@ -130,6 +133,19 @@ while continuer:
         bloc2.draw()
         mario.draw()
         mario.move()
+        for event in pygame.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_RIGHT:
+                    mario.right()
+                    mario.draw()
+                if event.key == K_LEFT:
+                    mario.left()
+                    mario.draw()
+                if event.key == K_SPACE:
+                    mario.jump()
+                    mario.draw()
+
+
     if level_current == 2 :
         print("niveau2")
     if level_current == 3 :
