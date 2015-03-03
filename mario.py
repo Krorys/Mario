@@ -120,10 +120,27 @@ while continuer:
                 screen.blit(menuCurseur, menu_curseur_position1)
                 levelselection, menu = 0, 1
                 levelselection_curseur_actuel = 1
+
+            if jeu_en_cours == 1:
+                if event.key == K_RIGHT:
+                    mario.changeX = 5
+                    if mario.lookat == "left":
+                        mario.sprite = pygame.transform.flip(mario.sprite, True, False)
+                        mario.lookat = "right"
+                if event.key == K_LEFT:
+                    mario.changeX = -5
+                    if mario.lookat == "right":
+                        mario.sprite = pygame.transform.flip(mario.sprite, True, False)
+                        mario.lookat = "left"
+                if event.key == K_SPACE:
+                    pass
+        if event.type == KEYUP:
+            if jeu_en_cours == 1:
+                if event.key == K_RIGHT:
+                    mario.changeX = 0
+                if event.key == K_LEFT:
+                    mario.changeX = -0
     #Niveaux
-    if jeu_en_cours == 1:
-        #pygame.key.set_repeat(10, 10)
-        jeu_en_cours =0
     if level_current == 1 :
         level1_cons()
         niveau = Niveau(choix)
@@ -133,27 +150,15 @@ while continuer:
         bloc2.draw()
         mario.draw()
         mario.move()
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_RIGHT:
-                    mario.changeX = 5
-                if event.key == K_LEFT:
-                    mario.changeX = -5
-                if event.key == K_SPACE:
-                    pass
-            if event.type == KEYUP:
-                if event.key == K_RIGHT:
-                    mario.changeX = 0
-                if event.key == K_LEFT:
-                    mario.changeX = -0
-
-
     if level_current == 2 :
         print("niveau2")
+        break
     if level_current == 3 :
         print("niveau3")
+        break
     if level_current == 4 :
         print("niveau4")
+        break
 
     pygame.display.flip()
     clock.tick(60)

@@ -36,6 +36,7 @@ class Mario(pygame.sprite.Sprite):
         self.changeY = 6
         #self.sprite = pygame.image.load(sprite).convert()
         self.sprite = sprite
+        self.lookat = "right"
         self.rect = self.sprite.get_rect()
         self.hp = 3
         super().__init__()
