@@ -69,20 +69,22 @@ class Block(pygame.sprite.Sprite):
         self.y = 0
         self.changeX = 0
         self.changeY = 0
-        self.sprite = pygame.image.load(sprite)
-        self.rect = self.sprite.get_rect()
+        self.image = pygame.image.load(sprite)
+        self.rect = self.image.get_rect()
     def update(self):
-        self.rect = pygame.Rect(self.x, self.y, self.sprite.get_size()[0], self.sprite.get_size()[1])
+        self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
         sols.append(self.rect)
     def draw(self):
         self.update()
-        screen.blit(self.sprite, (self.x, self.y))
+        screen.blit(self.image, (self.x, self.y))
 
 
 class Sol(Block):
     def __init__(self, sprite):
         Block.__init__(self, sprite)
         #sol_list.add(self)
+
+block_list = pygame.sprite.Group()
 
 bloc1 = Sol("bloc.jpg")
 bloc1.x = 100
@@ -127,15 +129,19 @@ class Niveau:
                 #On calcule la position réelle en pixels
                 x = num_case * taille_sprite
                 y = num_ligne * taille_sprite
+
                 if sprite == 'b':  #m = Mur
                     #screen.blit(bloc, (x, y))
                     mur = Sol("bloc.jpg")
                     mur.x = x
                     mur.y = y
-                    mur.draw()
+                    block_list.add(mur)
+                    #mur.draw()
+
                 elif sprite == 'm':  #d = Départ
                     screen.blit(mushroom, (x, y))
                 elif sprite == 'f':  #a = Arrivée
                     screen.blit(flag, (x, y))
+
                 num_case += 1
             num_ligne += 1
