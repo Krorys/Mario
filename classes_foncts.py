@@ -49,14 +49,6 @@ class Mario(pygame.sprite.Sprite):
         if not pygame.sprite.spritecollide(self, block_list, False):
             self.y += self.changeY
 
-    def jump(self):
-        self.y -= 30
-
-    def left(self):
-        self.x -= 5
-    def right(self):
-        self.x +=5
-
     def death(self):
         pass
 

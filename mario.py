@@ -122,7 +122,7 @@ while continuer:
                 levelselection_curseur_actuel = 1
     #Niveaux
     if jeu_en_cours == 1:
-        pygame.key.set_repeat(10, 10)
+        #pygame.key.set_repeat(10, 10)
         jeu_en_cours =0
     if level_current == 1 :
         level1_cons()
@@ -136,14 +136,16 @@ while continuer:
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_RIGHT:
-                    mario.right()
-                    mario.draw()
+                    mario.changeX = 5
                 if event.key == K_LEFT:
-                    mario.left()
-                    mario.draw()
+                    mario.changeX = -5
                 if event.key == K_SPACE:
-                    mario.jump()
-                    mario.draw()
+                    pass
+            if event.type == KEYUP:
+                if event.key == K_RIGHT:
+                    mario.changeX = 0
+                if event.key == K_LEFT:
+                    mario.changeX = -0
 
 
     if level_current == 2 :
@@ -155,3 +157,5 @@ while continuer:
 
     pygame.display.flip()
     clock.tick(60)
+
+pygame.quit()
