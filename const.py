@@ -8,7 +8,6 @@ pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
 choix = "n1.txt"
 taille_sprite = 29
-sols = []
 
 #Coordonnées
 menu_curseur_position1 = (195,160)

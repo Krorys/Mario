@@ -126,9 +126,8 @@ while continuer:
         niveau = Niveau(choix)
         niveau.generer()
         niveau.afficher(screen)
-        #block_list.update()
         block_list.draw(screen)
-        bloc1.draw()
+        bloc2.draw()
         mario.draw()
         mario.move()
     if level_current == 2 :

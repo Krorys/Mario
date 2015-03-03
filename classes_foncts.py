@@ -33,7 +33,7 @@ class Mario(pygame.sprite.Sprite):
         self.x = 100
         self.y = 100
         self.changeX = 0
-        self.changeY = 3
+        self.changeY = 6
         #self.sprite = pygame.image.load(sprite).convert()
         self.sprite = sprite
         self.rect = self.sprite.get_rect()
@@ -46,8 +46,7 @@ class Mario(pygame.sprite.Sprite):
 
     def move(self):
         self.x += self.changeX
-        if self.rect.collidelist(sols):
-        #if pygame.sprite.spritecollide(self, block_list, False):
+        if not pygame.sprite.spritecollide(self, block_list, False):
             self.y += self.changeY
 
     def jump(self):
@@ -74,7 +73,6 @@ class Block(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
     def update(self):
         self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
-        sols.append(self.rect)
     def draw(self):
         self.update()
         screen.blit(self.image, (self.x, self.y))
@@ -86,17 +84,16 @@ class Sol(Block):
         self.x = x
         self.y = y
         self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
-        #sol_list.add(self)
 
 block_list = pygame.sprite.Group()
 
 bloc1 = Sol("bloc.jpg", 100, 250)
+bloc2 = Sol("bloc.jpg", 100, 200)
 
 class Niveau:
     def __init__(self, fichier):
         self.fichier = fichier
         self.structure = 0
-
 
     def generer(self):
         with open("n1.txt", "r") as fichier:
@@ -133,11 +130,8 @@ class Niveau:
                 y = num_ligne * taille_sprite
 
                 if sprite == 'b':  #m = Mur
-                    #screen.blit(bloc, (x, y))
                     mur = Sol("bloc.jpg", x, y)
-                    #mur.update()
                     block_list.add(mur)
-                    #mur.draw()
 
                 elif sprite == 'm':  #d = Départ
                     screen.blit(mushroom, (x, y))
