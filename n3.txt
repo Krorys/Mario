@@ -1,9 +1,9 @@
 
-            ff
-           f  f
-             f
-           f  f
-            ff
+            bb
+           b  b
+             b
+           b  b
+            bb
 
 
 

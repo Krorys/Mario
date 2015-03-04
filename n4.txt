@@ -1,8 +1,8 @@
-             ff
-            f f
-            f f
-            ffff
-              f
+             bb
+            b b
+            b b
+            bbbb
+              b
 
 
 

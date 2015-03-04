@@ -155,8 +155,8 @@ while continuer:
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
-            niveau.afficher(screen) #on évite le lag (en gros ici ça affiche pas le niveau (qui va se faire recouvrir par level1_cons())
-            generation_level = 0    #mais ça charge les bloc dans block_list (et plus tard les autres blocs dans les autres listes = on aura tout le niveau)
+            niveau.afficher(screen)
+            generation_level = 0
         level1_cons()
         block_list.draw(screen)
         mario.draw()
@@ -165,34 +165,37 @@ while continuer:
 
     if level_current == 2 : #NIVEAU 2
         choix = 'n2.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
         level1_cons()
-        niveau = Niveau(choix)
-        niveau.generer()
-        niveau.afficher(screen)
         block_list.draw(screen)
-        #bloc2.draw()
         mario.draw()
         mario.move()
 
     if level_current == 3 : #NIVEAU 3
         choix = 'n3.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
         level1_cons()
-        niveau = Niveau(choix)
-        niveau.generer()
-        niveau.afficher(screen)
         block_list.draw(screen)
-        #bloc2.draw()
         mario.draw()
         mario.move()
 
     if level_current == 4 : #NIVEAU 4
         choix = 'n4.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
         level1_cons()
-        niveau = Niveau(choix)
-        niveau.generer()
-        niveau.afficher(screen)
         block_list.draw(screen)
-        #bloc2.draw()
         mario.draw()
         mario.move()
 
