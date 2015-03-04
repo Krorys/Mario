@@ -7,13 +7,15 @@ from classes_foncts import *
 
 pygame.init()
 
-menu_music = pygame.mixer.Sound('menu_music.wav')
+#Musiques/sons
+menu_music = pygame.mixer.Sound('sons/menu_music.wav')
+jeu_music = pygame.mixer.Sound('sons/jeu_music.wav')
 menu_music.play()
 
+#Sprites
 marioSprite = SpriteImage("images/mario.png")
 marioImage1 = marioSprite.get_image(0, 7, 18, 23) #Récupère l'image en position (0,7) de taille (18,23)
 mariox2 = pygame.transform.scale2x(marioImage1) #Double la taille du Mario
-
 mario = Mario(mariox2)
 
 while continuer:
@@ -45,6 +47,8 @@ while continuer:
     if levelCurrent == 0:
         choix = 'n1.txt'
         if generation_level == 1:
+            pygame.mixer.stop()
+            jeu_music.play()
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
