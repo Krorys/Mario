@@ -4,14 +4,13 @@ import pygame, sys
 from pygame.locals import *
 from const import *
 from classes_foncts import *
+
 pygame.init()
 
-#Musique
 menu_music = pygame.mixer.Sound('menu_music.wav')
 menu_music.play()
 
-#Variables
-marioSprite = SpriteImage("mario.png")
+marioSprite = SpriteImage("images/mario.png")
 marioImage1 = marioSprite.get_image(0, 7, 18, 23) #Récupère l'image en position (0,7) de taille (18,23)
 mariox2 = pygame.transform.scale2x(marioImage1) #Double la taille du Mario
 
@@ -21,185 +20,74 @@ while continuer:
     for event in pygame.event.get():
         if event.type == QUIT:
             continuer = 0
-        if event.type == KEYDOWN:
-            if menu == 1: #MENU
-                if menu_curseur_actuel == 1:
-                    if event.key == K_DOWN:
-                        screen.blit(menuImage, (0,0))
-                        screen.blit(menuCurseur, menu_curseur_position2)
-                        menu_curseur_actuel +=1
-                        break
-                if menu_curseur_actuel == 2:
-                    if event.key == K_DOWN:
-                        screen.blit(menuImage, (0,0))
-                        screen.blit(menuCurseur, menu_curseur_position3)
-                        menu_curseur_actuel +=1
-                    if event.key == K_UP:
-                        screen.blit(menuImage, (0,0))
-                        screen.blit(menuCurseur, menu_curseur_position1)
-                        menu_curseur_actuel -=1
-                if menu_curseur_actuel == 3:
-                    if event.key == K_UP:
-                        screen.blit(menuImage, (0,0))
-                        screen.blit(menuCurseur, menu_curseur_position2)
-                        menu_curseur_actuel -=1
-
-                if (event.key == K_RETURN) and (menu_curseur_actuel==1) : #ALLER SELECTION NIVEAUX
-                    levelselection, menu = 1, 0
-                    level_selection_cons()
-                    screen.blit(menuCurseur, levelselection_curseur_position1)
-
-                if (event.key == K_RETURN) and (menu_curseur_actuel==2) : #ALLER OPTIONS
-                    screen.blit(options, (0,0))
-                    optionsOn, menu = 1, 0
-                    break
-
-                if (event.key == K_RETURN) and (menu_curseur_actuel==3) : #QUITTER
-                    continuer = 0
-                break
-            if optionsOn == 1:
-                if event.key == K_RETURN: #OPTIONS
-                    menu, optionsOn = 1, 0
-                    screen.blit(menuImage, (0,0))
-                    screen.blit(menuCurseur, menu_curseur_position2)
-
-            if levelselection == 1: #SELECTION NIVEAUX
-
-                if levelselection_curseur_actuel == 1:
-                    if event.key == K_RIGHT:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position2)
-                        levelselection_curseur_actuel = 2
-                        break
-                    if event.key == K_DOWN:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position3)
-                        levelselection_curseur_actuel = 3
-                        break
-                if levelselection_curseur_actuel == 2:
-                    if event.key == K_LEFT:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position1)
-                        levelselection_curseur_actuel = 1
-                        break
-                    if event.key == K_DOWN:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position4)
-                        levelselection_curseur_actuel = 4
-                        break
-                if levelselection_curseur_actuel == 3:
-                    if event.key == K_RIGHT:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position4)
-                        levelselection_curseur_actuel = 4
-                        break
-                    if event.key == K_UP:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position1)
-                        levelselection_curseur_actuel = 1
-                        break
-                if levelselection_curseur_actuel == 4:
-                    if event.key == K_LEFT:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position3)
-                        levelselection_curseur_actuel = 3
-                        break
-                    if event.key == K_UP:
-                        level_selection_cons()
-                        screen.blit(menuCurseur, levelselection_curseur_position2)
-                        levelselection_curseur_actuel = 2
-                        break
-
-                if event.key == K_RETURN: #ALLER JEU
-                    level_current = levelselection_curseur_actuel
-                    jeu_en_cours, levelselection = 1, 0
-
-                if event.key == K_ESCAPE: #RETOUR MENU
-                    screen.blit(menuImage, (0,0))
-                    screen.blit(menuCurseur, menu_curseur_position1)
-                    levelselection, menu = 0, 1
-                    menu_curseur_actuel = 1
-
-            if jeu_en_cours == 1: #JEU
-
-                if event.key == K_RIGHT: #DROITE
-                    mario.changeX = 5
-                    if mario.lookat == "left":
-                        mario.sprite = pygame.transform.flip(mario.sprite, True, False)
-                        mario.lookat = "right"
-                    mario.draw()
-                if event.key == K_LEFT: #GAUCHE
-                    mario.changeX = -5
-                    if mario.lookat == "right":
-                        mario.sprite = pygame.transform.flip(mario.sprite, True, False)
-                        mario.lookat = "left"
-                    mario.draw()
-                    # Là faut trouver un moyen de nettoyer block_list à chaque fois qu'on retourne sur la sélection des niveaux (avec echap), sinon les niveaux "s'entassent" dans block_list
-                """
-                if event.key == K_ESCAPE: #RETOUR SELECTION NIVEAUX
-                    level_selection_cons() #on reconstruis l'écran de sélection
-                    levelselection_curseur_actuel = 1 #on replace la position du curseur sur le stage 1-1
-                    screen.blit(menuCurseur, levelselection_curseur_position1) #on dessine l'image du curseur à la position actuelle du curseur (donc la 1)
-                    levelselection, level_current, jeu_en_cours = 1, 0, 0 #on lance la boucle de sélection des niveaux et on ferme les deux boucles de jeu
-                    mario.x, mario.y = 100, 100 #on replace mario pour qu'il ne respawn pas à l'endroit où on l'a laissé la dernière fois
-                """
-        if event.type == KEYUP: #ANTI-REFLET
-            if jeu_en_cours == 1:
-                if event.key == K_RIGHT:
-                    mario.changeX = 0
-                if event.key == K_LEFT:
-                    mario.changeX = -0
-
-    if level_current == 1 : #NIVEAU 1
+        if menu:
+            screen.blit(menuImage, (0,0))
+            menuCurseurPos = choixMenu(event, menuCurseurPos)
+            screen.blit(menuCurseurImage, menuCurseurList[menuCurseurPos])
+            if event.type == KEYDOWN and event.key == K_RETURN:
+                levelSelection, optionsOn, continuer = menuTo(menuCurseurPos)
+                menu = 0
+        elif optionsOn:
+            screen.blit(options, (0,0))
+            if event.type == KEYDOWN and event.key == K_RETURN:
+                menu, optionsOn = 1, 0
+        elif levelSelection:
+            levelSelectionDraw()
+            screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
+            levelCurseurPos = choixLevel(event, levelCurseurPos)
+            if event.type == KEYDOWN and event.key == K_ESCAPE:
+                menu, levelSelection = 1, 0
+            if event.type == KEYDOWN and event.key == K_RETURN:
+                menu, levelSelection, jeu, levelCurrent = 0, 0, 1, levelCurseurPos
+        elif jeu:
+            jeuFonct(event, mario)
+    #Niveaux
+    if levelCurrent == 0:
         choix = 'n1.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
             generation_level = 0
-        level1_cons()
+        screen.blit(bg, (0, 0))
         block_list.draw(screen)
         mario.draw()
         mario.move()
-
-
-    if level_current == 2 : #NIVEAU 2
+    if levelCurrent == 1 :
         choix = 'n2.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
             generation_level = 0
-        level1_cons()
+        screen.blit(bg, (0, 0))
         block_list.draw(screen)
         mario.draw()
         mario.move()
-
-    if level_current == 3 : #NIVEAU 3
+    if levelCurrent == 2 :
         choix = 'n3.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
             generation_level = 0
-        level1_cons()
+        screen.blit(bg, (0, 0))
         block_list.draw(screen)
         mario.draw()
         mario.move()
-
-    if level_current == 4 : #NIVEAU 4
+    if levelCurrent == 3 :
         choix = 'n4.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
             generation_level = 0
-        level1_cons()
+        screen.blit(bg, (0, 0))
         block_list.draw(screen)
         mario.draw()
         mario.move()
 
+    clock.tick(60)
     pygame.display.flip()
-    clock.tick(30)
 
 pygame.quit()
