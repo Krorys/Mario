@@ -161,7 +161,7 @@ class Niveau:
                 y = num_ligne * taille_sprite
 
                 if sprite == 'b':
-                    mur = Sol("bloc.jpg", x, y)
+                    mur = Sol("images/bloc.jpg", x, y)
                     block_list.add(mur)
 
                 elif sprite == 'm':

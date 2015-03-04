@@ -33,8 +33,8 @@ while continuer:
                 menu, optionsOn = 1, 0
         elif levelSelection:
             levelSelectionDraw()
-            screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
             levelCurseurPos = choixLevel(event, levelCurseurPos)
+            screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 menu, levelSelection = 1, 0
             if event.type == KEYDOWN and event.key == K_RETURN:
