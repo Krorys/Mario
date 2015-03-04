@@ -43,20 +43,49 @@ while continuer:
             jeuFonct(event, mario)
     #Niveaux
     if levelCurrent == 0:
-        screen.blit(bg, (0,0))
-        niveau = Niveau(choix)
-        niveau.generer()
-        niveau.afficher(screen)
+        choix = 'n1.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
+        screen.blit(bg, (0, 0))
         block_list.draw(screen)
-        bloc2.draw()
         mario.draw()
         mario.move()
     if levelCurrent == 1 :
-        print("niveau2")
+        choix = 'n1.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
+        screen.blit(bg, (0, 0))
+        block_list.draw(screen)
+        mario.draw()
+        mario.move()
     if levelCurrent == 2 :
-        print("niveau3")
+        choix = 'n1.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
+        screen.blit(bg, (0, 0))
+        block_list.draw(screen)
+        mario.draw()
+        mario.move()
     if levelCurrent == 3 :
-        print("niveau4")
+        choix = 'n1.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen)
+            generation_level = 0
+        screen.blit(bg, (0, 0))
+        block_list.draw(screen)
+        mario.draw()
+        mario.move()
 
     clock.tick(60)
     pygame.display.flip()

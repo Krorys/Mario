@@ -8,6 +8,8 @@ pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
 choix = "n1.txt"
 taille_sprite = 29
+on_level = 0
+block_list = pygame.sprite.Group()
 
 #Coordonnées
 menuCurseurList = [(195,160), (195,195), (195,230)]
@@ -28,5 +30,6 @@ levelselection_stage_1_4 = pygame.image.load("levelselection_stage_1_4.png")
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent = 1, 1, 0, 0, 0, -1
+generation_level = 1
 
 pygame.display.set_icon(icon)

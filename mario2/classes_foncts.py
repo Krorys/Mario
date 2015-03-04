@@ -135,11 +135,6 @@ class Sol(Block):
         self.y = y
         self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
 
-block_list = pygame.sprite.Group()
-
-bloc1 = Sol("bloc.jpg", 100, 250)
-bloc2 = Sol("bloc.jpg", 100, 200)
-
 class Niveau:
     def __init__(self, fichier):
         self.fichier = fichier
@@ -151,41 +146,31 @@ class Niveau:
             for ligne in fichier:
                 ligne_niveau = []
                 for sprite in ligne:
-                    # On ignore les "\n" de fin de ligne
                     if sprite != '\n':
-                        #On ajoute le sprite à la liste de la ligne
                         ligne_niveau.append(sprite)
-                # On ajoute la ligne à la liste du niveau
                 structure_niveau.append(ligne_niveau)
-            # On sauvegarde cette structure
             self.structure = structure_niveau
 
 
     def afficher(self, screen):
-        """Méthode permettant d'afficher le niveau en fonction
-		de la liste de structure renvoyée par generer()"""
-        # Chargement des images (seule celle d'arrivée contient de la transparence)
         bloc = pygame.image.load("bloc.jpg")
         mushroom = pygame.image.load("mushroom.jpg")
         flag = pygame.image.load("flag.jpg")
 
-        #On parcourt la liste du niveau
         num_ligne = 0
         for ligne in self.structure:
-            #On parcourt les listes de lignes
             num_case = 0
             for sprite in ligne:
-                #On calcule la position réelle en pixels
                 x = num_case * taille_sprite
                 y = num_ligne * taille_sprite
 
-                if sprite == 'b':  #m = Mur
+                if sprite == 'b':
                     mur = Sol("bloc.jpg", x, y)
                     block_list.add(mur)
 
-                elif sprite == 'm':  #d = Départ
+                elif sprite == 'm':
                     screen.blit(mushroom, (x, y))
-                elif sprite == 'f':  #a = Arrivée
+                elif sprite == 'f':
                     screen.blit(flag, (x, y))
 
                 num_case += 1
