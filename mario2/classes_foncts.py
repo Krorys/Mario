@@ -141,7 +141,7 @@ class Niveau:
         self.structure = 0
 
     def generer(self):
-        with open("n1.txt", "r") as fichier:
+        with open(self.fichier, "r") as fichier:
             structure_niveau = []
             for ligne in fichier:
                 ligne_niveau = []

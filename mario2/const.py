@@ -17,19 +17,22 @@ levelCurseurList = [(80,100), (270,100), (80,300), (270,300)]
 menuCurseurPos, levelCurseurPos = 0, 0
 
 #Images
-icon = pygame.image.load("icon.png")
-bg = pygame.image.load("bg.png")
-levelselection_bg = pygame.image.load("levelselection_bg.png")
-menuImage = pygame.image.load("menu.png")
-menuCurseurImage = pygame.image.load("curseur.png")
-options = pygame.image.load("options.png")
-levelselection_stage_1_1 = pygame.image.load("levelselection_stage_1_1.png")
-levelselection_stage_1_2 = pygame.image.load("levelselection_stage_1_2.png")
-levelselection_stage_1_3 = pygame.image.load("levelselection_stage_1_3.png")
-levelselection_stage_1_4 = pygame.image.load("levelselection_stage_1_4.png")
+icon = pygame.image.load("images/icon.png")
+bg = pygame.image.load("images/bg.png")
+levelselection_bg = pygame.image.load("images/levelselection_bg.png")
+menuImage = pygame.image.load("images/menu.png")
+menuCurseurImage = pygame.image.load("images/curseur.png")
+options = pygame.image.load("images/options.png")
+levelselection_stage_1_1 = pygame.image.load("images/levelselection_stage_1_1.png")
+levelselection_stage_1_2 = pygame.image.load("images/levelselection_stage_1_2.png")
+levelselection_stage_1_3 = pygame.image.load("images/levelselection_stage_1_3.png")
+levelselection_stage_1_4 = pygame.image.load("images/levelselection_stage_1_4.png")
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent = 1, 1, 0, 0, 0, -1
 generation_level = 1
 
+#Init n°2
 pygame.display.set_icon(icon)
+screen.blit(menuImage, (0,0))
+screen.blit(menuCurseurImage, menuCurseurList[0])

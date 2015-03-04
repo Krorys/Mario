@@ -10,7 +10,7 @@ pygame.init()
 menu_music = pygame.mixer.Sound('menu_music.wav')
 menu_music.play()
 
-marioSprite = SpriteImage("mario.png")
+marioSprite = SpriteImage("images/mario.png")
 marioImage1 = marioSprite.get_image(0, 7, 18, 23) #Récupère l'image en position (0,7) de taille (18,23)
 mariox2 = pygame.transform.scale2x(marioImage1) #Double la taille du Mario
 
@@ -22,8 +22,8 @@ while continuer:
             continuer = 0
         if menu:
             screen.blit(menuImage, (0,0))
-            screen.blit(menuCurseurImage, menuCurseurList[menuCurseurPos])
             menuCurseurPos = choixMenu(event, menuCurseurPos)
+            screen.blit(menuCurseurImage, menuCurseurList[menuCurseurPos])
             if event.type == KEYDOWN and event.key == K_RETURN:
                 levelSelection, optionsOn, continuer = menuTo(menuCurseurPos)
                 menu = 0
@@ -54,7 +54,7 @@ while continuer:
         mario.draw()
         mario.move()
     if levelCurrent == 1 :
-        choix = 'n1.txt'
+        choix = 'n2.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
@@ -65,7 +65,7 @@ while continuer:
         mario.draw()
         mario.move()
     if levelCurrent == 2 :
-        choix = 'n1.txt'
+        choix = 'n3.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
@@ -76,7 +76,7 @@ while continuer:
         mario.draw()
         mario.move()
     if levelCurrent == 3 :
-        choix = 'n1.txt'
+        choix = 'n4.txt'
         if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
