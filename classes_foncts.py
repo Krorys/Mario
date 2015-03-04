@@ -153,10 +153,6 @@ class Niveau:
 
 
     def afficher(self, screen):
-        bloc = pygame.image.load("bloc.jpg")
-        mushroom = pygame.image.load("mushroom.jpg")
-        flag = pygame.image.load("flag.jpg")
-
         num_ligne = 0
         for ligne in self.structure:
             num_case = 0

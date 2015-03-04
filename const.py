@@ -27,6 +27,9 @@ levelselection_stage_1_1 = pygame.image.load("images/levelselection_stage_1_1.pn
 levelselection_stage_1_2 = pygame.image.load("images/levelselection_stage_1_2.png")
 levelselection_stage_1_3 = pygame.image.load("images/levelselection_stage_1_3.png")
 levelselection_stage_1_4 = pygame.image.load("images/levelselection_stage_1_4.png")
+bloc = pygame.image.load("bloc.jpg")
+mushroom = pygame.image.load("mushroom.jpg")
+flag = pygame.image.load("flag.jpg")
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent = 1, 1, 0, 0, 0, -1
