@@ -58,45 +58,12 @@ while continuer:
         elif jeu:
             jeuFonct(event, mario)
     #Niveaux
-    if levelCurrent == 0:
-        choix = 'n1.txt'
+    if jeu == 1:
+        choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
             pygame.mixer.stop()
             jeu_music.set_volume(volume_default)
             jeu_music.play()
-            niveau = Niveau(choix)
-            niveau.generer()
-            niveau.afficher(screen)
-            generation_level = 0
-        screen.blit(bg, (0, 0))
-        block_list.draw(screen)
-        mario.draw()
-        mario.move()
-    if levelCurrent == 1 :
-        choix = 'n2.txt'
-        if generation_level == 1:
-            niveau = Niveau(choix)
-            niveau.generer()
-            niveau.afficher(screen)
-            generation_level = 0
-        screen.blit(bg, (0, 0))
-        block_list.draw(screen)
-        mario.draw()
-        mario.move()
-    if levelCurrent == 2 :
-        choix = 'n3.txt'
-        if generation_level == 1:
-            niveau = Niveau(choix)
-            niveau.generer()
-            niveau.afficher(screen)
-            generation_level = 0
-        screen.blit(bg, (0, 0))
-        block_list.draw(screen)
-        mario.draw()
-        mario.move()
-    if levelCurrent == 3 :
-        choix = 'n4.txt'
-        if generation_level == 1:
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)

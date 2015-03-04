@@ -98,7 +98,12 @@ class Mario(pygame.sprite.Sprite):
         screen.blit(self.sprite, (self.x, self.y))
 
     def move(self):
-        self.x += self.changeX
+        if self.rect.right >= screenX:
+            self.x -= 1
+        elif self.rect.left <= 0:
+            self.x += 1
+        else:
+            self.x += self.changeX
         if not pygame.sprite.spritecollide(self, block_list, False):
             self.y += self.changeY
 

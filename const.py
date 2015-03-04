@@ -3,7 +3,8 @@ from pygame.locals import *
 
 #Init
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((516, 435))
+screenX, screenY = 516, 435
+screen = pygame.display.set_mode((screenX, screenY))
 pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
 choix = "n1.txt"
