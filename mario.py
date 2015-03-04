@@ -118,7 +118,7 @@ while continuer:
                     screen.blit(menuImage, (0,0))
                     screen.blit(menuCurseur, menu_curseur_position1)
                     levelselection, menu = 0, 1
-                    levelselection_curseur_actuel = 1
+                    menu_curseur_actuel = 1
 
             if jeu_en_cours == 1: #JEU
 
@@ -127,11 +127,13 @@ while continuer:
                     if mario.lookat == "left":
                         mario.sprite = pygame.transform.flip(mario.sprite, True, False)
                         mario.lookat = "right"
+                    mario.draw()
                 if event.key == K_LEFT: #GAUCHE
                     mario.changeX = -5
                     if mario.lookat == "right":
                         mario.sprite = pygame.transform.flip(mario.sprite, True, False)
                         mario.lookat = "left"
+                    mario.draw()
                     # Là faut trouver un moyen de nettoyer block_list à chaque fois qu'on retourne sur la sélection des niveaux (avec echap), sinon les niveaux "s'entassent" dans block_list
                 """
                 if event.key == K_ESCAPE: #RETOUR SELECTION NIVEAUX
@@ -150,14 +152,16 @@ while continuer:
 
     if level_current == 1 : #NIVEAU 1
         choix = 'n1.txt'
+        if generation_level == 1:
+            niveau = Niveau(choix)
+            niveau.generer()
+            niveau.afficher(screen) #on évite le lag (en gros ici ça affiche pas le niveau (qui va se faire recouvrir par level1_cons())
+            generation_level = 0    #mais ça charge les bloc dans block_list (et plus tard les autres blocs dans les autres listes = on aura tout le niveau)
         level1_cons()
-        niveau = Niveau(choix)
-        niveau.generer()
-        niveau.afficher(screen)
         block_list.draw(screen)
-        #bloc2.draw()
         mario.draw()
         mario.move()
+
 
     if level_current == 2 : #NIVEAU 2
         choix = 'n2.txt'

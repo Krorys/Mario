@@ -15,6 +15,7 @@ block_list = pygame.sprite.Group()
 menu_curseur_actuel, levelselection_curseur_actuel = 1, 1
 continuer, menu, optionsOn, levelselection, jeu_en_cours = 1, 1, 0, 0, 0
 level_current = 0
+generation_level = 1
 
 #Coordonnées
 menu_curseur_position1 = (195,160)
