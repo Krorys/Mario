@@ -153,10 +153,6 @@ class Niveau:
 
 
     def afficher(self, screen):
-        bloc = pygame.image.load("bloc.jpg")
-        mushroom = pygame.image.load("mushroom.jpg")
-        flag = pygame.image.load("flag.jpg")
-
         num_ligne = 0
         for ligne in self.structure:
             num_case = 0
@@ -165,7 +161,7 @@ class Niveau:
                 y = num_ligne * taille_sprite
 
                 if sprite == 'b':
-                    mur = Sol("bloc.jpg", x, y)
+                    mur = Sol("images/bloc.jpg", x, y)
                     block_list.add(mur)
 
                 elif sprite == 'm':
