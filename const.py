@@ -38,8 +38,10 @@ mushroom = pygame.image.load("images/mushroom.jpg")
 flag = pygame.image.load("images/flag.jpg")
 
 #Musiques/sons
-menu_music = (pygame.mixer.Sound('sons/menu_music.wav'))
+menu_music = pygame.mixer.Sound('sons/menu_music.wav')
 levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sound('sons/level2_music.wav')), (pygame.mixer.Sound('sons/level3_music.wav')), (pygame.mixer.Sound('sons/level4_music.wav'))]
+jump_sound = pygame.mixer.Sound('sons/jump.wav')
+death_sound = pygame.mixer.Sound('sons/death.wav')
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1

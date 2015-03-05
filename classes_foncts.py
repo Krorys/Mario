@@ -2,15 +2,26 @@ import pygame
 from pygame.locals import *
 from const import *
 
-def music_levels(levelCurrent):
+def music_levels(levelCurrent, volume_default):
     pygame.mixer.stop()
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
 
-def music_menu():
+def music_menu(volume_default):
     pygame.mixer.stop()
     menu_music.set_volume(volume_default)
     menu_music.play()
+
+"""def jump_sound_play(volume_default):
+    pygame.mixer.pause()
+    jump_sound.set_volume(volume_default)
+    jump_sound.play()
+    pygame.mixer.unpause"""
+
+def death_sound_play(volume_default):
+    pygame.mixer.stop()
+    death_sound.set_volume(volume_default)
+    death_sound.play()
 
 def level_selection_cons():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_bg, (0, 0))
@@ -114,7 +125,7 @@ class Mario(pygame.sprite.Sprite):
         self.lookat = "right"
         self.rect = self.image.get_rect()
         self.reset = 0
-        self.time = 60
+        self.time = 200
         self.hp = 3
 
     def update(self):
@@ -144,7 +155,9 @@ class Mario(pygame.sprite.Sprite):
         if self.rect.y >= 435:
             gameOverSprite = SpriteImage("images/game over.png", noirFond)
             gameOver = gameOverSprite.get_imageXY(5, 7, 260, 230)
-            screen.blit(gameOver, (0,0))
+            volume_default = pygame.mixer.Sound.get_volume(menu_music)
+            if self.time == 200: death_sound_play(volume_default)
+            screen.blit(gameOver, (100,100))
             if self.time > 0: self.time -= 1
             else: self.reset = 1
 
@@ -162,6 +175,8 @@ class Mario(pygame.sprite.Sprite):
         if len(block_list) == 0 or self.changeY == 0:
             self.rect.y -= 5
             self.changeY = -10
+            #volume_default = pygame.mixer.Sound.get_volume(menu_music)
+            #jump_sound_play(volume_default)
 
     def death(self):
         if self.rect.y >= 435:

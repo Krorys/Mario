@@ -56,7 +56,8 @@ while continuer:
         choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
             pygame.key.set_repeat(1, 1)
-            music_levels(levelCurrent)
+            volume_default = pygame.mixer.Sound.get_volume(menu_music)
+            music_levels(levelCurrent, volume_default)
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
@@ -70,12 +71,12 @@ while continuer:
             block_list.empty()
             levelSelectionDraw()
             screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
-            music_menu()
+            music_menu(volume_default)
             mario.rect.x, mario.rect.y = 0, 0
             jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
             pygame.key.set_repeat(0, 0)
             mario.reset = 0
-            mario.time = 60
+            mario.time = 200
 
     clock.tick(60)
     pygame.display.flip()
