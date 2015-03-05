@@ -56,12 +56,12 @@ def jeuFonct(event, mario):
         if event.key == K_RIGHT:
                 mario.changeX = 5
                 if mario.lookat == "left":
-                    mario.sprite = pygame.transform.flip(mario.sprite, True, False)
+                    mario.image = pygame.transform.flip(mario.image, True, False)
                     mario.lookat = "right"
         if event.key == K_LEFT:
             mario.changeX = -5
             if mario.lookat == "right":
-                mario.sprite = pygame.transform.flip(mario.sprite, True, False)
+                mario.image = pygame.transform.flip(mario.image, True, False)
                 mario.lookat = "left"
         if event.key == K_UP or event.key == K_SPACE:
                 mario.jump()
@@ -91,44 +91,37 @@ class SpriteImage():
         return image
 
 class Mario(pygame.sprite.Sprite):
-    def __init__(self, sprite):
-        self.x = 100
-        self.y = 100
+    def __init__(self, image):
+        super().__init__()
         self.changeX = 0
         self.changeY = 0
-        #self.sprite = pygame.image.load(sprite).convert()
-        self.sprite = sprite
+        self.image = image
         self.lookat = "right"
-        self.rect = self.sprite.get_rect()
+        self.rect = self.image.get_rect()
         self.hp = 3
-        super().__init__()
 
-    def draw(self):
-        self.rect = pygame.Rect(self.x, self.y, self.sprite.get_size()[0], self.sprite.get_size()[1])
-        screen.blit(self.sprite, (self.x, self.y))
-
-    def move(self):
-        if self.rect.right >= screenX:
-            self.x -= 1
-        elif self.rect.left <= 0:
-            self.x += 1
-        else:
-            self.x += self.changeX
-        #if not pygame.sprite.spritecollide(self, block_list, False):
-            #self.y += self.changeY
-        self.y += self.changeY
-        print(self.changeY)
+    def update(self):
         self.grav()
-        sols = pygame.sprite.spritecollide(self, block_list, False)
-        for plateforme in sols:
-            if self.rect.colliderect(plateforme):
-                if self.changeY > 0: #Bas
-                    self.y = 1+plateforme.rect.top-self.rect.height
-                    #self.rect.bottom = plateforme.rect.top
-                elif self.changeY < 0: #Haut
-                    #self.rect.top = plateforme.rect.bottom+self.rect.height
-                    self.y = plateforme.rect.bottom
-                self.changeY = 0
+
+        self.rect.x += self.changeX
+
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeX > 0:
+                self.rect.right = block.rect.left
+            elif self.changeX < 0:
+                self.rect.left = block.rect.right
+
+        self.rect.y += self.changeY
+
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeY > 0:
+                self.rect.bottom = block.rect.top
+            elif self.changeY < 0:
+                self.rect.top = block.rect.bottom
+
+            self.changeY = 0
 
     def grav(self):
         if self.changeY == 0:
@@ -137,8 +130,8 @@ class Mario(pygame.sprite.Sprite):
             self.changeY += 0.35
 
     def jump(self):
-        if self.changeY == 0:
-            self.y -= 5
+        if len(block_list) == 0 or self.changeY == 0:
+            self.rect.y -= 5
             self.changeY = -10
 
     def death(self):
@@ -147,32 +140,25 @@ class Mario(pygame.sprite.Sprite):
     def kill(self, monster):
         pass
 
-
 class Monstres(Mario):
     pass
 
 class Block(pygame.sprite.Sprite):
-    def __init__(self, sprite):
+    def __init__(self, image):
         super().__init__()
         self.x = 0
         self.y = 0
+        self.image = pygame.image.load(image).convert()
+        self.rect = self.image.get_rect()
         self.changeX = 0
         self.changeY = 0
-        self.image = pygame.image.load(sprite)
-        self.rect = self.image.get_rect()
-    def update(self):
-        self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
-    def draw(self):
-        self.update()
-        screen.blit(self.image, (self.x, self.y))
-
 
 class Sol(Block):
-    def __init__(self, sprite, x, y):
-        Block.__init__(self, sprite)
-        self.x = x
-        self.y = y
-        self.rect = pygame.Rect(self.x, self.y, self.image.get_size()[0], self.image.get_size()[1])
+    def __init__(self, image, x, y):
+        Block.__init__(self, image)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 class Niveau:
     def __init__(self, fichier):

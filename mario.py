@@ -11,6 +11,9 @@ marioImage1 = marioSprite.get_image(0, 7, 18, 23) #Récupère l'image en positio
 mariox2 = pygame.transform.scale2x(marioImage1) #Double la taille du Mario
 mario = Mario(mariox2)
 
+active_sprite_list = pygame.sprite.Group()
+active_sprite_list.add(mario)
+
 while continuer:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -59,9 +62,10 @@ while continuer:
             niveau.afficher(screen)
             generation_level = 0
         screen.blit(bg_list[levelCurrent], (0, 0))
+        block_list.update()
+        active_sprite_list.update()
         block_list.draw(screen)
-        mario.draw()
-        mario.move()
+        active_sprite_list.draw(screen)
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 block_list.empty()
