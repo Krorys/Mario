@@ -26,6 +26,10 @@ def levelSelectionDraw():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_stage_1_3, (110, 300))
     screen.blit(levelselection_stage_1_4, (300, 300))
 
+def doubleImage(image):
+    imagex2 = pygame.transform.scale2x(image) #Double la taille du Mario
+    return imagex2
+
 def choixMenu(event, pos):
     if event.type == KEYDOWN:
         if event.key == K_DOWN and pos < 2: #On peut descendre qu'en étant en haut
@@ -54,22 +58,18 @@ def choixLevel(event, pos):
 def jeuFonct(event, mario):
     if event.type == KEYDOWN:
         if event.key == K_RIGHT:
-                mario.changeX = 5
-                if mario.lookat == "left":
-                    mario.image = pygame.transform.flip(mario.image, True, False)
-                    mario.lookat = "right"
+            mario.changeX = 5
+            if mario.lookat == "left":
+                mario.lookat = "right"
         if event.key == K_LEFT:
             mario.changeX = -5
             if mario.lookat == "right":
-                mario.image = pygame.transform.flip(mario.image, True, False)
                 mario.lookat = "left"
         if event.key == K_UP or event.key == K_SPACE:
                 mario.jump()
     if event.type == KEYUP:
-        if event.key == K_RIGHT:
+        if event.key == K_RIGHT or event.key == K_LEFT:
             mario.changeX = 0
-        if event.key == K_LEFT:
-            mario.changeX = -0
 
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
@@ -85,19 +85,33 @@ class SpriteImage():
         self.sprite_image = pygame.image.load(file_name)
 
     def get_image(self, x, y, largeur, hauteur):
+        image = pygame.Surface([largeur+1, hauteur+1])
+        image.blit(self.sprite_image, (0, 0), (x, y, largeur, hauteur))
+        image.set_colorkey(vertFond)
+        return image
+
+    def get_imageXY(self, x, y, x2, y2):
+        largeur, hauteur = 1+x2-x, 1+y2-y
         image = pygame.Surface([largeur, hauteur])
         image.blit(self.sprite_image, (0, 0), (x, y, largeur, hauteur))
-        image.set_colorkey(orange)
-        return image
+        image.set_colorkey(vertFond)
+        imagex2 = doubleImage(image)
+        return imagex2
 
 class Mario(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
+        self.sprite = SpriteImage("images/sheet.png")
+        self.standright = self.sprite.get_imageXY(72, 5, 87, 31)
+        self.standleft = pygame.transform.flip(self.standright, True, False)
+        self.jumpright = self.sprite.get_imageXY(72, 99, 89, 126)
+        self.jumpleft = pygame.transform.flip(self.jumpright, True, False)
         self.changeX = 0
         self.changeY = 0
         self.image = image
         self.lookat = "right"
         self.rect = self.image.get_rect()
+        self.time = 0
         self.hp = 3
 
     def update(self):
@@ -122,11 +136,17 @@ class Mario(pygame.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
+        """if self.time > 0:  self.time -= 1
+        else: self.changeX = 0"""
 
     def grav(self):
         if self.changeY == 0:
+            if self.lookat == "right": self.image = self.standright
+            else: self.image = self.standleft
             self.changeY = 1
         else:
+            if self.lookat == "right": self.image = self.jumpright
+            else: self.image = self.jumpleft
             self.changeY += 0.35
 
     def jump(self):

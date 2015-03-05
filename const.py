@@ -9,6 +9,7 @@ screenX, screenY = 516, 435
 screen = pygame.display.set_mode((screenX, screenY))
 pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
+vertFond = (166, 177, 65)
 choix = "n1.txt"
 taille_sprite = 29
 on_level = 0
