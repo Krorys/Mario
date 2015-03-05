@@ -10,6 +10,7 @@ screen = pygame.display.set_mode((screenX, screenY))
 pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
 vertFond = (166, 177, 65)
+noirFond = (0, 4, 0)
 choix = "n1.txt"
 taille_sprite = 29
 on_level = 0
@@ -42,6 +43,7 @@ levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sou
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
+reset = 0
 
 #Init n°2
 pygame.display.set_icon(icon)

@@ -6,13 +6,7 @@ from const import *
 from classes_foncts import *
 
 #Sprites
-"""
-marioSprite = SpriteImage("images/mario.png")
-marioImage1 = marioSprite.get_image(4, 9, 14, 20) #Récupère l'image en position (4,9) de taille (13,19) (+1 pixel pour inclure tout le rectangle)
-marioImage1 = marioSprite.get_image(21, 9, 15, 20)
-"""
-#Sprites
-marioSprite = SpriteImage("images/sheet.png")
+marioSprite = SpriteImage("images/mario sheet.png", vertFond)
 marioStand = marioSprite.get_imageXY(72, 5, 87, 31)
 mario = Mario(marioStand)
 
@@ -72,15 +66,16 @@ while continuer:
         active_sprite_list.update()
         block_list.draw(screen)
         active_sprite_list.draw(screen)
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                block_list.empty()
-                levelSelectionDraw()
-                screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
-                music_menu()
-                mario.rect.x, mario.rect.y = 100, 100
-                jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
-                pygame.key.set_repeat(0, 0)
+        if (event.type == KEYDOWN and event.key == K_ESCAPE) or mario.reset == 1:
+            block_list.empty()
+            levelSelectionDraw()
+            screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
+            music_menu()
+            mario.rect.x, mario.rect.y = 0, 0
+            jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
+            pygame.key.set_repeat(0, 0)
+            mario.reset = 0
+            mario.time = 60
 
     clock.tick(60)
     pygame.display.flip()
