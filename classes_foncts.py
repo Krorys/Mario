@@ -4,6 +4,7 @@ from const import *
 
 def music_levels(levelCurrent, volume_default):
     pygame.mixer.stop()
+    print(volume_default)
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
 

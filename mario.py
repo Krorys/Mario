@@ -56,7 +56,10 @@ while continuer:
         choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
             pygame.key.set_repeat(1, 1)
+<<<<<<< HEAD
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
+=======
+>>>>>>> origin/master
             music_levels(levelCurrent, volume_default)
             niveau = Niveau(choix)
             niveau.generer()
