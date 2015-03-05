@@ -63,8 +63,8 @@ def jeuFonct(event, mario):
             if mario.lookat == "right":
                 mario.sprite = pygame.transform.flip(mario.sprite, True, False)
                 mario.lookat = "left"
-        if event.key == K_SPACE:
-            pass
+        if event.key == K_UP or event.key == K_SPACE:
+                mario.jump()
     if event.type == KEYUP:
         if event.key == K_RIGHT:
             mario.changeX = 0
@@ -95,7 +95,7 @@ class Mario(pygame.sprite.Sprite):
         self.x = 100
         self.y = 100
         self.changeX = 0
-        self.changeY = 6
+        self.changeY = 0
         #self.sprite = pygame.image.load(sprite).convert()
         self.sprite = sprite
         self.lookat = "right"
@@ -114,8 +114,32 @@ class Mario(pygame.sprite.Sprite):
             self.x += 1
         else:
             self.x += self.changeX
-        if not pygame.sprite.spritecollide(self, block_list, False):
-            self.y += self.changeY
+        #if not pygame.sprite.spritecollide(self, block_list, False):
+            #self.y += self.changeY
+        self.y += self.changeY
+        print(self.changeY)
+        self.grav()
+        sols = pygame.sprite.spritecollide(self, block_list, False)
+        for plateforme in sols:
+            if self.rect.colliderect(plateforme):
+                if self.changeY > 0: #Bas
+                    self.y = 1+plateforme.rect.top-self.rect.height
+                    #self.rect.bottom = plateforme.rect.top
+                elif self.changeY < 0: #Haut
+                    #self.rect.top = plateforme.rect.bottom+self.rect.height
+                    self.y = plateforme.rect.bottom
+                self.changeY = 0
+
+    def grav(self):
+        if self.changeY == 0:
+            self.changeY = 1
+        else:
+            self.changeY += 0.35
+
+    def jump(self):
+        if self.changeY == 0:
+            self.y -= 5
+            self.changeY = -10
 
     def death(self):
         pass
