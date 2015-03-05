@@ -1,5 +1,6 @@
 import pygame, sys
 from pygame.locals import *
+pygame.init()
 
 #Init
 clock = pygame.time.Clock()
@@ -33,6 +34,10 @@ bloc = pygame.image.load("images/bloc.jpg")
 mushroom = pygame.image.load("images/mushroom.jpg")
 flag = pygame.image.load("images/flag.jpg")
 
+#Musiques/sons
+menu_music = (pygame.mixer.Sound('sons/menu_music.wav'))
+levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sound('sons/level2_music.wav')), (pygame.mixer.Sound('sons/level3_music.wav')), (pygame.mixer.Sound('sons/level4_music.wav'))]
+
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
 
@@ -40,3 +45,5 @@ continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level 
 pygame.display.set_icon(icon)
 screen.blit(menuImage, (0,0))
 screen.blit(menuCurseurImage, menuCurseurList[0])
+menu_music.set_volume(volume_default)
+menu_music.play()

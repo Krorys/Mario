@@ -7,12 +7,6 @@ from classes_foncts import *
 
 pygame.init()
 
-#Musiques/sons
-menu_music = pygame.mixer.Sound('sons/menu_music.wav')
-level1_music = pygame.mixer.Sound('sons/level1_music.wav')
-menu_music.set_volume(volume_default)
-menu_music.play()
-
 #Sprites
 marioSprite = SpriteImage("images/mario.png")
 marioImage1 = marioSprite.get_image(0, 7, 18, 23) #Récupère l'image en position (0,7) de taille (18,23)
@@ -61,9 +55,7 @@ while continuer:
     if jeu == 1:
         choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
-            pygame.mixer.stop()
-            level1_music.set_volume(volume_default)
-            level1_music.play()
+            music()
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
