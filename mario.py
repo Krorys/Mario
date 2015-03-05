@@ -6,9 +6,12 @@ from const import *
 from classes_foncts import *
 
 #Sprites
-marioSprite = SpriteImage("images/mario sheet.png", vertFond)
+marioSprite = SpriteImage("images/mario sheet.png", vertFond, 1)
 marioStand = marioSprite.get_imageXY(72, 5, 87, 31)
 mario = Mario(marioStand)
+
+gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
+gameOver = gameOverSprite.get_imageXY(5, 7, 260, 230)
 
 active_sprite_list = pygame.sprite.Group()
 active_sprite_list.add(mario)
@@ -56,10 +59,7 @@ while continuer:
         choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
             pygame.key.set_repeat(1, 1)
-<<<<<<< HEAD
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
-=======
->>>>>>> origin/master
             music_levels(levelCurrent, volume_default)
             niveau = Niveau(choix)
             niveau.generer()

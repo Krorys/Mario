@@ -38,9 +38,9 @@ def levelSelectionDraw():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_stage_1_3, (110, 300))
     screen.blit(levelselection_stage_1_4, (300, 300))
 
-def doubleImage(image):
-    #imagex2 = pygame.transform.scale2x(image) #Double la taille du Mario
-    imagex2 = pygame.transform.scale(image, (28, 50))
+def doubleImage(image, mario):
+    if mario: imagex2 = pygame.transform.scale(image, (28, 50))
+    else: imagex2 = pygame.transform.scale2x(image) #Double la taille du Mario
     return imagex2
 
 def choixMenu(event, pos):
@@ -94,28 +94,23 @@ def niveauFonct(niveau, choix, screen, fonct):
 class SpriteImage():
     sprite_image = None
 
-    def __init__(self, file_name, couleur):
+    def __init__(self, file_name, couleur, mario):
         self.sprite_image = pygame.image.load(file_name)
         self.couleur = couleur
-
-    def get_image(self, x, y, largeur, hauteur):
-        image = pygame.Surface([largeur+1, hauteur+1])
-        image.blit(self.sprite_image, (0, 0), (x, y, largeur, hauteur))
-        image.set_colorkey(self.couleur)
-        return image
+        self.mario = mario
 
     def get_imageXY(self, x, y, x2, y2):
         largeur, hauteur = 1+x2-x, 1+y2-y
         image = pygame.Surface([largeur, hauteur])
         image.blit(self.sprite_image, (0, 0), (x, y, largeur, hauteur))
         image.set_colorkey(self.couleur)
-        imagex2 = doubleImage(image)
+        imagex2 = doubleImage(image, self.mario)
         return imagex2
 
 class Mario(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
-        self.sprite = SpriteImage("images/mario sheet.png", vertFond)
+        self.sprite = SpriteImage("images/mario sheet.png", vertFond, 1)
         self.standright = self.sprite.get_imageXY(72, 5, 87, 31)
         self.standleft = pygame.transform.flip(self.standright, True, False)
         self.jumpright = self.sprite.get_imageXY(72, 99, 89, 126)
@@ -126,7 +121,7 @@ class Mario(pygame.sprite.Sprite):
         self.lookat = "right"
         self.rect = self.image.get_rect()
         self.reset = 0
-        self.time = 200
+        self.time = 180
         self.hp = 3
 
     def update(self):
@@ -153,12 +148,15 @@ class Mario(pygame.sprite.Sprite):
 
             self.changeY = 0
 
-        if self.rect.y >= 435:
-            gameOverSprite = SpriteImage("images/game over.png", noirFond)
-            gameOver = gameOverSprite.get_imageXY(5, 7, 260, 230)
+        if self.rect.y >= 435: #Si on tombe on meurt
+            gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
+            gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
+            GOrect = gameOver.get_rect()
+            centerX = int((screenX/2)-GOrect.centerx)
+            centerY = int((screenY/2)-GOrect.centery)
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
-            if self.time == 200: death_sound_play(volume_default)
-            screen.blit(gameOver, (100,100))
+            if self.time == 180: death_sound_play(volume_default)
+            screen.blit(gameOver, (centerX, centerY))
             if self.time > 0: self.time -= 1
             else: self.reset = 1
 
