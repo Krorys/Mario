@@ -2,12 +2,13 @@ import pygame
 from pygame.locals import *
 from const import *
 
-def music_levels(levelCurrent):
+def music_levels(levelCurrent, volume_default):
     pygame.mixer.stop()
+    print(volume_default)
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
 
-def music_menu():
+def music_menu(volume_default):
     pygame.mixer.stop()
     menu_music.set_volume(volume_default)
     menu_music.play()
