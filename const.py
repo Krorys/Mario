@@ -20,7 +20,7 @@ menuCurseurPos, levelCurseurPos = 0, 0
 
 #Images
 icon = pygame.image.load("images/icon.png")
-bg = pygame.image.load("images/bg.png")
+bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.png")), (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
 levelselection_bg = pygame.image.load("images/levelselection_bg.png")
 menuImage = pygame.image.load("images/menu.png")
 menuCurseurImage = pygame.image.load("images/curseur.png")
@@ -34,8 +34,7 @@ mushroom = pygame.image.load("images/mushroom.jpg")
 flag = pygame.image.load("images/flag.jpg")
 
 #Variables
-continuer, menu, optionsOn, levelSelection, jeu, levelCurrent = 1, 1, 0, 0, 0, -1
-generation_level = 1
+continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
 
 #Init n°2
 pygame.display.set_icon(icon)

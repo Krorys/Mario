@@ -9,7 +9,7 @@ pygame.init()
 
 #Musiques/sons
 menu_music = pygame.mixer.Sound('sons/menu_music.wav')
-jeu_music = pygame.mixer.Sound('sons/jeu_music.wav')
+level1_music = pygame.mixer.Sound('sons/level1_music.wav')
 menu_music.set_volume(volume_default)
 menu_music.play()
 
@@ -62,13 +62,13 @@ while continuer:
         choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
             pygame.mixer.stop()
-            jeu_music.set_volume(volume_default)
-            jeu_music.play()
+            level1_music.set_volume(volume_default)
+            level1_music.play()
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
             generation_level = 0
-        screen.blit(bg, (0, 0))
+        screen.blit(bg_list[levelCurrent], (0, 0))
         block_list.draw(screen)
         mario.draw()
         mario.move()
