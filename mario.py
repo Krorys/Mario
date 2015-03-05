@@ -5,8 +5,6 @@ from pygame.locals import *
 from const import *
 from classes_foncts import *
 
-pygame.init()
-
 #Sprites
 marioSprite = SpriteImage("images/mario.png")
 marioImage1 = marioSprite.get_image(0, 7, 18, 23) #Récupère l'image en position (0,7) de taille (18,23)
@@ -55,7 +53,7 @@ while continuer:
     if jeu == 1:
         choix = "n"+str(levelCurrent+1)+".txt"
         if generation_level == 1:
-            music()
+            music_levels(levelCurrent)
             niveau = Niveau(choix)
             niveau.generer()
             niveau.afficher(screen)
@@ -64,6 +62,14 @@ while continuer:
         block_list.draw(screen)
         mario.draw()
         mario.move()
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                block_list.empty()
+                levelSelectionDraw()
+                screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
+                music_menu()
+                mario.x, mario.y = 100, 100
+                jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
 
     clock.tick(60)
     pygame.display.flip()

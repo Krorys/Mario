@@ -2,10 +2,15 @@ import pygame
 from pygame.locals import *
 from const import *
 
-def music():
+def music_levels(levelCurrent):
     pygame.mixer.stop()
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
+
+def music_menu():
+    pygame.mixer.stop()
+    menu_music.set_volume(volume_default)
+    menu_music.play()
 
 def level_selection_cons():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_bg, (0, 0))
