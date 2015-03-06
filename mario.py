@@ -88,15 +88,10 @@ while continuer:
             jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
             pygame.key.set_repeat(0, 0)
             mario.reset = 0
-<<<<<<< HEAD
             mario.time = 210
         """if event.type == KEYDOWN and event.key == K_SPACE:
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
             jump_sound_play(volume_default)"""
-=======
-            mario.time = 200
-
->>>>>>> origin/master
     clock.tick(60)
     pygame.display.flip()
 

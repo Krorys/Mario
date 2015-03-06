@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 from const import *
 
-<<<<<<< HEAD
 
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
@@ -13,11 +12,8 @@ def affichage_volume(volume):
         volume_default -= 0.1"""
 
 
-=======
->>>>>>> origin/master
 def music_levels(levelCurrent, volume_default):
     pygame.mixer.stop()
-    print(volume_default)
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
 
@@ -26,17 +22,9 @@ def music_menu(volume_default):
     menu_music.set_volume(volume_default)
     menu_music.play()
 
-<<<<<<< HEAD
 def jump_sound_play(volume_default):
     jump_sound.set_volume(volume_default)
     jump_sound.play()
-=======
-"""def jump_sound_play(volume_default):
-    pygame.mixer.pause()
-    jump_sound.set_volume(volume_default)
-    jump_sound.play()
-    pygame.mixer.unpause"""
->>>>>>> origin/master
 
 def death_sound_play(volume_default):
     pygame.mixer.stop()
@@ -140,11 +128,7 @@ class Mario(pygame.sprite.Sprite):
         self.lookat = "right"
         self.rect = self.image.get_rect()
         self.reset = 0
-<<<<<<< HEAD
         self.time = 210
-=======
-        self.time = 180
->>>>>>> origin/master
         self.hp = 3
 
     def update(self):
@@ -178,11 +162,7 @@ class Mario(pygame.sprite.Sprite):
             centerX = int((screenX/2)-GOrect.centerx)
             centerY = int((screenY/2)-GOrect.centery)
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
-<<<<<<< HEAD
             if self.time == 210: death_sound_play(volume_default)
-=======
-            if self.time == 180: death_sound_play(volume_default)
->>>>>>> origin/master
             screen.blit(gameOver, (centerX, centerY))
             if self.time > 0: self.time -= 1
             else: self.reset = 1
