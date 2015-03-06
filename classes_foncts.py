@@ -241,11 +241,9 @@ class Niveau:
                     block_list.add(mur)
 
                 elif sprite == 'm':
-                    mush = Sol("images/mushroom.jpg", x, y)
-                    block_list.add(mush)
+                    screen.blit(mushroom, (x, y))
                 elif sprite == 'f':
-                    flag = Sol("images/flag.jpg", x, y)
-                    block_list.add(flag)
+                    screen.blit(flag, (x, y))
 
                 num_case += 1
             num_ligne += 1
