@@ -78,18 +78,14 @@ def choixLevel(event, pos):
 def jeuFonct(event, mario):
     if event.type == KEYDOWN:
         if event.key == K_RIGHT:
-            mario.changeX = 5
-            if mario.lookat == "left":
-                mario.lookat = "right"
+            mario.goRight()
         if event.key == K_LEFT:
-            mario.changeX = -5
-            if mario.lookat == "right":
-                mario.lookat = "left"
+            mario.goLeft()
         if event.key == K_UP or event.key == K_SPACE:
-                mario.jump()
+            mario.jump()
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
-            mario.changeX = 0
+            mario.stop()
 
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
@@ -117,10 +113,25 @@ class SpriteImage():
 class Mario(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
-        self.sprite = SpriteImage("images/mario sheet.png", vertFond, 1)
-        self.standright = self.sprite.get_imageXY(72, 5, 87, 31)
+        spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+        self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
+                       spriteSheet.get_imageXY(104, 36, 120, 62),
+                       spriteSheet.get_imageXY(136, 37, 151, 63),
+                       spriteSheet.get_imageXY(168, 37, 183, 63)]
+        self.walkHold_r = [spriteSheet.get_imageXY(72, 69, 88, 95),
+                           spriteSheet.get_imageXY(103, 68, 120, 94),
+                           spriteSheet.get_imageXY(136, 69, 152, 95),
+                           spriteSheet.get_imageXY(168, 69, 184, 95)]
+        self.stand_r = [spriteSheet.get_imageXY(72, 5, 87, 31),
+                        spriteSheet.get_imageXY(104, 4, 119, 31),
+                        spriteSheet.get_imageXY(136, 3, 151, 31),
+                        spriteSheet.get_imageXY(168, 4, 183, 31),
+                        spriteSheet.get_imageXY(200, 5, 215, 31)]
+        self.standright = spriteSheet.get_imageXY(72, 5, 87, 31)
+        self.stand = 0
         self.standleft = pygame.transform.flip(self.standright, True, False)
-        self.jumpright = self.sprite.get_imageXY(72, 99, 89, 126)
+        self.jumpright = spriteSheet.get_imageXY(72, 99, 89, 126)
+        self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126), spriteSheet.get_imageXY(104, 100, 121, 126)]
         self.jumpleft = pygame.transform.flip(self.jumpright, True, False)
         self.changeX = 0
         self.changeY = 0
@@ -168,14 +179,40 @@ class Mario(pygame.sprite.Sprite):
             else: self.reset = 1
 
     def grav(self):
-        if self.changeY == 0:
-            if self.lookat == "right": self.image = self.standright
-            else: self.image = self.standleft
+        if self.changeY == 0: #Si il est au sol
+            if self.lookat == "right":
+                if self.changeX == 0: #et si il ne bouge pas
+                    #self.image = self.standright
+                    frame = (self.stand // 17) % len(self.stand_r)
+                    self.image = self.stand_r[frame]
+                    self.stand += 1
+                else:
+                    frame = (self.rect.x // 30) % len(self.walk_r)
+                    self.image = self.walk_r[frame]
+            else:
+                self.image = self.standleft
             self.changeY = 1
         else:
-            if self.lookat == "right": self.image = self.jumpright
-            else: self.image = self.jumpleft
+            if self.lookat == "right":
+                if self.changeY >= 5: #Si Mario tombe
+                    self.image = self.jump_r[1]
+                else: #Si il saute
+                    self.image = self.jump_r[0]
+            else:
+                self.image = self.jumpleft
             self.changeY += 0.35
+
+    def goLeft(self):
+        self.changeX = -3
+        self.lookat = "left"
+
+    def goRight(self):
+        self.changeX = 3
+        self.lookat = "right"
+
+    def stop(self):
+        self.changeX = 0
+        self.stand = 0
 
     def jump(self):
         if len(block_list) == 0 or self.changeY == 0:
