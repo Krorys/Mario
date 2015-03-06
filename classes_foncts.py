@@ -5,7 +5,7 @@ from const import *
 
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
-        screen.blit(volume_images[volume], (210,250))
+        screen.blit(volume_images[volume], (404,159))
 
 """def volume_down(volume_default):
     if volume_default > 0.05 and volume_default < 1.05:
