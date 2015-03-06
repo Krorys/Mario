@@ -76,8 +76,9 @@ while continuer:
             generation_level = 0
         screen.blit(bg_list[levelCurrent], (0, 0))
         block_list.update()
-        active_sprite_list.update()
         block_list.draw(screen)
+        active_sprite_list.update()
+        #block_list.draw(screen)
         active_sprite_list.draw(screen)
         if (event.type == KEYDOWN and event.key == K_ESCAPE) or mario.reset == 1:
             block_list.empty()
