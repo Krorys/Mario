@@ -46,7 +46,7 @@ def levelSelectionDraw():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_stage_1_4, (300, 300))
 
 def doubleImage(image, mario):
-    if mario: imagex2 = pygame.transform.scale(image, (28, 50))
+    if mario: imagex2 = pygame.transform.scale(image, (29, 50))
     else: imagex2 = pygame.transform.scale2x(image) #Double la taille du Mario
     return imagex2
 
@@ -83,9 +83,13 @@ def jeuFonct(event, mario):
             mario.goLeft()
         if event.key == K_UP or event.key == K_SPACE:
             mario.jump()
+        if event.key == K_DOWN:
+            mario.duckOn = 1
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
             mario.stop()
+        if event.key == K_UP:
+            mario.duckOn = 0
 
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
@@ -127,22 +131,27 @@ class Mario(pygame.sprite.Sprite):
                         spriteSheet.get_imageXY(136, 3, 151, 31),
                         spriteSheet.get_imageXY(168, 4, 183, 31),
                         spriteSheet.get_imageXY(200, 5, 215, 31)]
-        self.standright = spriteSheet.get_imageXY(72, 5, 87, 31)
+        self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126),
+                       spriteSheet.get_imageXY(104, 100, 121, 126)]
+        self.duck_r = spriteSheet.get_imageXY(73, 165, 88, 191)
+        self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
+        self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
+        self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
+        self.duck_l = pygame.transform.flip(self.duck_r, True, False)
         self.stand = 0
-        self.standleft = pygame.transform.flip(self.standright, True, False)
-        self.jumpright = spriteSheet.get_imageXY(72, 99, 89, 126)
-        self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126), spriteSheet.get_imageXY(104, 100, 121, 126)]
-        self.jumpleft = pygame.transform.flip(self.jumpright, True, False)
         self.changeX = 0
         self.changeY = 0
         self.image = image
         self.lookat = "right"
+        self.duckOn = 0
         self.rect = self.image.get_rect()
         self.reset = 0
         self.time = 210
         self.hp = 3
 
     def update(self):
+        self.direction()
+        if self.duckOn == 1: self.duck()
         self.grav()
 
         self.rect.x += self.changeX
@@ -161,58 +170,69 @@ class Mario(pygame.sprite.Sprite):
             if self.changeY > 0:
                 self.rect.bottom = block.rect.top
             elif self.changeY < 0:
-                pygame.key.set_repeat(0, 0)
+                pygame.key.set_repeat(0, 0) #Empeche de s'accrocher au mur si on maintient la touche de saut
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
 
-        if self.rect.y >= 435: #Si on tombe on meurt
-            gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
-            gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
-            GOrect = gameOver.get_rect()
-            centerX = int((screenX/2)-GOrect.centerx)
-            centerY = int((screenY/2)-GOrect.centery)
-            volume_default = pygame.mixer.Sound.get_volume(menu_music)
-            if self.time == 210: death_sound_play(volume_default)
-            screen.blit(gameOver, (centerX, centerY))
-            if self.time > 0: self.time -= 1
-            else: self.reset = 1
+        if self.rect.y >= screenY: #Si on tombe on meurt
+            self.death()
 
     def grav(self):
         if self.changeY == 0: #Si il est au sol
-            if self.lookat == "right":
-                if self.changeX == 0: #et si il ne bouge pas
-                    #self.image = self.standright
-                    frame = (self.stand // 17) % len(self.stand_r)
-                    self.image = self.stand_r[frame]
-                    self.stand += 1
-                else:
-                    frame = (self.rect.x // 30) % len(self.walk_r)
-                    self.image = self.walk_r[frame]
-            else:
-                self.image = self.standleft
             self.changeY = 1
         else:
-            if self.lookat == "right":
-                if self.changeY >= 5: #Si Mario tombe
-                    self.image = self.jump_r[1]
-                else: #Si il saute
-                    self.image = self.jump_r[0]
-            else:
-                self.image = self.jumpleft
             self.changeY += 0.35
 
     def goLeft(self):
         self.changeX = -3
         self.lookat = "left"
+        self.duckOn = 0
 
     def goRight(self):
         self.changeX = 3
         self.lookat = "right"
+        self.duckOn = 0
+
+    def duck(self):
+        if self.changeY == 0:
+            self.changeX = 0
+            if self.lookat == "right": self.image = self.duck_r
+            else: self.image = self.duck_l
 
     def stop(self):
         self.changeX = 0
         self.stand = 0
+
+    def direction(self):
+        if self.lookat == "right": #Si il regardre à droite
+            if self.changeY == 0: #Si il est au sol
+                if self.changeX == 0: #et si il ne bouge pas
+                    frame = (self.stand // 18) % len(self.stand_r)
+                    self.image = self.stand_r[frame]
+                    self.stand += 1
+                else: #Si il marche
+                    frame = (self.rect.x // 30) % len(self.walk_r)
+                    self.image = self.walk_r[frame]
+            else: #Si il est en l'air
+                if self.changeY >= 5: #Si Mario tombe
+                    self.image = self.jump_r[1]
+                else: #Si il saute
+                    self.image = self.jump_r[0]
+        else: #Si il regarde à gauche
+            if self.changeY == 0: #Si il est au sol
+                if self.changeX == 0: #et si il ne bouge pas
+                    frame = (self.stand // 18) % len(self.stand_l)
+                    self.image = self.stand_l[frame]
+                    self.stand += 1
+                else: #Si il marche
+                    frame = (self.rect.x // 30) % len(self.walk_l)
+                    self.image = self.walk_l[frame]
+            else: #Si il est en l'air
+                if self.changeY >= 5: #Si Mario tombe
+                    self.image = self.jump_l[1]
+                else: #Si il saute
+                    self.image = self.jump_l[0]
 
     def jump(self):
         if len(block_list) == 0 or self.changeY == 0:
@@ -222,8 +242,16 @@ class Mario(pygame.sprite.Sprite):
             #jump_sound_play(volume_default)
 
     def death(self):
-        if self.rect.y >= 435:
-            self.rect.y = 200
+        gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
+        gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
+        GOrect = gameOver.get_rect()
+        centerX = int((screenX/2)-GOrect.centerx)
+        centerY = int((screenY/2)-GOrect.centery)
+        volume_default = pygame.mixer.Sound.get_volume(menu_music)
+        if self.time == 210: death_sound_play(volume_default)
+        screen.blit(gameOver, (centerX, centerY))
+        if self.time > 0: self.time -= 1
+        else: self.reset = 1
 
     def kill(self, monster):
         pass
