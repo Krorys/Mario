@@ -14,6 +14,7 @@ pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
 vertFond = (166, 177, 65)
 noirFond = (0, 4, 0)
+blancFond = (255, 255, 255)
 choix = "n1.txt"
 taille_sprite = 29
 on_level = 0

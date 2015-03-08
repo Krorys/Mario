@@ -88,7 +88,13 @@ def choixLevel(event, pos):
     return pos
 
 
-def jeuFonct(event, mario):
+def jeuFonct(event, mario, monstres):
+    if monstres.direct == 1: #si direct = 1 le monstre va à droite
+        monstres.goRight()
+        #monstres.switch()
+    if monstres.direct == 0: #si direct = 0 le monstre ira à gauche
+        monstres.goLeft()
+        #monstres.switch()
     if event.type == KEYDOWN:
         if event.key == K_RIGHT:
             mario.goRight()
@@ -101,7 +107,7 @@ def jeuFonct(event, mario):
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
             mario.stop()
-        if event.key == K_UP:
+        if event.key == K_DOWN:
             mario.duckOn = 0
 
 
@@ -150,6 +156,7 @@ class Mario(pygame.sprite.Sprite):
         self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126),
                        spriteSheet.get_imageXY(104, 100, 121, 126)]
         self.duck_r = spriteSheet.get_imageXY(73, 165, 88, 191)
+        self.dead = spriteSheet.get_imageXY(67, 242, 92, 271)
         self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
         self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
@@ -261,17 +268,18 @@ class Mario(pygame.sprite.Sprite):
             #jump_sound_play(volume_default)
 
     def death(self):
+        self.image = self.dead
         gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
         gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
         GOrect = gameOver.get_rect()
         centerX = int((screenX / 2) - GOrect.centerx)
         centerY = int((screenY / 2) - GOrect.centery)
         volume_default = pygame.mixer.Sound.get_volume(menu_music)
-        if self.time == 210: death_sound_play(volume_default)
         screen.blit(gameOver, (centerX, centerY))
+        if self.time == 210: death_sound_play(volume_default)
         if self.time > 0:
             self.time -= 1
-        else:
+        if self.time == 0:
             self.reset = 1
 
     def kill(self, monster):
@@ -279,7 +287,56 @@ class Mario(pygame.sprite.Sprite):
 
 
 class Monstres(Mario):
-    pass
+    def __init__(self, image):
+        super().__init__(image)
+        spriteSheet = SpriteImage("images/goomba sheet.png", blancFond, 1)
+        self.walk_r = [spriteSheet.get_imageXY(1, 41, 17, 60),
+                       spriteSheet.get_imageXY(41, 41, 58, 59),
+                       spriteSheet.get_imageXY(80, 42, 99, 59),
+                       spriteSheet.get_imageXY(121, 41, 138, 59)]
+        self.walkHold_r = [spriteSheet.get_imageXY(72, 69, 88, 95),
+                           spriteSheet.get_imageXY(103, 68, 120, 94),
+                           spriteSheet.get_imageXY(136, 69, 152, 95),
+                           spriteSheet.get_imageXY(168, 69, 184, 95)]
+        self.jump_r = [spriteSheet.get_imageXY(1, 41, 17, 60),
+                       spriteSheet.get_imageXY(1, 41, 17, 60)]
+        #self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
+        self.changeX = 0
+        self.changeY = 0
+        self.image = image
+        self.lookat = "right"
+        self.rect = self.image.get_rect()
+        self.rect.x = 100
+        self.rect.y = 300
+        self.timetime = 0
+        self.test = self.rect.x
+        self.direct = 1
+
+    def goRight(self):
+        self.changeX = 1
+        self.lookat = "right"
+        self.duckOn = 0
+
+    def goLeft(self):
+        self.changeX = -3
+        self.lookat = "left"
+        self.duckOn = 0
+
+    def switch(self): #Fonction sensée faire changer de direction (via direct) le goomba lors d'une collision mais ça marche pas
+        if pygame.sprite.collide_rect(monstres, block_list) and self.lookat == "right":
+            self.direct = 0
+            print("a")
+        if pygame.sprite.collide_rect(monstres, block_list) and self.lookat == "left":
+            self.direct = 1
+            print("b")
+
+
+
+
+
+    def death(self):
+        pass
+
 
 
 class Block(pygame.sprite.Sprite):

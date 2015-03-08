@@ -11,5 +11,5 @@
 bbb
 
 
- s        e   f
-bbbbbb  bbmbbbbb
+bs       e     b
+bbbbbbbbbbmbbbbbbb
