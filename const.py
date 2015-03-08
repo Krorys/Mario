@@ -1,9 +1,12 @@
-import pygame, sys
+import sys
+
+import pygame
 from pygame.locals import *
+
 
 pygame.init()
 
-#Init
+# Init
 clock = pygame.time.Clock()
 screenX, screenY = 516, 435
 screen = pygame.display.set_mode((screenX, screenY))
@@ -19,14 +22,22 @@ volume_default = 0.5
 volume = 5
 
 #Coordonnées
-menuCurseurList = [(195,160), (195,195), (195,230)]
-levelCurseurList = [(80,100), (270,100), (80,300), (270,300)]
+menuCurseurList = [(195, 160), (195, 195), (195, 230)]
+levelCurseurList = [(80, 100), (270, 100), (80, 300), (270, 300)]
 menuCurseurPos, levelCurseurPos = 0, 0
 
 #Images
 icon = pygame.image.load("images/icon.png")
-bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.png")), (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
-volume_images = [(pygame.image.load("images/vol0.jpg")), (pygame.image.load("images/vol1.jpg")), (pygame.image.load("images/vol2.jpg")), (pygame.image.load("images/vol3.jpg")),(pygame.image.load("images/vol4.jpg")), (pygame.image.load("images/vol5.jpg")), (pygame.image.load("images/vol6.jpg")), (pygame.image.load("images/vol7.jpg")), (pygame.image.load("images/vol8.jpg")), (pygame.image.load("images/vol9.jpg")), (pygame.image.load("images/vol10.jpg")), ]
+bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.png")),
+           (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
+volume_images = [(pygame.image.load("images/vol0.jpg")), (pygame.image.load("images/vol1.jpg")),
+                 (pygame.image.load("images/vol2.jpg")), (pygame.image.load("images/vol3.jpg")),
+                 (pygame.image.load("images/vol4.jpg")), (pygame.image.load("images/vol5.jpg")),
+                 (pygame.image.load("images/vol6.jpg")), (pygame.image.load("images/vol7.jpg")),
+                 (pygame.image.load("images/vol8.jpg")), (pygame.image.load("images/vol9.jpg")),
+                 (pygame.image.load("images/vol10.jpg")), ]
+volume_redsquare = pygame.image.load("images/vol red square.png")
+volume_bar = pygame.image.load("images/vol0.jpg")
 levelselection_bg = pygame.image.load("images/levelselection_bg.png")
 menuImage = pygame.image.load("images/menu.png")
 menuCurseurImage = pygame.image.load("images/curseur.png")
@@ -41,7 +52,8 @@ flag = pygame.image.load("images/flag.jpg")
 
 #Musiques/sons
 menu_music = pygame.mixer.Sound('sons/menu_music.wav')
-levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sound('sons/level2_music.wav')), (pygame.mixer.Sound('sons/level3_music.wav')), (pygame.mixer.Sound('sons/level4_music.wav'))]
+levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sound('sons/level2_music.wav')),
+                (pygame.mixer.Sound('sons/level3_music.wav')), (pygame.mixer.Sound('sons/level4_music.wav'))]
 jump_sound = pygame.mixer.Sound('sons/jump.wav')
 death_sound = pygame.mixer.Sound('sons/death.wav')
 
@@ -51,7 +63,7 @@ reset = 0
 
 #Init n°2
 pygame.display.set_icon(icon)
-screen.blit(menuImage, (0,0))
+screen.blit(menuImage, (0, 0))
 screen.blit(menuCurseurImage, menuCurseurList[0])
 menu_music.set_volume(volume_default)
 menu_music.play()

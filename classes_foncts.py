@@ -1,15 +1,16 @@
 import pygame
 from pygame.locals import *
+
 from const import *
 
 
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
-        screen.blit(volume_images[volume], (404,159))
-
-"""def volume_down(volume_default):
-    if volume_default > 0.05 and volume_default < 1.05:
-        volume_default -= 0.1"""
+        # screen.blit(volume_images[volume], (404,159))
+        screen.blit(volume_bar, (404, 159))
+        for x in range(0, volume):
+            coordX = 406 + 7 * x
+            screen.blit(volume_redsquare, (coordX, 161))
 
 
 def music_levels(levelCurrent, volume_default):
@@ -17,19 +18,23 @@ def music_levels(levelCurrent, volume_default):
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
 
+
 def music_menu(volume_default):
     pygame.mixer.stop()
     menu_music.set_volume(volume_default)
     menu_music.play()
 
+
 def jump_sound_play(volume_default):
     jump_sound.set_volume(volume_default)
     jump_sound.play()
+
 
 def death_sound_play(volume_default):
     pygame.mixer.stop()
     death_sound.set_volume(volume_default)
     death_sound.play()
+
 
 def level_selection_cons():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_bg, (0, 0))
@@ -38,6 +43,7 @@ def level_selection_cons():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_stage_1_3, (110, 300))
     screen.blit(levelselection_stage_1_4, (300, 300))
 
+
 def levelSelectionDraw():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_bg, (0, 0))
     screen.blit(levelselection_stage_1_1, (110, 100))
@@ -45,35 +51,42 @@ def levelSelectionDraw():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_stage_1_3, (110, 300))
     screen.blit(levelselection_stage_1_4, (300, 300))
 
+
 def doubleImage(image, mario):
-    if mario: imagex2 = pygame.transform.scale(image, (29, 50))
-    else: imagex2 = pygame.transform.scale2x(image) #Double la taille du Mario
+    if mario:
+        imagex2 = pygame.transform.scale(image, (29, 50))
+    else:
+        imagex2 = pygame.transform.scale2x(image)  # Double la taille du Mario
     return imagex2
+
 
 def choixMenu(event, pos):
     if event.type == KEYDOWN:
-        if event.key == K_DOWN and pos < 2: #On peut descendre qu'en étant en haut
+        if event.key == K_DOWN and pos < 2:  # On peut descendre qu'en étant en haut
             pos += 1
-        if event.key == K_UP and pos > 0: #Et inversement
+        if event.key == K_UP and pos > 0:  # Et inversement
             pos -= 1
     return pos
 
+
 def menuTo(pos):
     valeurs = [0, 0, 1]
-    valeurs[pos] = abs(valeurs[pos]-1) #si c'est à 0 -> 1, si c'est à 1->0
-    return valeurs #[levelSelection, optionsOn, continuer]
+    valeurs[pos] = abs(valeurs[pos] - 1)  # si c'est à 0 -> 1, si c'est à 1->0
+    return valeurs  # [levelSelection, optionsOn, continuer]
+
 
 def choixLevel(event, pos):
     if event.type == KEYDOWN:
         if event.key == K_DOWN and pos < 3:
-            pos = (pos+2)%4
+            pos = (pos + 2) % 4
         if event.key == K_UP and pos > 0:
-            pos = (pos-2)%4
+            pos = (pos - 2) % 4
         if event.key == K_LEFT:
-            pos = (pos-1)%4
+            pos = (pos - 1) % 4
         if event.key == K_RIGHT:
-            pos = (pos+1)%4
+            pos = (pos + 1) % 4
     return pos
+
 
 def jeuFonct(event, mario):
     if event.type == KEYDOWN:
@@ -91,12 +104,14 @@ def jeuFonct(event, mario):
         if event.key == K_UP:
             mario.duckOn = 0
 
+
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
         niveau.generer()
     else:
-        screen.blit(bg, (0,0))
+        screen.blit(bg, (0, 0))
         niveau.afficher(screen)
+
 
 class SpriteImage():
     sprite_image = None
@@ -107,12 +122,13 @@ class SpriteImage():
         self.mario = mario
 
     def get_imageXY(self, x, y, x2, y2):
-        largeur, hauteur = 1+x2-x, 1+y2-y
+        largeur, hauteur = 1 + x2 - x, 1 + y2 - y
         image = pygame.Surface([largeur, hauteur])
         image.blit(self.sprite_image, (0, 0), (x, y, largeur, hauteur))
         image.set_colorkey(self.couleur)
         imagex2 = doubleImage(image, self.mario)
         return imagex2
+
 
 class Mario(pygame.sprite.Sprite):
     def __init__(self, image):
@@ -170,19 +186,20 @@ class Mario(pygame.sprite.Sprite):
             if self.changeY > 0:
                 self.rect.bottom = block.rect.top
             elif self.changeY < 0:
-                pygame.key.set_repeat(0, 0) #Empeche de s'accrocher au mur si on maintient la touche de saut
+                pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
 
-        if self.rect.y >= screenY: #Si on tombe on meurt
+        if self.rect.y >= screenY:  # Si on tombe on meurt
             self.death()
 
     def grav(self):
-        if self.changeY == 0: #Si il est au sol
+        if self.changeY == 0:  # Si il est au sol
             self.changeY = 1
         else:
-            self.changeY += 0.35
+            if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                self.changeY += 0.35
 
     def goLeft(self):
         self.changeX = -3
@@ -197,67 +214,73 @@ class Mario(pygame.sprite.Sprite):
     def duck(self):
         if self.changeY == 0:
             self.changeX = 0
-            if self.lookat == "right": self.image = self.duck_r
-            else: self.image = self.duck_l
+            if self.lookat == "right":
+                self.image = self.duck_r
+            else:
+                self.image = self.duck_l
 
     def stop(self):
         self.changeX = 0
         self.stand = 0
 
     def direction(self):
-        if self.lookat == "right": #Si il regardre à droite
-            if self.changeY == 0: #Si il est au sol
-                if self.changeX == 0: #et si il ne bouge pas
+        if self.lookat == "right":  # Si il regardre à droite
+            if self.changeY == 0:  #Si il est au sol
+                if self.changeX == 0:  #et si il ne bouge pas
                     frame = (self.stand // 18) % len(self.stand_r)
                     self.image = self.stand_r[frame]
                     self.stand += 1
-                else: #Si il marche
+                else:  #Si il marche
                     frame = (self.rect.x // 30) % len(self.walk_r)
                     self.image = self.walk_r[frame]
-            else: #Si il est en l'air
-                if self.changeY >= 5: #Si Mario tombe
+            else:  #Si il est en l'air
+                if self.changeY >= 5:  #Si Mario tombe
                     self.image = self.jump_r[1]
-                else: #Si il saute
+                else:  #Si il saute
                     self.image = self.jump_r[0]
-        else: #Si il regarde à gauche
-            if self.changeY == 0: #Si il est au sol
-                if self.changeX == 0: #et si il ne bouge pas
+        else:  # Si il regarde à gauche
+            if self.changeY == 0:  #Si il est au sol
+                if self.changeX == 0:  #et si il ne bouge pas
                     frame = (self.stand // 18) % len(self.stand_l)
                     self.image = self.stand_l[frame]
                     self.stand += 1
-                else: #Si il marche
+                else:  #Si il marche
                     frame = (self.rect.x // 30) % len(self.walk_l)
                     self.image = self.walk_l[frame]
-            else: #Si il est en l'air
-                if self.changeY >= 5: #Si Mario tombe
+            else:  #Si il est en l'air
+                if self.changeY >= 5:  #Si Mario tombe
                     self.image = self.jump_l[1]
-                else: #Si il saute
+                else:  #Si il saute
                     self.image = self.jump_l[0]
 
     def jump(self):
         if len(block_list) == 0 or self.changeY == 0:
             self.rect.y -= 5
             self.changeY = -10
-            #volume_default = pygame.mixer.Sound.get_volume(menu_music)
+            # volume_default = pygame.mixer.Sound.get_volume(menu_music)
             #jump_sound_play(volume_default)
 
     def death(self):
         gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
         gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
         GOrect = gameOver.get_rect()
-        centerX = int((screenX/2)-GOrect.centerx)
-        centerY = int((screenY/2)-GOrect.centery)
+        centerX = int((screenX / 2) - GOrect.centerx)
+        centerY = int((screenY / 2) - GOrect.centery)
         volume_default = pygame.mixer.Sound.get_volume(menu_music)
         if self.time == 210: death_sound_play(volume_default)
         screen.blit(gameOver, (centerX, centerY))
-        if self.time > 0: self.time -= 1
-        else: self.reset = 1
+        if self.time > 0:
+            self.time -= 1
+        else:
+            self.reset = 1
 
     def kill(self, monster):
         pass
 
+
 class Monstres(Mario):
     pass
+
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, image):
@@ -269,12 +292,14 @@ class Block(pygame.sprite.Sprite):
         self.changeX = 0
         self.changeY = 0
 
+
 class Sol(Block):
     def __init__(self, image, x, y):
         Block.__init__(self, image)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
 
 class Niveau:
     def __init__(self, fichier):
