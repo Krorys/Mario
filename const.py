@@ -19,8 +19,8 @@ choix = "n1.txt"
 taille_sprite = 29
 on_level = 0
 block_list = pygame.sprite.Group()
-volume_default = 0.5
-volume = 5
+volume_default = 0.4
+volume = 4
 
 #Coordonnées
 menuCurseurList = [(195, 160), (195, 195), (195, 230)]

@@ -88,13 +88,13 @@ def choixLevel(event, pos):
     return pos
 
 
-def jeuFonct(event, mario, monstres):
+def monstresMovement(monstres):
     if monstres.direct == 1: #si direct = 1 le monstre va à droite
         monstres.goRight()
-        #monstres.switch()
     if monstres.direct == 0: #si direct = 0 le monstre ira à gauche
         monstres.goLeft()
-        #monstres.switch()
+
+def jeuFonct(event, mario):
     if event.type == KEYDOWN:
         if event.key == K_RIGHT:
             mario.goRight()
@@ -178,13 +178,14 @@ class Mario(pygame.sprite.Sprite):
         self.grav()
 
         self.rect.x += self.changeX
-
         block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
         for block in block_hit_list:
             if self.changeX > 0:
                 self.rect.right = block.rect.left
+                self.direct = 0
             elif self.changeX < 0:
                 self.rect.left = block.rect.right
+                self.direct = 1
 
         self.rect.y += self.changeY
 
@@ -197,9 +198,6 @@ class Mario(pygame.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
-
-        if self.rect.y >= screenY:  # Si on tombe on meurt
-            self.death()
 
     def grav(self):
         if self.changeY == 0:  # Si il est au sol
@@ -300,7 +298,8 @@ class Monstres(Mario):
                            spriteSheet.get_imageXY(168, 69, 184, 95)]
         self.jump_r = [spriteSheet.get_imageXY(1, 41, 17, 60),
                        spriteSheet.get_imageXY(1, 41, 17, 60)]
-        #self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
+        self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
+        self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
         self.changeX = 0
         self.changeY = 0
         self.image = image
@@ -308,30 +307,42 @@ class Monstres(Mario):
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = 300
-        self.timetime = 0
         self.test = self.rect.x
         self.direct = 1
 
     def goRight(self):
         self.changeX = 1
         self.lookat = "right"
-        self.duckOn = 0
 
     def goLeft(self):
-        self.changeX = -3
+        self.changeX = -1
         self.lookat = "left"
-        self.duckOn = 0
 
-    def switch(self): #Fonction sensée faire changer de direction (via direct) le goomba lors d'une collision mais ça marche pas
-        if pygame.sprite.collide_rect(monstres, block_list) and self.lookat == "right":
-            self.direct = 0
-            print("a")
-        if pygame.sprite.collide_rect(monstres, block_list) and self.lookat == "left":
-            self.direct = 1
-            print("b")
+    def update(self):
+        self.direction()
+        self.grav()
 
+        self.rect.x += self.changeX
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeX > 0:
+                self.direct = 0
+                self.rect.right = block.rect.left
+            elif self.changeX < 0:
+                self.direct = 1
+                self.rect.left = block.rect.right
 
+        self.rect.y += self.changeY
 
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeY > 0:
+                self.rect.bottom = block.rect.top
+            elif self.changeY < 0:
+                pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
+                self.rect.top = block.rect.bottom
+
+            self.changeY = 0
 
 
     def death(self):

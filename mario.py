@@ -70,7 +70,7 @@ while continuer:
             if event.type == KEYDOWN and event.key == K_RETURN:
                 menu, levelSelection, jeu, levelCurrent = 0, 0, 1, levelCurseurPos
         elif jeu:
-            jeuFonct(event, mario, monstres)
+            jeuFonct(event, mario)
     # Niveaux
     if jeu:
         choix = "n" + str(levelCurrent + 1) + ".txt"
@@ -93,14 +93,9 @@ while continuer:
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.update()
             block_list.draw(screen)
+            monstresMovement(monstres)
             active_sprite_list.update()
             active_sprite_list.draw(screen)
-            """if pygame.sprite.collide_rect(monstres, block_list) and monstres.lookat == "right":
-                monstres.direct = 0
-                print("a")
-            if pygame.sprite.collide_rect(monstres, block_list) and monstres.lookat == "left":
-                monstres.direct = 1
-                print("b")"""
 
         if (event.type == KEYDOWN and event.key == K_ESCAPE) or mario.reset == 1:
             block_list.empty()
