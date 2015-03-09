@@ -182,10 +182,8 @@ class Mario(pygame.sprite.Sprite):
         for block in block_hit_list:
             if self.changeX > 0:
                 self.rect.right = block.rect.left
-                self.direct = 0
             elif self.changeX < 0:
                 self.rect.left = block.rect.right
-                self.direct = 1
 
         self.rect.y += self.changeY
 
@@ -196,6 +194,9 @@ class Mario(pygame.sprite.Sprite):
             elif self.changeY < 0:
                 pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
                 self.rect.top = block.rect.bottom
+                block_list.remove(block)
+                volume_default = pygame.mixer.Sound.get_volume(menu_music)
+                bloc_break_sound.play()
 
             self.changeY = 0
 
@@ -345,8 +346,10 @@ class Monstres(Mario):
             self.changeY = 0
 
 
+
+
     def death(self):
-        pass
+        Mario.rect.y = 100
 
 
 

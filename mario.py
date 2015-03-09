@@ -71,7 +71,7 @@ while continuer:
                 menu, levelSelection, jeu, levelCurrent = 0, 0, 1, levelCurseurPos
         elif jeu:
             jeuFonct(event, mario)
-    # Niveaux
+
     if jeu:
         choix = "n" + str(levelCurrent + 1) + ".txt"
         if generation_level:
