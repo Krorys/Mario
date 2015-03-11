@@ -195,15 +195,30 @@ class Mario(pygame.sprite.Sprite):
             elif self.changeY < 0:
                 pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
                 self.rect.top = block.rect.bottom
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/master
                 if block == flag: #si le bloc est un flag on fait apparaître un champignon
                     print("yolo")
                 block_list.remove(block)
                 volume_default = pygame.mixer.Sound.get_volume(menu_music)
                 bloc_break_sound.set_volume(volume_default)
+<<<<<<< HEAD
+=======
+=======
+                block_list.remove(block)
+                volume_default = pygame.mixer.Sound.get_volume(menu_music)
+>>>>>>> origin/master
+>>>>>>> origin/master
                 bloc_break_sound.play()
 
             self.changeY = 0
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/master
         #print(monstres_list)
         monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
         for goomba in monstres_hit_list:
@@ -211,8 +226,14 @@ class Mario(pygame.sprite.Sprite):
                 #self.rect.bottom = goomba.rect.top  #***à rajouter pour marcher sur des ennemis***
                 self.yolo = 1
                 monstres_list.remove(goomba)
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/master
 
 
+=======
+>>>>>>> origin/master
     def grav(self):
         if self.changeY == 0:  # Si il est au sol
             self.changeY = 1
@@ -323,9 +344,18 @@ class Monstres(Mario):
         self.rect.y = 300
         self.test = self.rect.x
         self.direct = 1
+<<<<<<< HEAD
         self.yes = 1
         self.yolo = 1
         monstres_list.add(self)
+=======
+<<<<<<< HEAD
+        self.yes = 1
+        self.yolo = 1
+        monstres_list.add(self)
+=======
+>>>>>>> origin/master
+>>>>>>> origin/master
 
     def goRight(self):
         self.changeX = 1
@@ -361,6 +391,15 @@ class Monstres(Mario):
 
             self.changeY = 0
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> origin/master
+>>>>>>> origin/master
     def death(self):
         Mario.rect.y = 100
 
