@@ -3,7 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 
-
+pygame.mixer.pre_init(frequency=22050, size=-16, channels=8, buffer=256)
 pygame.init()
 
 # Init
@@ -14,12 +14,16 @@ pygame.display.set_caption("Mariolike")
 orange = (255, 128, 64)
 vertFond = (166, 177, 65)
 noirFond = (0, 4, 0)
+blancFond = (255, 255, 255)
 choix = "n1.txt"
 taille_sprite = 29
 on_level = 0
 block_list = pygame.sprite.Group()
-volume_default = 0.5
-volume = 5
+monstres_list = pygame.sprite.Group()
+volume_default = 0.3
+volume = 3
+willDie = 0
+yolo = 1
 
 #Coordonnées
 menuCurseurList = [(195, 160), (195, 195), (195, 230)]
@@ -56,6 +60,7 @@ levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sou
                 (pygame.mixer.Sound('sons/level3_music.wav')), (pygame.mixer.Sound('sons/level4_music.wav'))]
 jump_sound = pygame.mixer.Sound('sons/jump.wav')
 death_sound = pygame.mixer.Sound('sons/death.wav')
+bloc_break_sound = pygame.mixer.Sound('sons/bloc_break.wav')
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
