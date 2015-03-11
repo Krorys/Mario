@@ -28,10 +28,6 @@ while continuer:
     for event in pygame.event.get():
         if event.type == QUIT:
             continuer = 0
-        if mario.yolo == 1:
-            active_sprite_list.remove(monstres)
-            active_sprite_list.update()
-            mario.yolo = 0
         if menu:
             screen.blit(menuImage, (0, 0))
             menuCurseurPos = choixMenu(event, menuCurseurPos)
@@ -93,7 +89,20 @@ while continuer:
             active_sprite_list.draw(screen)
             mario.death()
 
-        if mario.time == 210:
+        if mario.killEnnemy == 1:
+            active_sprite_list.remove(monstres)
+            active_sprite_list.update()
+            monstres.update()
+            mario.rect.y -= 5
+            mario.changeY = -5
+            mario.update()
+            volume_default = pygame.mixer.Sound.get_volume(menu_music)
+            goomba_stomp.set_volume(volume_default)
+            goomba_stomp.play()
+            mario.killEnnemy = 0
+            respawn = 1
+
+        if mario.time == 210: #Tant que Mario n'est pas mouru
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.update()
             block_list.draw(screen)
@@ -112,8 +121,10 @@ while continuer:
             pygame.key.set_repeat(0, 0)
             mario.reset = 0
             mario.time = 210
-            monstres = Monstres(monstresStand)
-            active_sprite_list.add(monstres)
+            if respawn == 1:
+                monstres = Monstres(monstresStand)
+                active_sprite_list.add(monstres)
+                respawn = 0
 
     clock.tick(60)
     pygame.display.flip()

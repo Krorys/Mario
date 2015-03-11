@@ -36,14 +36,6 @@ def death_sound_play(volume_default):
     death_sound.play()
 
 
-def level_selection_cons():  # Fonction qui re-dessine levelselection
-    screen.blit(levelselection_bg, (0, 0))
-    screen.blit(levelselection_stage_1_1, (110, 100))
-    screen.blit(levelselection_stage_1_2, (300, 100))
-    screen.blit(levelselection_stage_1_3, (110, 300))
-    screen.blit(levelselection_stage_1_4, (300, 300))
-
-
 def levelSelectionDraw():  # Fonction qui re-dessine levelselection
     screen.blit(levelselection_bg, (0, 0))
     screen.blit(levelselection_stage_1_1, (110, 100))
@@ -171,7 +163,7 @@ class Mario(pygame.sprite.Sprite):
         self.reset = 0
         self.time = 210
         self.hp = 3
-        self.yolo = 0
+        self.killEnnemy = 0
 
     def update(self):
         self.direction()
@@ -195,7 +187,7 @@ class Mario(pygame.sprite.Sprite):
             elif self.changeY < 0:
                 pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
                 self.rect.top = block.rect.bottom
-                if block == flag: #si le bloc est un flag on fait apparaître un champignon
+                if block == flag: #si le bloc est un flag on fait apparaître un champignon (marche pas)
                     print("yolo")
                 block_list.remove(block)
                 volume_default = pygame.mixer.Sound.get_volume(menu_music)
@@ -208,8 +200,8 @@ class Mario(pygame.sprite.Sprite):
         monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
         for goomba in monstres_hit_list:
             if self.changeY > 0:
-                #self.rect.bottom = goomba.rect.top  #***à rajouter pour marcher sur des ennemis***
-                self.yolo = 1
+                #self.rect.bottom = goomba.rect.top  #(à rajouter pour marcher sur les ennemis)
+                self.killEnnemy = 1
                 monstres_list.remove(goomba)
 
 
@@ -218,7 +210,7 @@ class Mario(pygame.sprite.Sprite):
             self.changeY = 1
         else:
             if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
-                self.changeY += 0.35
+                self.changeY += 0.40
 
     def goLeft(self):
         self.changeX = -3
@@ -323,8 +315,6 @@ class Monstres(Mario):
         self.rect.y = 300
         self.test = self.rect.x
         self.direct = 1
-        self.yes = 1
-        self.yolo = 1
         monstres_list.add(self)
 
     def goRight(self):

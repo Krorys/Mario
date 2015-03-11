@@ -22,8 +22,8 @@ block_list = pygame.sprite.Group()
 monstres_list = pygame.sprite.Group()
 volume_default = 0.3
 volume = 3
-willDie = 0
-yolo = 1
+willDie = 0 #Sensé se mettre à 1 seulement si collision horizontale avec goomba le fdp OU sensé s'annuler lors d'une collision verticale (faudra choisir l'un ou l'autre).
+respawn = 0
 
 #Coordonnées
 menuCurseurList = [(195, 160), (195, 195), (195, 230)]
@@ -34,12 +34,6 @@ menuCurseurPos, levelCurseurPos = 0, 0
 icon = pygame.image.load("images/icon.png")
 bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.png")),
            (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
-volume_images = [(pygame.image.load("images/vol0.jpg")), (pygame.image.load("images/vol1.jpg")),
-                 (pygame.image.load("images/vol2.jpg")), (pygame.image.load("images/vol3.jpg")),
-                 (pygame.image.load("images/vol4.jpg")), (pygame.image.load("images/vol5.jpg")),
-                 (pygame.image.load("images/vol6.jpg")), (pygame.image.load("images/vol7.jpg")),
-                 (pygame.image.load("images/vol8.jpg")), (pygame.image.load("images/vol9.jpg")),
-                 (pygame.image.load("images/vol10.jpg")), ]
 volume_redsquare = pygame.image.load("images/vol red square.png")
 volume_bar = pygame.image.load("images/vol0.jpg")
 levelselection_bg = pygame.image.load("images/levelselection_bg.png")
@@ -61,6 +55,7 @@ levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sou
 jump_sound = pygame.mixer.Sound('sons/jump.wav')
 death_sound = pygame.mixer.Sound('sons/death.wav')
 bloc_break_sound = pygame.mixer.Sound('sons/bloc_break.wav')
+goomba_stomp = pygame.mixer.Sound('sons/goomba_stomp.wav')
 
 #Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
