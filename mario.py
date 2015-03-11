@@ -87,7 +87,11 @@ while continuer:
             niveau.afficher(screen)
             generation_level = 0
 
+<<<<<<< HEAD
         if ((pygame.sprite.collide_rect(mario, monstres)) and willDie == 1) or (mario.rect.y >= screenY) :
+=======
+        if (pygame.sprite.collide_rect(mario, monstres)) or (mario.rect.y >= screenY):
+>>>>>>> origin/master
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.draw(screen)
             active_sprite_list.draw(screen)
