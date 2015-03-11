@@ -19,22 +19,11 @@ choix = "n1.txt"
 taille_sprite = 29
 on_level = 0
 block_list = pygame.sprite.Group()
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> origin/master
 monstres_list = pygame.sprite.Group()
 volume_default = 0.3
 volume = 3
 willDie = 0
 yolo = 1
-<<<<<<< HEAD
-=======
-=======
-volume_default = 0.3
-volume = 3
->>>>>>> origin/master
->>>>>>> origin/master
 
 #Coordonnées
 menuCurseurList = [(195, 160), (195, 195), (195, 230)]
