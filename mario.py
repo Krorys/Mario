@@ -83,7 +83,7 @@ while continuer:
             niveau.afficher(screen)
             generation_level = 0
 
-        if ((pygame.sprite.collide_rect(mario, monstres)) and willDie == 1) or (mario.rect.y >= screenY) :
+        if ((pygame.sprite.collide_rect(mario, monstres)) and mario.willDie == 1) or (mario.rect.y >= screenY) :
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.draw(screen)
             active_sprite_list.draw(screen)
@@ -100,7 +100,7 @@ while continuer:
             goomba_stomp.set_volume(volume_default)
             goomba_stomp.play()
             mario.killEnnemy = 0
-            respawn = 1
+            willRespawn = 1
 
         if mario.time == 210: #Tant que Mario n'est pas mouru
             screen.blit(bg_list[levelCurrent], (0, 0))
@@ -121,10 +121,10 @@ while continuer:
             pygame.key.set_repeat(0, 0)
             mario.reset = 0
             mario.time = 210
-            if respawn == 1:
+            if willRespawn == 1:
                 monstres = Monstres(monstresStand)
                 active_sprite_list.add(monstres)
-                respawn = 0
+                willRespawn = 0
 
     clock.tick(60)
     pygame.display.flip()

@@ -164,6 +164,7 @@ class Mario(pygame.sprite.Sprite):
         self.time = 210
         self.hp = 3
         self.killEnnemy = 0
+        self.willDie = 0
 
     def update(self):
         self.direction()
@@ -196,13 +197,15 @@ class Mario(pygame.sprite.Sprite):
 
             self.changeY = 0
 
-        #print(monstres_list)
         monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
         for goomba in monstres_hit_list:
             if self.changeY > 0:
                 #self.rect.bottom = goomba.rect.top  #(à rajouter pour marcher sur les ennemis)
                 self.killEnnemy = 1
                 monstres_list.remove(goomba)
+            """if self.changeX > 0 or self.changeX < 0 or self.changeY < 0: #Si collision par en bas, à gauche ou à droite -> Mario meurt
+                self.willDie = 1 #Problème, les lignes verticales tout à droite et tout à gauche comptent comme une collision qui tue car elles atteignent le rect.top
+                                 # -> sauter dessus nous tue"""
 
 
     def grav(self):
@@ -304,6 +307,7 @@ class Monstres(Mario):
                            spriteSheet.get_imageXY(168, 69, 184, 95)]
         self.jump_r = [spriteSheet.get_imageXY(1, 41, 17, 60),
                        spriteSheet.get_imageXY(1, 41, 17, 60)]
+        self.stomp = spriteSheet.get_imageXY(157, 87, 182, 94)
         self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
         self.changeX = 0
