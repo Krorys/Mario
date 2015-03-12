@@ -14,12 +14,15 @@ pygame.display.set_caption("Mariolike")
 vertFond = (166, 177, 65)
 noirFond = (0, 4, 0)
 blancFond = (255, 255, 255)
-choix = "n1.txt"
 taille_sprite = 29
 block_list = pygame.sprite.Group()
+block_list_special = pygame.sprite.Group()
+block_list_used = pygame.sprite.Group()
 monstres_list = pygame.sprite.Group()
+item_list = pygame.sprite.Group()
 volume_default = 0.3
 volume = 3
+x, y = 0, 0
 #time_ennemyDestroy = 60
 
 # Coordonnées
@@ -42,6 +45,7 @@ levelselection_stage_1_2 = pygame.image.load("images/levelselection_stage_1_2.pn
 levelselection_stage_1_3 = pygame.image.load("images/levelselection_stage_1_3.png")
 levelselection_stage_1_4 = pygame.image.load("images/levelselection_stage_1_4.png")
 bloc = pygame.image.load("images/bloc.jpg")
+bloc_used = pygame.image.load("images/bloc_used.jpg")
 mushroom = pygame.image.load("images/mushroom.jpg")
 flag = pygame.image.load("images/flag.jpg")
 
@@ -52,7 +56,9 @@ levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sou
 jump_sound = pygame.mixer.Sound('sons/jump.wav')
 death_sound = pygame.mixer.Sound('sons/death.wav')
 bloc_break_sound = pygame.mixer.Sound('sons/bloc_break.wav')
+bloc_item_sound = pygame.mixer.Sound('sons/bloc_item.wav')
 goomba_stomp = pygame.mixer.Sound('sons/goomba_stomp.wav')
+item_sound = pygame.mixer.Sound('sons/item_pick_sound.wav')
 
 # Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
