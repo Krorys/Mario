@@ -10,22 +10,15 @@ from classes_foncts import *
 
 
 # Sprites
-marioSprite = SpriteImage("images/mario sheet.png", vertFond, 1)
-goombaSprite = SpriteImage("images/goomba sheet.png", blancFond, 1)
-itemSprite = SpriteImage("images/item_sheet.png", blancFond, 1)
-marioStand = marioSprite.get_imageXY(72, 5, 87, 31)
-monstresStand = goombaSprite.get_imageXY(72, 5, 87, 31)
+goombaSprite = SpriteImage("images/goomba sheet.png", blancFond, 0)
+itemSprite = SpriteImage("images/item_sheet.png", blancFond, 0)
+monstresStand = goombaSprite.get_imageXY(1, 41, 17, 59)
 mushroomStand = itemSprite.get_imageXY(1, 43, 16, 58)
-mario = Mario(marioStand)
-monstres = Monstres(monstresStand)
 mushroom = Item(mushroomStand)
 
 gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
 gameOver = gameOverSprite.get_imageXY(5, 7, 260, 230)
 
-active_sprite_list = pygame.sprite.Group()
-active_sprite_list.add(mario)
-active_sprite_list.add(monstres)
 #active_sprite_list.add(mushroom)
 
 while continuer:
@@ -74,7 +67,7 @@ while continuer:
             if event.type == KEYDOWN and event.key == K_RETURN:
                 menu, levelSelection, jeu, levelCurrent = 0, 0, 1, levelCurseurPos
         elif jeu:
-            jeuFonct(event, mario)
+            jeuFonct(event, niveau.mario)
 
     if jeu:
         choix = "n" + str(levelCurrent + 1) + ".txt"
@@ -87,14 +80,7 @@ while continuer:
             niveau.afficher(screen)
             generation_level = 0
 
-        if ((pygame.sprite.collide_rect(mario, monstres)) and mario.willDie == 1) or (mario.rect.y >= screenY) :
-            screen.blit(bg_list[levelCurrent], (0, 0))
-            block_list.draw(screen)
-            block_list_special.draw(screen)
-            active_sprite_list.draw(screen)
-            mario.death()
-
-        if mario.mush == 1:
+        """if mario.mush == 1:
             mushroom = Item(mushroomStand)
             active_sprite_list.add(mushroom)
             mushroom.rect.y = mario.rect.y - 80
@@ -108,51 +94,23 @@ while continuer:
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
             item_sound.set_volume(volume_default)
             item_sound.play()
-            mario.pick = 0
+            mario.pick = 0"""
 
-        if mario.killEnnemy == 1:
-            active_sprite_list.remove(monstres)
-            active_sprite_list.update()
-            monstres.update()
-            mario.rect.y -= 5
-            mario.changeY = -5
-            mario.update()
-            volume_default = pygame.mixer.Sound.get_volume(menu_music)
-            goomba_stomp.set_volume(volume_default)
-            goomba_stomp.play()
-            mario.killEnnemy = 0
-            willRespawn = 1
-
-        if mario.time == 210: #Tant que Mario n'est pas mouru
+        if niveau.mario.time == 210: #Tant que Mario n'est pas mouru
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.update()
-            block_list_special.update()
-            block_list_used.update()
             block_list.draw(screen)
-            block_list_special.draw(screen)
-            block_list_used.draw(screen)
-            monstresMovement(monstres, mushroom)
-            active_sprite_list.update()
             active_sprite_list.draw(screen)
+            monstresMovement(monstres_list, mushroom)
+            active_sprite_list.update()
+        else:
+            if niveau.mario.time > 0:
+                niveau.mario.time -= 1
+            if niveau.mario.time == 0:
+                niveau.mario.reset = 1
 
-        if (event.type == KEYDOWN and event.key == K_ESCAPE) or mario.reset == 1:
-            block_list.empty()
-            block_list_special.empty()
-            block_list_used.empty()
-            active_sprite_list.remove(mushroom)
-            levelSelectionDraw()
-            screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
-            music_menu(volume_default)
-            mario.rect.x, mario.rect.y = 0, 0
-            monstres.rect.x, monstres.rect.y = 100, 300
-            jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
-            pygame.key.set_repeat(0, 0)
-            mario.reset, mario.time = 0, 210
-            monstres.direct, mushroom.direct = 1, 1
-            if willRespawn == 1:
-                monstres = Monstres(monstresStand)
-                active_sprite_list.add(monstres)
-                willRespawn = 0
+        if (event.type == KEYDOWN and event.key == K_ESCAPE) or niveau.mario.reset == 1:
+            jeu, levelSelection, levelCurrent, generation_level = niveau.reset(jeu, levelSelection, levelCurrent, generation_level)
 
     clock.tick(60)
     pygame.display.flip()
