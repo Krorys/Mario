@@ -1,4 +1,4 @@
-             bb
+e            bb
             b b
             b b
             bbbb
@@ -6,10 +6,10 @@
 
 
 
-    g
+    g      
     
 
 
 bbbbbbbbbbbbbbb
- s        e   f
+ s            f
 mmmmmmmmmmmmmmmmm
