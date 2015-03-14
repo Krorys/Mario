@@ -1,25 +1,4 @@
-__author__ = 'Chèvre'
-
-import sys
-
-import pygame
-from pygame.locals import *
-
-from const import *
-from classes_foncts import *
-
-
-# Sprites
-goombaSprite = SpriteImage("images/goomba sheet.png", blancFond, 0)
-itemSprite = SpriteImage("images/item_sheet.png", blancFond, 0)
-monstresStand = goombaSprite.get_imageXY(1, 41, 17, 59)
-mushroomStand = itemSprite.get_imageXY(1, 43, 16, 58)
-mushroom = Item(mushroomStand)
-
-gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
-gameOver = gameOverSprite.get_imageXY(5, 7, 260, 230)
-
-#active_sprite_list.add(mushroom)
+from classes import *
 
 while continuer:
     for event in pygame.event.get():
@@ -28,7 +7,7 @@ while continuer:
         if menu:
             screen.blit(menuImage, (0, 0))
             menuCurseurPos = choixMenu(event, menuCurseurPos)
-            screen.blit(menuCurseurImage, menuCurseurList[menuCurseurPos])
+            screen.blit(menuCurseurImage, menu_Curseur_Coord[menuCurseurPos])
             if event.type == KEYDOWN and event.key == K_RETURN:
                 levelSelection, optionsOn, continuer = menuTo(menuCurseurPos)
                 menu = 0
@@ -61,7 +40,7 @@ while continuer:
         elif levelSelection:
             levelSelectionDraw()
             levelCurseurPos = choixLevel(event, levelCurseurPos)
-            screen.blit(menuCurseurImage, levelCurseurList[levelCurseurPos])
+            screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 menu, levelSelection = 1, 0
             if event.type == KEYDOWN and event.key == K_RETURN:
@@ -101,7 +80,7 @@ while continuer:
             block_list.update()
             block_list.draw(screen)
             active_sprite_list.draw(screen)
-            monstresMovement(monstres_list, mushroom)
+            nomarioMovement(monstres_list)
             active_sprite_list.update()
         else:
             if niveau.mario.time > 0:
@@ -110,7 +89,7 @@ while continuer:
                 niveau.mario.reset = 1
 
         if (event.type == KEYDOWN and event.key == K_ESCAPE) or niveau.mario.reset == 1:
-            jeu, levelSelection, levelCurrent, generation_level = niveau.reset(jeu, levelSelection, levelCurrent, generation_level)
+            jeu, levelSelection, levelCurrent, generation_level = niveau.reset(levelCurseurPos)
 
     clock.tick(60)
     pygame.display.flip()
