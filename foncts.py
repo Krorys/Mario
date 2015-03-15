@@ -1,5 +1,23 @@
 from const import *
 
+def volume_down(volume_default, volume):
+    pygame.mixer.pause()
+    if volume_default > 0.05 and volume_default < 1.05:
+        volume_default -= 0.1
+    if volume > 0 and volume < 11:
+        volume -= 1
+    return (volume_default, volume)
+
+
+def volume_up(volume_default, volume):
+    pygame.mixer.pause()
+    if volume_default > -0.5 and volume_default < 0.95:
+        volume_default += 0.1
+    if volume > -1 and volume < 10:
+        volume += 1
+    return (volume_default, volume)
+
+
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
         # screen.blit(volume_images[volume], (404,159))
@@ -21,9 +39,28 @@ def music_menu(volume_default):
     menu_music.play()
 
 
-def jump_sound_play(volume_default):
+def jump_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
     jump_sound.set_volume(volume_default)
     jump_sound.play()
+
+
+def upgrade_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    upgrade_sound.set_volume(volume_default)
+    upgrade_sound.play()
+
+
+def goomba_stomp_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    goomba_stomp_sound.set_volume(volume_default)
+    goomba_stomp_sound.play()
+
+
+def item_block_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    bloc_item_sound.set_volume(volume_default)
+    bloc_item_sound.play()
 
 
 def death_sound_play(volume_default):
@@ -75,14 +112,21 @@ def choixLevel(event, pos):
     return pos
 
 
-def nomarioMovement(monstres_list):
+def nomarioMovement(monstres_list, item_list):
     for monstres in monstres_list:
-        if monstres.direct == 1: #si direct = 1 le monstre va à droite
+        if monstres.direct == 1: #direct = 1 -> droite
             monstres.goRight()
-        if monstres.direct == 0: #si direct = 0 le monstre ira à gauche
+        if monstres.direct == 0: #direct = 0 -> gauche
             monstres.goLeft()
         if monstres.direct == 2:
             monstres.stop()
+    for item in item_list:
+        if item.direct == 1:
+            item.goRight()
+        if item.direct == 0:
+            item.goLeft()
+        if item.direct == 2:
+            item.stop()
 
 
 def jeuFonct(event, mario):

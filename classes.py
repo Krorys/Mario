@@ -21,6 +21,7 @@ class Mario(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
         spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+        self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
         self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
                        spriteSheet.get_imageXY(104, 36, 120, 62),
                        spriteSheet.get_imageXY(136, 37, 151, 63),
@@ -58,6 +59,7 @@ class Mario(pygame.sprite.Sprite):
         self.mush = 0
         self.killed = None
         self.deadOn = 0
+        self.upgraded = 0
 
     def update(self):
         if self.deadOn == 0:
@@ -82,8 +84,9 @@ class Mario(pygame.sprite.Sprite):
             for block in block_hit_list:
                 if self.changeY > 0:
                     self.rect.bottom = block.rect.top
+                    if block.deadly == 1:
+                        self.death()
                 elif self.changeY < 0:
-                    pygame.key.set_repeat(0, 0)  # Empêche accrochage au mur si on maintient saut
                     self.rect.top = block.rect.bottom
                     if block.item_activation == 0 and block.used == 0:
                         block_list.remove(block)
@@ -91,28 +94,36 @@ class Mario(pygame.sprite.Sprite):
                         bloc_break_sound.set_volume(volume_default)
                         bloc_break_sound.play()
                     elif block.item_activation == 1:
-                        block.image = pygame.image.load("images/bloc_used.jpg")
-                        volume_default = pygame.mixer.Sound.get_volume(menu_music)
-                        bloc_item_sound.set_volume(volume_default)
-                        bloc_item_sound.play()
-                        #self.mush = 1
+                        mushroomStand = self.itemSheet.get_imageXY(163, 43, 178, 58)
+                        mushroom = Item(mushroomStand)
+                        mushroom.mush = 1
+                        active_sprite_list.add(mushroom)
+                        mushroom.rect.y = self.rect.y - 80
+                        mushroom.rect.x = self.rect.x
+                        block.image = pygame.image.load("images/usedBlock.jpg")
+                        item_block_play()
                         block.item_activation = 0
                         block.used = 1
+
                 self.changeY = 0
 
             item_hit_list = pygame.sprite.spritecollide(self, item_list, False)                        #Collisions items
             for item in item_hit_list:
-                #self.pick = 1
-                item_list.remove(item)
+                if item.mush == 1 and self.upgraded == 1:
+                    print("Overdose de champignon!")
+                if item.mush == 1:
+                    item_list.remove(item)
+                    active_sprite_list.remove(item)
+                    upgrade_sound_play()
+                    self.upgraded = 1
+
 
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
             for goomba in monstres_hit_list:
                 if self.changeY > 0:
                     self.rect.y -= 5
                     self.changeY = -5
-                    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-                    goomba_stomp_sound.set_volume(volume_default)
-                    goomba_stomp_sound.play()
+                    goomba_stomp_play()
                     monstres_list.remove(goomba)
                     active_sprite_list.remove(goomba)
                 else:
@@ -152,43 +163,42 @@ class Mario(pygame.sprite.Sprite):
         self.stand = 0
 
     def direction(self):
-        if self.lookat == "right":  # Si il regardre à droite
-            if self.changeY == 0:  #Si il est au sol
-                if self.changeX == 0:  #et si il ne bouge pas
-                    if self not in monstres_list:
-                        frame = (self.stand // 18) % len(self.stand_r)
-                        self.image = self.stand_r[frame]
-                        self.stand += 1
-                else:  #Si il marche
-                    frame = (self.rect.x // 30) % len(self.walk_r)
-                    self.image = self.walk_r[frame]
-            else:  #Si il est en l'air
-                if self.changeY >= 5:  #Si Mario tombe
-                    self.image = self.jump_r[1]
-                else:  #Si il saute
-                    self.image = self.jump_r[0]
-        else:  # Si il regarde à gauche
-            if self.changeY == 0:  #Si il est au sol
-                if self.changeX == 0:  #et si il ne bouge pas
-                    if self not in monstres_list:
-                        frame = (self.stand // 18) % len(self.stand_l)
-                        self.image = self.stand_l[frame]
-                        self.stand += 1
-                else:  #Si il marche
-                    frame = (self.rect.x // 30) % len(self.walk_l)
-                    self.image = self.walk_l[frame]
-            else:  #Si il est en l'air
-                if self.changeY >= 5:  #Si Mario tombe
-                    self.image = self.jump_l[1]
-                else:  #Si il saute
-                    self.image = self.jump_l[0]
+            if self.lookat == "right":  # Si il regardre à droite
+                if self.changeY == 0:  #Si il est au sol
+                    if self.changeX == 0:  #et si il ne bouge pas
+                        if self not in monstres_list:
+                            frame = (self.stand // 18) % len(self.stand_r)
+                            self.image = self.stand_r[frame]
+                            self.stand += 1
+                    else:  #Si il marche
+                        frame = (self.rect.x // 30) % len(self.walk_r)
+                        self.image = self.walk_r[frame]
+                else:  #Si il est en l'air
+                    if self.changeY >= 5:  #Si Mario tombe
+                        self.image = self.jump_r[1]
+                    else:  #Si il saute
+                        self.image = self.jump_r[0]
+            else:  # Si il regarde à gauche
+                if self.changeY == 0:  #Si il est au sol
+                    if self.changeX == 0:  #et si il ne bouge pas
+                        if self not in monstres_list:
+                            frame = (self.stand // 18) % len(self.stand_l)
+                            self.image = self.stand_l[frame]
+                            self.stand += 1
+                    else:  #Si il marche
+                        frame = (self.rect.x // 30) % len(self.walk_l)
+                        self.image = self.walk_l[frame]
+                else:  #Si il est en l'air
+                    if self.changeY >= 5:  #Si Mario tombe
+                        self.image = self.jump_l[1]
+                    else:  #Si il saute
+                        self.image = self.jump_l[0]
 
     def jump(self):
         if len(block_list) == 0 or self.changeY == 0:
             self.rect.y -= 5
             self.changeY = -10
-            volume_default = pygame.mixer.Sound.get_volume(menu_music)
-            jump_sound_play(volume_default)
+            jump_sound_play()
 
     def death(self):
         self.image = self.dead
@@ -231,6 +241,7 @@ class Monstres(Mario):
         self.rect.x = 100
         self.rect.y = 300
         self.direct = 1
+        self.nodirection = 0
 
     def goRight(self):
         self.changeX = 1
@@ -241,7 +252,8 @@ class Monstres(Mario):
         self.lookat = "left"
 
     def update(self):
-        self.direction()
+        if self.nodirection == 0:
+            self.direction()
         self.grav()
 
         self.rect.x += self.changeX
@@ -261,13 +273,9 @@ class Monstres(Mario):
             if self.changeY > 0:
                 self.rect.bottom = block.rect.top
             elif self.changeY < 0:
-                pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
-
-    def death(self):
-        Mario.rect.y = 100
 
 
 class Item(Monstres):
@@ -281,33 +289,9 @@ class Item(Monstres):
         self.rect.x = -100
         self.rect.y = -100
         self.direct = 1
+        self.mush = 0
+        self.nodirection = 1
         item_list.add(self)
-
-    def update(self):
-        self.grav()
-
-        self.rect.x += self.changeX
-
-        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
-        for block in block_hit_list:
-            if self.changeX > 0:
-                self.direct = 0
-                self.rect.right = block.rect.left
-            elif self.changeX < 0:
-                self.direct = 1
-                self.rect.left = block.rect.right
-
-        self.rect.y += self.changeY
-
-
-        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
-        for block in block_hit_list:
-            if self.changeY > 0:
-                self.rect.bottom = block.rect.top
-            elif self.changeY < 0:
-                pygame.key.set_repeat(0, 0)  # Empeche de s'accrocher au mur si on maintient la touche de saut
-                self.rect.top = block.rect.bottom
-            self.changeY = 0
 
 
 class Block(pygame.sprite.Sprite):
@@ -321,6 +305,7 @@ class Block(pygame.sprite.Sprite):
         self.changeY = 0
         self.item_activation = 0
         self.used = 0
+        self.deadly = 0
 
 
 class Sol(Block):
@@ -362,25 +347,32 @@ class Niveau:
                 y = num_ligne * taille_sprite
 
                 if sprite == 'b':
-                    mur = Sol("images/bloc.jpg", x, y)
-                    block_list.add(mur)
+                    Block = Sol("images/Block.jpg", x, y)
+                    block_list.add(Block)
 
-                elif sprite == 'm':
-                    mush = Sol("images/flag.jpg", x, y)
-                    block_list.add(mush)
+                elif sprite == 'x':
+                    xBlock = Sol("images/xBlock.jpg", x, y)
+                    block_list.add(xBlock)
 
-                elif sprite == 'f':
-                    flag = Sol("images/item_block.jpg", x, y)
-                    flag.item_activation = 1
-                    block_list.add(flag)
+                elif sprite == 'i':
+                    itemBlock = Sol("images/itemBlock.jpg", x, y)
+                    itemBlock.item_activation = 1
+                    block_list.add(itemBlock)
+
+                elif sprite == 'l':
+                    lavaBlock = Sol("images/lavaBlock.jpg", x, y)
+                    lavaBlock.deadly = 1
+                    block_list.add(lavaBlock)
 
                 elif sprite == 'g':
                     goombaStand = self.goombaSheet.get_imageXY(1, 41, 17, 59)
                     goomba = Monstres(goombaStand)
+                    goomba.rect.x = x
+                    goomba.rect.y = y
                     monstres_list.add(goomba)
                     active_sprite_list.add(goomba)
 
-                elif sprite == 'e':
+                elif sprite == 'm':
                     self.mario.rect.x = x
                     self.mario.rect.y = y
                     active_sprite_list.add(self.mario)
@@ -395,7 +387,6 @@ class Niveau:
         levelSelectionDraw()
         screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
         music_menu(volume_default)
-        #self.mario.rect.x, self.mario.rect.y = 0, 0
         jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
         pygame.key.set_repeat(0, 0)
         self.mario.reset, self.mario.time = 0, 210

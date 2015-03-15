@@ -48,7 +48,7 @@ death_sound = pygame.mixer.Sound('sons/death.wav')
 bloc_break_sound = pygame.mixer.Sound('sons/bloc_break.wav')
 bloc_item_sound = pygame.mixer.Sound('sons/bloc_item.wav')
 goomba_stomp_sound = pygame.mixer.Sound('sons/goomba_stomp.wav')
-item_sound = pygame.mixer.Sound('sons/item_pick_sound.wav')
+upgrade_sound = pygame.mixer.Sound('sons/item_pick_sound.wav')
 
 
 # Variables

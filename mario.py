@@ -16,22 +16,14 @@ while continuer:
             affichage_volume(volume)
             if event.type == KEYDOWN and event.key == K_RETURN:
                 menu, optionsOn = 1, 0
-            if event.type == KEYDOWN and event.key == K_LEFT:  # baisser le son
-                pygame.mixer.pause()
-                if volume_default > 0.05 and volume_default < 1.05:
-                    volume_default -= 0.1
-                if volume > 0 and volume < 11:
-                    volume -= 1
+            if event.type == KEYDOWN and event.key == K_LEFT:  # Baisser le son
+                volume_default, volume = volume_down(volume_default, volume)
                 affichage_volume(volume)
                 menu_music.set_volume(volume_default)
                 pygame.mixer.unpause()
                 break
-            if event.type == KEYDOWN and event.key == K_RIGHT:
-                pygame.mixer.pause()
-                if volume_default > -0.5 and volume_default < 0.95:
-                    volume_default += 0.1
-                if volume > -1 and volume < 10:
-                    volume += 1
+            if event.type == KEYDOWN and event.key == K_RIGHT: # Augmenter le son
+                volume_default, volume = volume_up(volume_default, volume)
                 affichage_volume(volume)
                 menu_music.set_volume(volume_default)
                 pygame.mixer.unpause()
@@ -51,7 +43,7 @@ while continuer:
     if jeu:
         choix = "n" + str(levelCurrent + 1) + ".txt"
         if generation_level:
-            pygame.key.set_repeat(1, 1)
+            pygame.key.set_repeat(0, 0)
             volume_default = pygame.mixer.Sound.get_volume(menu_music)
             music_levels(levelCurrent, volume_default)
             niveau = Niveau(choix)
@@ -59,28 +51,12 @@ while continuer:
             niveau.afficher(screen)
             generation_level = 0
 
-        """if mario.mush == 1:
-            mushroom = Item(mushroomStand)
-            active_sprite_list.add(mushroom)
-            mushroom.rect.y = mario.rect.y - 80
-            mushroom.rect.x = mario.rect.x
-            mario.mush = 0
-
-        if mario.pick == 1: #Bug si 2champis en même temps dans l'écran, au pire on s'en fou
-            active_sprite_list.remove(mushroom)
-            active_sprite_list.update()
-            mushroom.update()
-            volume_default = pygame.mixer.Sound.get_volume(menu_music)
-            item_sound.set_volume(volume_default)
-            item_sound.play()
-            mario.pick = 0"""
-
         if niveau.mario.time == 210: #Tant que Mario n'est pas mouru
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.update()
             block_list.draw(screen)
             active_sprite_list.draw(screen)
-            nomarioMovement(monstres_list)
+            nomarioMovement(monstres_list, item_list)
             active_sprite_list.update()
         else:
             if niveau.mario.time > 0:

@@ -1,6 +1,6 @@
 
          
-f          
+i          
          
         
         
@@ -8,8 +8,8 @@ b
       
       
   
-bbfm
+bbix
 
-
-bs       e     b
-bbbbbbbbbbmbbbbbbb
+         b   b   b
+b      m b g b g b
+bbbbbbbbbbxbbbbbbb

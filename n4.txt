@@ -1,4 +1,4 @@
-e            bb
+m            bb
             b b
             b b
             bbbb
@@ -11,5 +11,5 @@ e            bb
 
 
 bbbbbbbbbbbbbbb
- s            f
-mmmmmmmmmmmmmmmmm
+llllllllllllllb
+xxxxxxxxxxxxxxxxx

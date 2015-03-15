@@ -1,0 +1,3 @@
+Redessiner les goomba pour leur donner une taille de 28x28
+Bug: Sauter sur 2goomba superposés nous tue
+Rendre mario 1 ou 2 pixels moins large sur les x
