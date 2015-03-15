@@ -368,7 +368,7 @@ class Niveau:
                     goombaStand = self.goombaSheet.get_imageXY(1, 41, 17, 59)
                     goomba = Monstres(goombaStand)
                     goomba.rect.x = x
-                    goomba.rect.y = y
+                    goomba.rect.y = y - 9
                     monstres_list.add(goomba)
                     active_sprite_list.add(goomba)
 
@@ -386,9 +386,8 @@ class Niveau:
         active_sprite_list.empty()
         levelSelectionDraw()
         screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
-        music_menu(volume_default)
+        music_menu()
         jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
-        pygame.key.set_repeat(0, 0)
         self.mario.reset, self.mario.time = 0, 210
         for monstres in monstres_list:
             monstres.direct = 1

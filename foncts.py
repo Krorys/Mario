@@ -33,8 +33,9 @@ def music_levels(levelCurrent, volume_default):
     levels_music[levelCurrent].play()
 
 
-def music_menu(volume_default):
+def music_menu():
     pygame.mixer.stop()
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
     menu_music.set_volume(volume_default)
     menu_music.play()
 
@@ -69,7 +70,7 @@ def death_sound_play(volume_default):
     death_sound.play()
 
 
-def levelSelectionDraw():  # Fonction qui re-dessine levelselection
+def levelSelectionDraw():
     screen.blit(levelselection_bg, (0, 0))
     Coord = [0, 1, 2, 3]
     for x in Coord:
@@ -80,7 +81,7 @@ def doubleImage(image, mario):
     if mario:
         imagex2 = pygame.transform.scale(image, (29, 50))
     else:
-        imagex2 = pygame.transform.scale2x(image)  # Double la taille du Mario
+        imagex2 = pygame.transform.scale2x(image)  # Double la taille du truc
     return imagex2
 
 

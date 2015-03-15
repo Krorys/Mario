@@ -1,8 +1,8 @@
-m            bb
-            b b
-            b b
-            bbbb
-              b
+m              bb
+              b b
+              b b
+              bbbb
+                b
 
 
 
