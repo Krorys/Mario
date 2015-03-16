@@ -58,6 +58,7 @@ while continuer:
             flag_list.draw(screen)
             active_sprite_list.draw(screen)
             nomarioMovement(monstres_list, item_list)
+            coinDisparition()
             active_sprite_list.update()
         else:
             if niveau.mario.time > 0:

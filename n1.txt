@@ -1,15 +1,15 @@
-
-         
-i          
-         
-        
-        
-b
-      
-      
-  
-bbix
-                   bbbbbbbbbbbbbbbb
-                                     bib
-b      m b g b g b
-bbbbbbbbbbxbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+X       
+X          
+X        
+X       
+X                                                                                                          g
+X                 c                                                                                    bbbbbbbbbbbbbb   bbbc                   i           bbb    bccb                                                                      BB                       X
+X                                                                                                                                                                                                                                          BBB                       X
+X                                                                                                                                                                                                                                         BBBB                       X
+X                                                                                                    g                                                                                                                                   BBBBB                       X
+X           c   bibcb                                   PT                 PT      I                bib                    b        bc      c  c  c     b          bb            B  B          BB  B              bbcb                  BBBBBB                       X
+X                                       PT              pt                 pt                                                                                                   BB  BB        BBB  BB                                  BBBBBBB                       X
+X                       PT              pt              pt                 pt                                                                                                  BBB  BBB      BBBB  BBB      PT                    PT  BBBBBBBB                       X
+Xm                g     pt              pt  g           pt      g     g    pt                                               g  g              g               g g  g g        BBBB  BBBB    BBBBB  BBBB     pt         g g        pt BBBBBBBBB     b                 X
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  bbbbbbbbbbbbbbbbbbbbbbbbbb   bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  bbbbbbbbbbbbbbbbbbbbbbbbbb   bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb                                                               

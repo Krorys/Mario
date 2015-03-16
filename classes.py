@@ -21,7 +21,7 @@ class Mario(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
         spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
-        self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
+        self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 3)
         self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
                        spriteSheet.get_imageXY(104, 36, 120, 62),
                        spriteSheet.get_imageXY(136, 37, 151, 63),
@@ -63,6 +63,7 @@ class Mario(pygame.sprite.Sprite):
         self.isMario = 0
         self.niveauScroll = 0
         self.isScrolling = 0
+        self.isCoin = 0
 
     def update(self):
         if self.deadOn == 0:
@@ -96,13 +97,13 @@ class Mario(pygame.sprite.Sprite):
                         self.death()
                 elif self.changeY < 0:
                     self.rect.top = block.rect.bottom
-                    if block.item_activation == 0 and block.used == 0:
+                    if block.isBreakable == 1:
                         block_list.remove(block)
                         volume_default = pygame.mixer.Sound.get_volume(menu_music)
                         bloc_break_sound.set_volume(volume_default)
                         bloc_break_sound.play()
-                    elif block.item_activation == 1:
-                        mushroomStand = self.itemSheet.get_imageXY(163, 43, 178, 58)
+                    elif block.mushroom_activation == 1:                                                #Champigon rouge
+                        mushroomStand = self.itemSheet.get_imageXY(146, 43, 161, 58)
                         mushroom = Item(mushroomStand)
                         mushroom.mush = 1
                         active_sprite_list.add(mushroom)
@@ -110,10 +111,34 @@ class Mario(pygame.sprite.Sprite):
                         mushroom.rect.x = self.rect.x
                         block.image = pygame.image.load("images/usedBlock.jpg")
                         item_block_play()
-                        block.item_activation = 0
+                        block.mushroom_activation = 0
                         block.used = 1
+                    elif block.gmushroom_activation == 1:                                               #Champignon vert
+                        gmushroomStand = self.itemSheet.get_imageXY(197, 43, 212, 58)
+                        gmushroom = Item(gmushroomStand)
+                        gmushroom.gmush = 1
+                        active_sprite_list.add(gmushroom)
+                        gmushroom.rect.y = self.rect.y - 80
+                        gmushroom.rect.x = self.rect.x
+                        block.image = pygame.image.load("images/usedBlock.jpg")
+                        item_block_play()
+                        block.gmushroom_activation = 0
+                        block.used = 1
+                    elif block.giveCoin == 1:                                                                     #Pièce
+                        coinStand = self.itemSheet.get_imageXY(69, 172, 82, 187)
+                        coin = Item(coinStand)
+                        block.image = pygame.image.load("images/usedBlock.jpg")
+                        coin.isCoin = 1
+                        item_list.add(coin)
+                        active_sprite_list.add(coin)
+                        coin_sound_play()
+                        block.used = 1
+                        coin.rect.y = self.rect.y - 65
+                        coin.rect.x = self.rect.x
+                        block.giveCoin = 0
 
                 self.changeY = 0
+
             flag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
             for flag in flag_hit_list:
                 print(flag.flag, flag.pos, flag.fin)
@@ -131,6 +156,11 @@ class Mario(pygame.sprite.Sprite):
                     active_sprite_list.remove(item)
                     upgrade_sound_play()
                     self.upgraded = 1
+                if item.gmush == 1:
+                    item_list.remove(item)
+                    active_sprite_list.remove(item)
+                    liveUp_sound_play()
+                    #faire gagner une vie
 
 
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
@@ -149,11 +179,15 @@ class Mario(pygame.sprite.Sprite):
 
 
     def grav(self):
-        if self.changeY == 0:  # Si il est au sol
-            self.changeY = 1
+        if self.isCoin == 0:
+            if self.changeY == 0:  # Si il est au sol
+                self.changeY = 1
+            else:
+                if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                    self.changeY += 0.40
         else:
-            if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
-                self.changeY += 0.40
+            if self.changeY <= 10:
+                    self.changeY -= 0.40
 
     def goLeft(self):
         self.changeX = -3
@@ -286,6 +320,7 @@ class Monstres(Mario):
         self.rect.y = 300
         self.direct = 1
         self.nodirection = 0
+        self.coin = 0
 
     def goRight(self):
         self.changeX = 1
@@ -334,7 +369,10 @@ class Item(Monstres):
         self.rect.y = -100
         self.direct = 1
         self.mush = 0
+        self.gmush = 0
         self.nodirection = 1
+        self.coin = 0
+        self.time = 15
         item_list.add(self)
 
 
@@ -343,13 +381,16 @@ class Block(pygame.sprite.Sprite):
         super().__init__()
         self.x = 0
         self.y = 0
-        self.image = pygame.image.load(image).convert()
+        self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect()
         self.changeX = 0
         self.changeY = 0
-        self.item_activation = 0
+        self.mushroom_activation = 0
         self.used = 0
         self.deadly = 0
+        self.giveCoin = 0
+        self.isBreakable = 0
+        self.gmushroom_activation = 0
 
 
 class Sol(Block):
@@ -404,16 +445,51 @@ class Niveau:
 
                 if sprite == 'b':
                     Block = Sol("images/Block.jpg", x, y)
+                    Block.isBreakable = 1
+                    block_list.add(Block)
+
+                elif sprite == 'B':
+                    Block = Sol("images/Block2.jpg", x, y)
                     block_list.add(Block)
 
                 elif sprite == 'x':
                     xBlock = Sol("images/xBlock.jpg", x, y)
                     block_list.add(xBlock)
 
+                elif sprite == 'X':
+                    invisibleBlock = Sol("images/invisibleBlock.png", x, y)
+                    block_list.add(invisibleBlock)
+
+                elif sprite == 'p':
+                    invisibleBlock = Sol("images/pipe_lb.png", x, y)
+                    block_list.add(invisibleBlock)
+
+                elif sprite == 'P':
+                    invisibleBlock = Sol("images/pipe_lt.png", x, y)
+                    block_list.add(invisibleBlock)
+
+                elif sprite == 't':
+                    invisibleBlock = Sol("images/pipe_rb.png", x, y)
+                    block_list.add(invisibleBlock)
+
+                elif sprite == 'T':
+                    invisibleBlock = Sol("images/pipe_rt.png", x, y)
+                    block_list.add(invisibleBlock)
+
                 elif sprite == 'i':
-                    itemBlock = Sol("images/itemBlock.jpg", x, y)
-                    itemBlock.item_activation = 1
-                    block_list.add(itemBlock)
+                    mushBlock = Sol("images/itemBlock.jpg", x, y)
+                    mushBlock.mushroom_activation = 1
+                    block_list.add(mushBlock)
+
+                elif sprite == 'I':
+                    gmushBlock = Sol("images/itemBlock.jpg", x, y)
+                    gmushBlock.gmushroom_activation = 1
+                    block_list.add(gmushBlock)
+
+                elif sprite == 'c':
+                    coinBlock = Sol("images/itemBlock.jpg", x, y)
+                    coinBlock.giveCoin = 1
+                    block_list.add(coinBlock)
 
                 elif sprite == 'l':
                     lavaBlock = Sol("images/lavaBlock.jpg", x, y)

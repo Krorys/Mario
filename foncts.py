@@ -52,6 +52,17 @@ def upgrade_sound_play():
     upgrade_sound.play()
 
 
+def liveUp_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    liveUp_sound.set_volume(volume_default)
+    liveUp_sound.play()
+
+
+def coin_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    coin_sound.set_volume(volume_default)
+    coin_sound.play()
+
 def goomba_stomp_play():
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     goomba_stomp_sound.set_volume(volume_default)
@@ -82,6 +93,8 @@ def doubleImage(image, perso):
         imagex2 = pygame.transform.scale(image, (27, 48))
     elif perso == 2:
         imagex2 = pygame.transform.scale(image, (33, 27))
+    elif perso == 3:
+        imagex2 = pygame.transform.scale(image, (27, 27))
     else:
         imagex2 = pygame.transform.scale2x(image)  # Double la taille du truc
     return imagex2
@@ -124,12 +137,24 @@ def nomarioMovement(monstres_list, item_list):
         if monstres.direct == 2:
             monstres.stop()
     for item in item_list:
-        if item.direct == 1:
-            item.goRight()
-        if item.direct == 0:
-            item.goLeft()
-        if item.direct == 2:
-            item.stop()
+        if item.isCoin == 0:
+            if item.direct == 1:
+                item.goRight()
+            if item.direct == 0:
+                item.goLeft()
+            if item.direct == 2:
+                item.stop()
+
+
+def coinDisparition():
+    for coin in item_list:
+        if coin.isCoin == 1:
+            if coin.time > 0:
+                coin.time -= 1
+            if coin.time == 0:
+                active_sprite_list.remove(coin)
+                item_list.remove(coin)
+
 
 
 def jeuFonct(event, mario):
