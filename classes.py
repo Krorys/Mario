@@ -114,6 +114,13 @@ class Mario(pygame.sprite.Sprite):
                         block.used = 1
 
                 self.changeY = 0
+            flag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
+            for flag in flag_hit_list:
+                print(flag.flag, flag.pos, flag.fin)
+                if flag.fin != len(flag_hit_list):
+                    self.lastCheckpoint = flag.pos
+                else:
+                    self.reset = 1
 
             item_hit_list = pygame.sprite.spritecollide(self, item_list, False)                        #Collisions items
             for item in item_hit_list:
@@ -241,9 +248,10 @@ class Mario(pygame.sprite.Sprite):
     def scroll(self, sens):
         for x in block_list:
             x.rect.x += sens
+        for x in flag_list:
+            x.rect.x += sens
         for x in active_sprite_list:
             if x.isMario == 1:
-                #x.changeX = -sens
                 x.rect.x += sens
                 x.niveauScroll += sens
             else:
@@ -347,6 +355,18 @@ class Sol(Block):
         self.rect.y = y
 
 
+class Flag(Block):
+    flag = []
+    def __init__(self, image, x, y):
+        Block.__init__(self, image)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.pos = len(self.flag)
+        self.flag.append(self.pos)
+        self.fin = 0
+
+
 class Niveau:
     def __init__(self, fichier):
         self.fichier = fichier
@@ -369,7 +389,7 @@ class Niveau:
             self.structure = structure_niveau
 
 
-    def afficher(self, screen):
+    def afficher(self):
         num_ligne = 0
         for ligne in self.structure:
             num_case = 0
@@ -408,10 +428,22 @@ class Niveau:
                     self.mario.rect.x = x
                     self.mario.rect.y = y
                     active_sprite_list.add(self.mario)
+
+                elif sprite == 'f':
+                    flag = Flag("images/itemBlock.jpg", x, y)
+                    flag_list.add(flag)
+
+                elif sprite == 'F':
+                    flag = Flag("images/itemBlock.jpg", x, y)
+                    flag.fin = 1
+                    flag_list.add(flag)
+
                 num_case += 1
             num_ligne += 1
 
     def reset(self, levelCurseurPos):
+        Flag.flag = []
+        flag_list.empty()
         block_list.empty()
         monstres_list.empty()
         item_list.empty()

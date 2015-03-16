@@ -13,7 +13,7 @@ vertFond = (166, 177, 65)
 noirFond = (0, 4, 0)
 blancFond = (255, 255, 255)
 taille_sprite = 29
-block_list, monstres_list, item_list = pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group()
+block_list, monstres_list, item_list, flag_list = pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group()
 active_sprite_list = pygame.sprite.Group()
 volume_default, volume = 0.3, 3
 

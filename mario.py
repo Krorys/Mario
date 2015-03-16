@@ -48,13 +48,14 @@ while continuer:
             music_levels(levelCurrent, volume_default)
             niveau = Niveau(choix)
             niveau.generer()
-            niveau.afficher(screen)
+            niveau.afficher()
             generation_level = 0
 
         if niveau.mario.time == 210: #Tant que Mario n'est pas mouru
             screen.blit(bg_list[levelCurrent], (0, 0))
             block_list.update()
             block_list.draw(screen)
+            flag_list.draw(screen)
             active_sprite_list.draw(screen)
             nomarioMovement(monstres_list, item_list)
             active_sprite_list.update()

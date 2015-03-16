@@ -79,7 +79,7 @@ def levelSelectionDraw():
 
 def doubleImage(image, perso):
     if perso == 1:
-        imagex2 = pygame.transform.scale(image, (27, 49))
+        imagex2 = pygame.transform.scale(image, (27, 48))
     elif perso == 2:
         imagex2 = pygame.transform.scale(image, (33, 27))
     else:
