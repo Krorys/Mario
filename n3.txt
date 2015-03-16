@@ -1,15 +1,9 @@
-  m            bb
-              b  b
-                b
-              b  b
-               bb
 
 
 
-     bbbbbiiibbbb
 
 
-          bbbbbbb
 
-           
-bbbbbbbLbbbbbbbbbb
+
+m           
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb

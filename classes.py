@@ -3,17 +3,17 @@ from foncts import *
 class SpriteImage():
     sprite_image = None
 
-    def __init__(self, file_name, couleur, mario):
+    def __init__(self, file_name, couleur, perso):
         self.sprite_image = pygame.image.load(file_name)
         self.couleur = couleur
-        self.mario = mario
+        self.perso = perso
 
     def get_imageXY(self, x, y, x2, y2):
         largeur, hauteur = 1 + x2 - x, 1 + y2 - y
         image = pygame.Surface([largeur, hauteur])
         image.blit(self.sprite_image, (0, 0), (x, y, largeur, hauteur))
         image.set_colorkey(self.couleur)
-        imagex2 = doubleImage(image, self.mario)
+        imagex2 = doubleImage(image, self.perso)
         return imagex2
 
 
@@ -60,9 +60,17 @@ class Mario(pygame.sprite.Sprite):
         self.killed = None
         self.deadOn = 0
         self.upgraded = 0
+        self.isMario = 0
+        self.niveauScroll = 0
+        self.isScrolling = 0
 
     def update(self):
         if self.deadOn == 0:
+            if (self.rect.x < screenX/2-25 and self.changeX < 0) or (self.rect.x > 25+screenX-screenX/2 and self.changeX > 0):
+                self.scroll(-self.changeX)
+                self.isScrolling = 1
+            else:
+                self.isScrolling = 0
             self.direction()
             if self.duckOn == 1: self.duck()
             self.grav()
@@ -171,7 +179,13 @@ class Mario(pygame.sprite.Sprite):
                             self.image = self.stand_r[frame]
                             self.stand += 1
                     else:  #Si il marche
-                        frame = (self.rect.x // 30) % len(self.walk_r)
+                        if self in monstres_list:
+                            frame = (self.rect.x // 20) % len(self.walk_r)
+                        else:
+                            if self.isScrolling == 1:
+                                frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_r)
+                            else:
+                                frame = (self.rect.x  // 30) % len(self.walk_r)
                         self.image = self.walk_r[frame]
                 else:  #Si il est en l'air
                     if self.changeY >= 5:  #Si Mario tombe
@@ -186,7 +200,13 @@ class Mario(pygame.sprite.Sprite):
                             self.image = self.stand_l[frame]
                             self.stand += 1
                     else:  #Si il marche
-                        frame = (self.rect.x // 30) % len(self.walk_l)
+                        if self in monstres_list:
+                            frame = (self.rect.x // 20) % len(self.walk_l)
+                        else:
+                            if self.isScrolling == 1:
+                                frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_l)
+                            else:
+                                frame = (self.rect.x // 30) % len(self.walk_l)
                         self.image = self.walk_l[frame]
                 else:  #Si il est en l'air
                     if self.changeY >= 5:  #Si Mario tombe
@@ -218,11 +238,22 @@ class Mario(pygame.sprite.Sprite):
         if self.time == 0:
             self.reset = 1
 
+    def scroll(self, sens):
+        for x in block_list:
+            x.rect.x += sens
+        for x in active_sprite_list:
+            if x.isMario == 1:
+                #x.changeX = -sens
+                x.rect.x += sens
+                x.niveauScroll += sens
+            else:
+                x.rect.x += sens
+
 
 class Monstres(Mario):
     def __init__(self, image):
         super().__init__(image)
-        spriteSheet = SpriteImage("images/goomba sheet.png", blancFond, 0)
+        spriteSheet = SpriteImage("images/goomba sheet.png", blancFond, 2)
         self.walk_r = [spriteSheet.get_imageXY(1, 40, 17, 59),
                        spriteSheet.get_imageXY(41, 41, 58, 59),
                        spriteSheet.get_imageXY(80, 41, 99, 59),
@@ -320,7 +351,7 @@ class Niveau:
     def __init__(self, fichier):
         self.fichier = fichier
         self.structure = 0
-        self.goombaSheet = SpriteImage("images/goomba sheet.png", blancFond, 0)
+        self.goombaSheet = SpriteImage("images/goomba sheet.png", blancFond, 2)
         self.marioSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
         self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
         self.mario = Mario(self.marioSheet.get_imageXY(72, 5, 87, 31))
@@ -373,6 +404,7 @@ class Niveau:
                     active_sprite_list.add(goomba)
 
                 elif sprite == 'm':
+                    self.mario.isMario = 1
                     self.mario.rect.x = x
                     self.mario.rect.y = y
                     active_sprite_list.add(self.mario)

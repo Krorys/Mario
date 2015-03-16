@@ -77,9 +77,11 @@ def levelSelectionDraw():
         screen.blit(levelselection_list[x], levelSelection_Stages_Coord[x])
 
 
-def doubleImage(image, mario):
-    if mario:
-        imagex2 = pygame.transform.scale(image, (29, 50))
+def doubleImage(image, perso):
+    if perso == 1:
+        imagex2 = pygame.transform.scale(image, (27, 49))
+    elif perso == 2:
+        imagex2 = pygame.transform.scale(image, (33, 27))
     else:
         imagex2 = pygame.transform.scale2x(image)  # Double la taille du truc
     return imagex2
