@@ -228,6 +228,7 @@ class Mario(pygame.sprite.Sprite):
             jump_sound_play()
 
     def death(self):
+        """
         self.image = self.dead
         gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
         gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
@@ -244,6 +245,10 @@ class Mario(pygame.sprite.Sprite):
             self.time -= 1
         if self.time == 0:
             self.reset = 1
+        """
+        #self.niveauScroll -= Flag.flag[self.lastCheckpoint].rect.x
+        self.rect.x = Flag.flag[self.lastCheckpoint].rect.x
+        self.rect.y = Flag.flag[self.lastCheckpoint].rect.y
 
     def scroll(self, sens):
         for x in block_list:
@@ -363,7 +368,7 @@ class Flag(Block):
         self.rect.x = x
         self.rect.y = y
         self.pos = len(self.flag)
-        self.flag.append(self.pos)
+        self.flag.append(self)
         self.fin = 0
 
 
