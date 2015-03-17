@@ -1,3 +1,2 @@
 Bug: Sauter sur 2goomba superposés nous tue
 Faire stoper les goomba tant qu'ils sont pas proche de la vision de mario
-Réduire la taille des champignons
