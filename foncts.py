@@ -51,6 +51,10 @@ def upgrade_sound_play():
     upgrade_sound.set_volume(volume_default)
     upgrade_sound.play()
 
+def deUpgrade_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    deUpgrade_sound.set_volume(volume_default)
+    deUpgrade_sound.play()
 
 def liveUp_sound_play():
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
@@ -167,6 +171,8 @@ def jeuFonct(event, mario):
             mario.jump()
         if event.key == K_DOWN:
             mario.duckOn = 1
+        if event.key == K_e and mario.onFire == 1:
+            print("Boule de feu")
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
             mario.stop()

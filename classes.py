@@ -64,6 +64,8 @@ class Mario(pygame.sprite.Sprite):
         self.niveauScroll = 0
         self.isScrolling = 0
         self.isCoin = 0
+        self.onFire = 0
+        self.canBreak = 0
 
     def update(self):
         if self.deadOn == 0:
@@ -75,6 +77,43 @@ class Mario(pygame.sprite.Sprite):
             self.direction()
             if self.duckOn == 1: self.duck()
             self.grav()
+            if self.onFire == 1:
+                spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+                self.stand_r = [spriteSheet.get_imageXY(316, 6, 331, 32),
+                                spriteSheet.get_imageXY(348, 5, 363, 32),
+                                spriteSheet.get_imageXY(380, 4, 395, 32),
+                                spriteSheet.get_imageXY(412, 5, 427, 32),
+                                spriteSheet.get_imageXY(444, 6, 459, 32)]
+                self.walk_r = [spriteSheet.get_imageXY(317, 43, 332, 69),
+                               spriteSheet.get_imageXY(349, 42, 365, 68),
+                               spriteSheet.get_imageXY(381, 43, 396, 69),
+                               spriteSheet.get_imageXY(413, 43, 428, 69)]
+                self.jump_r = [spriteSheet.get_imageXY(317, 78, 334, 105),
+                                spriteSheet.get_imageXY(349, 79, 366, 105)]
+                self.duck_r = spriteSheet.get_imageXY(318, 114, 333, 140)
+                self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
+                self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
+                self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
+                self.duck_l = pygame.transform.flip(self.duck_r, True, False)
+            else:
+                spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+                self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
+                               spriteSheet.get_imageXY(104, 36, 120, 62),
+                               spriteSheet.get_imageXY(136, 37, 151, 63),
+                               spriteSheet.get_imageXY(168, 37, 183, 63)]
+                self.stand_r = [spriteSheet.get_imageXY(72, 5, 87, 31),
+                                spriteSheet.get_imageXY(104, 4, 119, 31),
+                                spriteSheet.get_imageXY(136, 3, 151, 31),
+                                spriteSheet.get_imageXY(168, 4, 183, 31),
+                                spriteSheet.get_imageXY(200, 5, 215, 31)]
+                self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126),
+                               spriteSheet.get_imageXY(104, 100, 121, 126)]
+                self.duck_r = spriteSheet.get_imageXY(73, 165, 88, 191)
+                self.dead = spriteSheet.get_imageXY(67, 242, 92, 271)
+                self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
+                self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
+                self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
+                self.duck_l = pygame.transform.flip(self.duck_r, True, False)
 
 
 
@@ -97,29 +136,42 @@ class Mario(pygame.sprite.Sprite):
                         self.death()
                 elif self.changeY < 0:
                     self.rect.top = block.rect.bottom
-                    if block.isBreakable == 1:
+                    if block.isBreakable == 1 and (self.upgraded == 1 or self.onFire == 1):
                         block_list.remove(block)
                         volume_default = pygame.mixer.Sound.get_volume(menu_music)
                         bloc_break_sound.set_volume(volume_default)
                         bloc_break_sound.play()
-                    elif block.mushroom_activation == 1:                                                #Champigon rouge
-                        mushroomStand = self.itemSheet.get_imageXY(146, 43, 161, 58)
-                        mushroom = Item(mushroomStand)
-                        mushroom.mush = 1
-                        active_sprite_list.add(mushroom)
-                        mushroom.rect.y = self.rect.y - 80
-                        mushroom.rect.x = self.rect.x
-                        block.image = pygame.image.load("images/usedBlock.jpg")
-                        item_block_play()
-                        block.mushroom_activation = 0
-                        block.used = 1
+                    elif block.mushroom_activation == 1:                                       #Champigon rouge et fleur
+                        if self.upgraded == 0:
+                            mushroomStand = self.itemSheet.get_imageXY(146, 43, 161, 58)
+                            mushroom = Item(mushroomStand)
+                            mushroom.mush = 1
+                            active_sprite_list.add(mushroom)
+                            mushroom.rect.y = block.rect.y - 30
+                            mushroom.rect.x = block.rect.x
+                            block.image = pygame.image.load("images/usedBlock.jpg")
+                            item_block_play()
+                            block.mushroom_activation = 0
+                            block.used = 1
+                        elif self.upgraded > 0:
+                            flowerStand = self.itemSheet.get_imageXY(214, 43, 227, 58)
+                            flower = Item(flowerStand)
+                            flower.isFlower = 1
+                            flower.direct = 2
+                            active_sprite_list.add(flower)
+                            flower.rect.y = block.rect.y - 30
+                            flower.rect.x = block.rect.x
+                            block.image = pygame.image.load("images/usedBlock.jpg")
+                            item_block_play()
+                            block.mushroom_activation = 0
+                            block.used = 1
                     elif block.gmushroom_activation == 1:                                               #Champignon vert
                         gmushroomStand = self.itemSheet.get_imageXY(197, 43, 212, 58)
                         gmushroom = Item(gmushroomStand)
                         gmushroom.gmush = 1
                         active_sprite_list.add(gmushroom)
-                        gmushroom.rect.y = self.rect.y - 80
-                        gmushroom.rect.x = self.rect.x
+                        gmushroom.rect.y = block.rect.y - 30
+                        gmushroom.rect.x = block.rect.x
                         block.image = pygame.image.load("images/usedBlock.jpg")
                         item_block_play()
                         block.gmushroom_activation = 0
@@ -133,8 +185,8 @@ class Mario(pygame.sprite.Sprite):
                         active_sprite_list.add(coin)
                         coin_sound_play()
                         block.used = 1
-                        coin.rect.y = self.rect.y - 65
-                        coin.rect.x = self.rect.x
+                        coin.rect.y = block.rect.y - 30
+                        coin.rect.x = block.rect.x
                         block.giveCoin = 0
 
                 self.changeY = 0
@@ -149,8 +201,6 @@ class Mario(pygame.sprite.Sprite):
 
             item_hit_list = pygame.sprite.spritecollide(self, item_list, False)                        #Collisions items
             for item in item_hit_list:
-                if item.mush == 1 and self.upgraded == 1:
-                    print("Overdose de champignon!")
                 if item.mush == 1:
                     item_list.remove(item)
                     active_sprite_list.remove(item)
@@ -161,6 +211,13 @@ class Mario(pygame.sprite.Sprite):
                     active_sprite_list.remove(item)
                     liveUp_sound_play()
                     #faire gagner une vie
+                if item.isFlower == 1:
+                    item_list.remove(item)
+                    active_sprite_list.remove(item)
+                    upgrade_sound_play()
+                    self.upgraded = 1
+                    self.onFire = 1
+
 
 
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
@@ -172,7 +229,19 @@ class Mario(pygame.sprite.Sprite):
                     monstres_list.remove(goomba)
                     active_sprite_list.remove(goomba)
                 else:
-                    self.death()
+                    if self.onFire == 1:
+                        deUpgrade_sound_play()
+                        monstres_list.remove(goomba)
+                        active_sprite_list.remove(goomba)
+                        self.onFire = 0
+                    else:
+                        if self.upgraded == 1:
+                            deUpgrade_sound_play()
+                            monstres_list.remove(goomba)
+                            active_sprite_list.remove(goomba)
+                            self.upgraded = 0
+                        else:
+                            self.death()
 
             if self.rect.y >= screenY:
                 self.death()
@@ -187,7 +256,7 @@ class Mario(pygame.sprite.Sprite):
                     self.changeY += 0.40
         else:
             if self.changeY <= 10:
-                    self.changeY -= 0.40
+                    self.changeY -= 0.35
 
     def goLeft(self):
         self.changeX = -3
@@ -262,7 +331,7 @@ class Mario(pygame.sprite.Sprite):
             jump_sound_play()
 
     def death(self):
-        """
+
         self.image = self.dead
         gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
         gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
@@ -279,10 +348,10 @@ class Mario(pygame.sprite.Sprite):
             self.time -= 1
         if self.time == 0:
             self.reset = 1
-        """
-        #self.niveauScroll -= Flag.flag[self.lastCheckpoint].rect.x
+
+        """#self.niveauScroll -= Flag.flag[self.lastCheckpoint].rect.x
         self.rect.x = Flag.flag[self.lastCheckpoint].rect.x
-        self.rect.y = Flag.flag[self.lastCheckpoint].rect.y
+        self.rect.y = Flag.flag[self.lastCheckpoint].rect.y"""
 
     def scroll(self, sens):
         for x in block_list:
@@ -372,6 +441,7 @@ class Item(Monstres):
         self.gmush = 0
         self.nodirection = 1
         self.coin = 0
+        self.isFlower = 0
         self.time = 15
         item_list.add(self)
 

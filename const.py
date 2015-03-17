@@ -51,6 +51,7 @@ goomba_stomp_sound = pygame.mixer.Sound('sons/goomba_stomp.wav')
 upgrade_sound = pygame.mixer.Sound('sons/item_pick_sound.wav')
 liveUp_sound = pygame.mixer.Sound('sons/liveUp_sound.wav')
 coin_sound = pygame.mixer.Sound('sons/coin_sound.wav')
+deUpgrade_sound = pygame.mixer.Sound('sons/deUpgrade_sound.wav')
 
 
 # Variables
