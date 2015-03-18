@@ -218,8 +218,6 @@ class Mario(pygame.sprite.Sprite):
                     self.upgraded = 1
                     self.onFire = 1
 
-
-
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
             for goomba in monstres_hit_list:
                 if self.changeY > 0:
@@ -390,6 +388,7 @@ class Monstres(Mario):
         self.direct = 1
         self.nodirection = 0
         self.coin = 0
+        self.isFireBall = 0
 
     def goRight(self):
         self.changeX = 1
@@ -420,10 +419,25 @@ class Monstres(Mario):
         for block in block_hit_list:
             if self.changeY > 0:
                 self.rect.bottom = block.rect.top
+                if self.isFireBall == 1:
+                    self.rect.y -= 15
+                    self.changeY = -30
             elif self.changeY < 0:
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
+
+        if self.isFireBall==1:
+            hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
+            for item in hit_list:
+                if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
+                    active_sprite_list.remove(item)
+                    monstres_list.remove(item)
+                    active_sprite_list.remove(self)
+                    item_list.remove(self)
+                    goomba_stomp_play()
+                self.changeY = 0
+
 
 
 class Item(Monstres):
@@ -434,8 +448,6 @@ class Item(Monstres):
         self.jump_r = self.walk_r
         self.image = image
         self.rect = self.image.get_rect()
-        self.rect.x = -100
-        self.rect.y = -100
         self.direct = 1
         self.mush = 0
         self.gmush = 0
@@ -443,7 +455,34 @@ class Item(Monstres):
         self.coin = 0
         self.isFlower = 0
         self.time = 15
+        self.isFireBall = 0
         item_list.add(self)
+
+class FireBall(Item):
+    def __init__(self, image):
+        super().__init__(image)
+        spriteSheet = SpriteImage("images/item sheet.png", blancFond, 0)
+        self.walk_r = spriteSheet.get_imageXY(69, 77, 82, 92)
+        self.jump_r = self.walk_r
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.direct = 1
+        item_list.add(self)
+        self.nodirection = 0
+        self.isFireBall = 1
+        self.time = 180
+
+    def goRight(self):
+        self.changeX = 7
+        self.lookat = "right"
+
+    def goLeft(self):
+        self.changeX = -7
+        self.lookat = "left"
+
+    def direction(self):
+        pass
+
 
 
 class Block(pygame.sprite.Sprite):
@@ -562,7 +601,7 @@ class Niveau:
                     block_list.add(coinBlock)
 
                 elif sprite == 'l':
-                    lavaBlock = Sol("images/lavaBlock.jpg", x, y)
+                    lavaBlock = Sol("images/lavaBlock.png", x, y)
                     lavaBlock.deadly = 1
                     block_list.add(lavaBlock)
 
@@ -585,7 +624,7 @@ class Niveau:
                     flag_list.add(flag)
 
                 elif sprite == 'F':
-                    flag = Flag("images/itemBlock.jpg", x, y)
+                    flag = Flag("images/flagBlock.png", x, y)
                     flag.fin = 1
                     flag_list.add(flag)
 

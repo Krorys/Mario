@@ -51,10 +51,12 @@ def upgrade_sound_play():
     upgrade_sound.set_volume(volume_default)
     upgrade_sound.play()
 
+
 def deUpgrade_sound_play():
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     deUpgrade_sound.set_volume(volume_default)
     deUpgrade_sound.play()
+
 
 def liveUp_sound_play():
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
@@ -67,6 +69,7 @@ def coin_sound_play():
     coin_sound.set_volume(volume_default)
     coin_sound.play()
 
+
 def goomba_stomp_play():
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     goomba_stomp_sound.set_volume(volume_default)
@@ -77,6 +80,12 @@ def item_block_play():
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     bloc_item_sound.set_volume(volume_default)
     bloc_item_sound.play()
+
+
+def fireball_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    fireball_sound.set_volume(volume_default)
+    fireball_sound.play()
 
 
 def death_sound_play(volume_default):
@@ -158,10 +167,16 @@ def coinDisparition():
             if coin.time == 0:
                 active_sprite_list.remove(coin)
                 item_list.remove(coin)
+        if coin.isFireBall == 1:
+            if coin.time > 0:
+                coin.time -= 1
+            if coin.time == 0:
+                active_sprite_list.remove(coin)
+                item_list.remove(coin)
 
 
 
-def jeuFonct(event, mario):
+def jeuFonct(event, mario, SpriteImage, FireBall):
     if event.type == KEYDOWN:
         if event.key == K_RIGHT:
             mario.goRight()
@@ -172,7 +187,16 @@ def jeuFonct(event, mario):
         if event.key == K_DOWN:
             mario.duckOn = 1
         if event.key == K_e and mario.onFire == 1:
-            print("Boule de feu")
+            fireball_sound_play()
+            itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
+            fireball = FireBall(itemSheet.get_imageXY(104, 84, 111, 91))
+            fireball.rect.x = mario.rect.x + 10
+            fireball.rect.y = mario.rect.y
+            if mario.lookat == 'right':
+                fireball.direct = 1
+            else:
+                fireball.direct = 0
+            active_sprite_list.add(fireball)
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
             mario.stop()
