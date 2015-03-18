@@ -1,4 +1,4 @@
-from classes import *
+from advanced_foncts import *
 
 while continuer:
     for event in pygame.event.get():
@@ -43,28 +43,13 @@ while continuer:
     if jeu:
         choix = "n" + str(levelCurrent + 1) + ".txt"
         if generation_level:
-            pygame.key.set_repeat(0, 0)
-            volume_default = pygame.mixer.Sound.get_volume(menu_music)
-            music_levels(levelCurrent, volume_default)
-            niveau = Niveau(choix)
-            niveau.generer()
-            niveau.afficher()
+            niveau = generation(choix, levelCurrent)
             generation_level = 0
 
         if niveau.mario.time == 210: #Tant que Mario n'est pas mouru
-            screen.blit(bg_list[levelCurrent], (0, 0))
-            block_list.update()
-            block_list.draw(screen)
-            flag_list.draw(screen)
-            active_sprite_list.draw(screen)
-            nomarioMovement(monstres_list, item_list)
-            coinDisparition()
-            active_sprite_list.update()
+            boucle_jeu(levelCurrent)
         else:
-            if niveau.mario.time > 0:
-                niveau.mario.time -= 1
-            if niveau.mario.time == 0:
-                niveau.mario.reset = 1
+            mort(niveau, levelCurrent)
 
         if (event.type == KEYDOWN and event.key == K_ESCAPE) or niveau.mario.reset == 1:
             jeu, levelSelection, levelCurrent, generation_level = niveau.reset(levelCurseurPos)

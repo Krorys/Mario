@@ -27,8 +27,9 @@ def affichage_volume(volume):
             screen.blit(volume_redsquare, (coordX, 161))
 
 
-def music_levels(levelCurrent, volume_default):
+def music_levels(levelCurrent):
     pygame.mixer.stop()
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
 
@@ -88,8 +89,9 @@ def fireball_sound_play():
     fireball_sound.play()
 
 
-def death_sound_play(volume_default):
+def death_sound_play():
     pygame.mixer.stop()
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
     death_sound.set_volume(volume_default)
     death_sound.play()
 
@@ -182,7 +184,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall):
             mario.goRight()
         if event.key == K_LEFT:
             mario.goLeft()
-        if event.key == K_UP or event.key == K_SPACE:
+        if (event.key == K_UP or event.key == K_SPACE) and mario.time == 210:
             mario.jump()
         if event.key == K_DOWN:
             mario.duckOn = 1

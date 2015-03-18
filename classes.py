@@ -336,12 +336,11 @@ class Mario(pygame.sprite.Sprite):
         GOrect = gameOver.get_rect()
         centerX = int((screenX / 2) - GOrect.centerx)
         centerY = int((screenY / 2) - GOrect.centery)
-        volume_default = pygame.mixer.Sound.get_volume(menu_music)
         screen.blit(gameOver, (centerX, centerY))
         for monstre in monstres_list:
             monstre.direct = 2
         self.deadOn = 1
-        if self.time == 210: death_sound_play(volume_default)
+        if self.time == 210: death_sound_play()
         if self.time > 0:
             self.time -= 1
         if self.time == 0:
@@ -420,8 +419,8 @@ class Monstres(Mario):
             if self.changeY > 0:
                 self.rect.bottom = block.rect.top
                 if self.isFireBall == 1:
-                    self.rect.y -= 15
-                    self.changeY = -30
+                    self.rect.y -= 30
+                    self.changeY = -1
             elif self.changeY < 0:
                 self.rect.top = block.rect.bottom
 
