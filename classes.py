@@ -349,18 +349,14 @@ class Mario(Perso):
         if self.lookat == "right":  # Si il regardre à droite
             if self.changeY == 0:  #Si il est au sol
                 if self.changeX == 0:  #et si il ne bouge pas
-                    if self not in monstres_list:
-                        frame = (self.stand // 18) % len(self.stand_r)
-                        self.image = self.stand_r[frame]
-                        self.stand += 1
+                    frame = (self.stand // 18) % len(self.stand_r)
+                    self.image = self.stand_r[frame]
+                    self.stand += 1
                 else:  #Si il marche
-                    if self in monstres_list:
-                        frame = (self.rect.x // 20) % len(self.walk_r)
+                    if self.isScrolling == 1:
+                        frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_r)
                     else:
-                        if self.isScrolling == 1:
-                            frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_r)
-                        else:
-                            frame = (self.rect.x  // 30) % len(self.walk_r)
+                        frame = (self.rect.x  // 30) % len(self.walk_r)
                     self.image = self.walk_r[frame]
             else:  #Si il est en l'air
                 if self.changeY >= 5:  #Si Mario tombe
@@ -370,18 +366,14 @@ class Mario(Perso):
         else:  # Si il regarde à gauche
             if self.changeY == 0:  #Si il est au sol
                 if self.changeX == 0:  #et si il ne bouge pas
-                    if self not in monstres_list:
-                        frame = (self.stand // 18) % len(self.stand_l)
-                        self.image = self.stand_l[frame]
-                        self.stand += 1
+                    frame = (self.stand // 18) % len(self.stand_l)
+                    self.image = self.stand_l[frame]
+                    self.stand += 1
                 else:  #Si il marche
-                    if self in monstres_list:
-                        frame = (self.rect.x // 20) % len(self.walk_l)
+                    if self.isScrolling == 1:
+                        frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_l)
                     else:
-                        if self.isScrolling == 1:
-                            frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_l)
-                        else:
-                            frame = (self.rect.x // 30) % len(self.walk_l)
+                        frame = (self.rect.x // 30) % len(self.walk_l)
                     self.image = self.walk_l[frame]
             else:  #Si il est en l'air
                 if self.changeY >= 5:  #Si Mario tombe
@@ -450,6 +442,7 @@ class Monstres(Perso):
     def direction(self):
         if self.lookat == "right":  # Si il regardre à droite
             if self.isScrolling == 1:
+
                 frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_r)
             else:
                 frame = (self.rect.x // 20) % len(self.walk_r)
