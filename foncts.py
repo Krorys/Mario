@@ -152,7 +152,7 @@ def nomarioMovement(monstres_list, item_list):
         if monstres.direct == 2:
             monstres.stop()
     for item in item_list:
-        if item.isCoin == 0:
+        if item not in coin_list:
             if item.direct == 1:
                 item.goRight()
             if item.direct == 0:
@@ -161,20 +161,21 @@ def nomarioMovement(monstres_list, item_list):
                 item.stop()
 
 
-def coinDisparition():
-    for coin in item_list:
-        if coin.isCoin == 1:
-            if coin.time > 0:
-                coin.time -= 1
-            if coin.time == 0:
-                active_sprite_list.remove(coin)
-                item_list.remove(coin)
-        if coin.isFireBall == 1:
-            if coin.time > 0:
-                coin.time -= 1
-            if coin.time == 0:
-                active_sprite_list.remove(coin)
-                item_list.remove(coin)
+def itemDisparition():
+    for item in item_list:
+        if item in coin_list:
+            if item.time > 0:
+                item.time -= 1
+            if item.time == 0:
+                active_sprite_list.remove(item)
+                item_list.remove(item)
+        if item in fireball_list:
+            if item.time > 0:
+                item.time -= 1
+            if item.time == 0:
+                fireball_list.remove(item)
+                active_sprite_list.remove(item)
+                item_list.remove(item)
 
 
 

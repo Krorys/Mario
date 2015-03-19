@@ -17,9 +17,82 @@ class SpriteImage():
         return imagex2
 
 
-class Mario(pygame.sprite.Sprite):
+class Perso(pygame.sprite.Sprite):
     def __init__(self, image):
         super().__init__()
+        self.changeX = 0
+        self.changeY = 0
+        self.image = image
+        self.imageR = image
+        self.imageL = pygame.transform.flip(self.image, True, False)
+        self.lookat = "right"
+        self.rect = self.image.get_rect()
+        self.niveauScroll = 0
+        self.isScrolling = 0
+        self.speed = 3
+        self.direct = 1
+
+    def update(self):
+        self.direction()
+
+        self.grav()
+
+        self.rect.x += self.changeX
+        #Collisions X blocs
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeX > 0:
+                self.rect.right = block.rect.left
+                self.direct = 0
+            elif self.changeX < 0:
+                self.rect.left = block.rect.right
+                self.direct = 1
+
+        self.rect.y += self.changeY
+        #Collisions Y blocs
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeY > 0:
+                self.rect.bottom = block.rect.top
+                if block.deadly == 1:
+                    self.death()
+            elif self.changeY < 0:
+                self.rect.top = block.rect.bottom
+
+            self.changeY = 0
+
+    def grav(self):
+        if self.changeY == 0:  #Si il ne tombe pas
+            self.changeY = 1
+        else:
+            if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                self.changeY += 0.40
+
+    def goLeft(self):
+        self.changeX = abs(self.speed)*-1
+        self.lookat = "left"
+
+    def goRight(self):
+        self.changeX = abs(self.speed)
+        self.lookat = "right"
+
+    def stop(self):
+        self.changeX = 0
+
+    def direction(self):
+        if self.lookat == "right":  # Si il regardre à droite
+            self.image = self.imageR
+        else:  # Si il regarde à gauche
+            self.image = self.imageL
+
+    def jump(self):
+        if self.changeY == 0:
+            self.rect.y -= 5
+            self.changeY = -10
+
+class Mario(Perso):
+    def __init__(self, image):
+        super().__init__(image)
         spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
         self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 3)
         self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
@@ -180,7 +253,7 @@ class Mario(pygame.sprite.Sprite):
                         coinStand = self.itemSheet.get_imageXY(69, 172, 82, 187)
                         coin = Item(coinStand)
                         block.image = pygame.image.load("images/usedBlock.jpg")
-                        coin.isCoin = 1
+                        coin_list.add(coin)
                         item_list.add(coin)
                         active_sprite_list.add(coin)
                         coin_sound_play()
@@ -246,24 +319,18 @@ class Mario(pygame.sprite.Sprite):
 
 
     def grav(self):
-        if self.isCoin == 0:
-            if self.changeY == 0:  # Si il est au sol
-                self.changeY = 1
-            else:
-                if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
-                    self.changeY += 0.40
+        if self.changeY == 0:  # Si il est au sol
+            self.changeY = 1
         else:
-            if self.changeY <= 10:
-                    self.changeY -= 0.35
+            if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                self.changeY += 0.40
 
     def goLeft(self):
-        self.changeX = -3
-        self.lookat = "left"
+        super().goLeft()
         self.duckOn = 0
 
     def goRight(self):
-        self.changeX = 3
-        self.lookat = "right"
+        super().goRight()
         self.duckOn = 0
 
     def duck(self):
@@ -279,51 +346,51 @@ class Mario(pygame.sprite.Sprite):
         self.stand = 0
 
     def direction(self):
-            if self.lookat == "right":  # Si il regardre à droite
-                if self.changeY == 0:  #Si il est au sol
-                    if self.changeX == 0:  #et si il ne bouge pas
-                        if self not in monstres_list:
-                            frame = (self.stand // 18) % len(self.stand_r)
-                            self.image = self.stand_r[frame]
-                            self.stand += 1
-                    else:  #Si il marche
-                        if self in monstres_list:
-                            frame = (self.rect.x // 20) % len(self.walk_r)
+        if self.lookat == "right":  # Si il regardre à droite
+            if self.changeY == 0:  #Si il est au sol
+                if self.changeX == 0:  #et si il ne bouge pas
+                    if self not in monstres_list:
+                        frame = (self.stand // 18) % len(self.stand_r)
+                        self.image = self.stand_r[frame]
+                        self.stand += 1
+                else:  #Si il marche
+                    if self in monstres_list:
+                        frame = (self.rect.x // 20) % len(self.walk_r)
+                    else:
+                        if self.isScrolling == 1:
+                            frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_r)
                         else:
-                            if self.isScrolling == 1:
-                                frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_r)
-                            else:
-                                frame = (self.rect.x  // 30) % len(self.walk_r)
-                        self.image = self.walk_r[frame]
-                else:  #Si il est en l'air
-                    if self.changeY >= 5:  #Si Mario tombe
-                        self.image = self.jump_r[1]
-                    else:  #Si il saute
-                        self.image = self.jump_r[0]
-            else:  # Si il regarde à gauche
-                if self.changeY == 0:  #Si il est au sol
-                    if self.changeX == 0:  #et si il ne bouge pas
-                        if self not in monstres_list:
-                            frame = (self.stand // 18) % len(self.stand_l)
-                            self.image = self.stand_l[frame]
-                            self.stand += 1
-                    else:  #Si il marche
-                        if self in monstres_list:
-                            frame = (self.rect.x // 20) % len(self.walk_l)
+                            frame = (self.rect.x  // 30) % len(self.walk_r)
+                    self.image = self.walk_r[frame]
+            else:  #Si il est en l'air
+                if self.changeY >= 5:  #Si Mario tombe
+                    self.image = self.jump_r[1]
+                else:  #Si il saute
+                    self.image = self.jump_r[0]
+        else:  # Si il regarde à gauche
+            if self.changeY == 0:  #Si il est au sol
+                if self.changeX == 0:  #et si il ne bouge pas
+                    if self not in monstres_list:
+                        frame = (self.stand // 18) % len(self.stand_l)
+                        self.image = self.stand_l[frame]
+                        self.stand += 1
+                else:  #Si il marche
+                    if self in monstres_list:
+                        frame = (self.rect.x // 20) % len(self.walk_l)
+                    else:
+                        if self.isScrolling == 1:
+                            frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_l)
                         else:
-                            if self.isScrolling == 1:
-                                frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_l)
-                            else:
-                                frame = (self.rect.x // 30) % len(self.walk_l)
-                        self.image = self.walk_l[frame]
-                else:  #Si il est en l'air
-                    if self.changeY >= 5:  #Si Mario tombe
-                        self.image = self.jump_l[1]
-                    else:  #Si il saute
-                        self.image = self.jump_l[0]
+                            frame = (self.rect.x // 30) % len(self.walk_l)
+                    self.image = self.walk_l[frame]
+            else:  #Si il est en l'air
+                if self.changeY >= 5:  #Si Mario tombe
+                    self.image = self.jump_l[1]
+                else:  #Si il saute
+                    self.image = self.jump_l[0]
 
     def jump(self):
-        if len(block_list) == 0 or self.changeY == 0:
+        if self.changeY == 0:
             self.rect.y -= 5
             self.changeY = -10
             jump_sound_play()
@@ -356,14 +423,11 @@ class Mario(pygame.sprite.Sprite):
         for x in flag_list:
             x.rect.x += sens
         for x in active_sprite_list:
-            if x.isMario == 1:
-                x.rect.x += sens
-                x.niveauScroll += sens
-            else:
-                x.rect.x += sens
+            x.rect.x += sens
+            x.niveauScroll += sens
 
 
-class Monstres(Mario):
+class Monstres(Perso):
     def __init__(self, image):
         super().__init__(image)
         spriteSheet = SpriteImage("images/goomba sheet.png", blancFond, 2)
@@ -377,85 +441,51 @@ class Monstres(Mario):
         self.stomp = spriteSheet.get_imageXY(157, 87, 182, 94)
         self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
-        self.changeX = 0
-        self.changeY = 0
         self.image = image
-        self.lookat = "right"
         self.rect = self.image.get_rect()
-        self.rect.x = 100
-        self.rect.y = 300
-        self.direct = 1
-        self.nodirection = 0
+        self.speed = 1
         self.coin = 0
         self.isFireBall = 0
 
-    def goRight(self):
-        self.changeX = 1
-        self.lookat = "right"
-
-    def goLeft(self):
-        self.changeX = -1
-        self.lookat = "left"
-
-    def update(self):
-        if self.nodirection == 0:
-            self.direction()
-        self.grav()
-
-        self.rect.x += self.changeX
-        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
-        for block in block_hit_list:
-            if self.changeX > 0:
-                self.direct = 0
-                self.rect.right = block.rect.left
-            elif self.changeX < 0:
-                self.direct = 1
-                self.rect.left = block.rect.right
-
-        self.rect.y += self.changeY
-
-        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
-        for block in block_hit_list:
-            if self.changeY > 0:
-                self.rect.bottom = block.rect.top
-                if self.isFireBall == 1:
-                    self.rect.y -= 30
-                    self.changeY = -1
-            elif self.changeY < 0:
-                self.rect.top = block.rect.bottom
-
-            self.changeY = 0
-
-        if self.isFireBall==1:
-            hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
-            for item in hit_list:
-                if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
-                    active_sprite_list.remove(item)
-                    monstres_list.remove(item)
-                    active_sprite_list.remove(self)
-                    item_list.remove(self)
-                    goomba_stomp_play()
-                self.changeY = 0
+    def direction(self):
+        if self.lookat == "right":  # Si il regardre à droite
+            if self.isScrolling == 1:
+                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_r)
+            else:
+                frame = (self.rect.x // 20) % len(self.walk_r)
+            self.image = self.walk_r[frame]
+        else:  # Si il regarde à gauche
+            if self.isScrolling == 1:
+                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_l)
+            else:
+                frame = (self.rect.x // 20) % len(self.walk_l)
+            self.image = self.walk_l[frame]
 
 
-
-class Item(Monstres):
+class Item(Perso):
     def __init__(self, image):
         super().__init__(image)
-        spriteSheet = SpriteImage("images/item sheet.png", blancFond, 0)
-        self.walk_r = spriteSheet.get_imageXY(1, 43, 16, 58)
-        self.jump_r = self.walk_r
         self.image = image
         self.rect = self.image.get_rect()
-        self.direct = 1
+        self.speed = 1
         self.mush = 0
         self.gmush = 0
-        self.nodirection = 1
         self.coin = 0
         self.isFlower = 0
         self.time = 15
         self.isFireBall = 0
         item_list.add(self)
+
+    def grav(self):
+        if self not in coin_list:
+            if self.changeY == 0:  # Si il est au sol
+                self.changeY = 1
+            else:
+                if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                    self.changeY += 0.40
+        else:
+            if self.changeY <= 10:
+                    self.changeY -= 0.35
 
 class FireBall(Item):
     def __init__(self, image):
@@ -466,21 +496,51 @@ class FireBall(Item):
         self.image = image
         self.rect = self.image.get_rect()
         self.direct = 1
-        item_list.add(self)
-        self.nodirection = 0
-        self.isFireBall = 1
+        self.speed = 7
         self.time = 180
+        fireball_list.add(self)
+        item_list.add(self)
 
-    def goRight(self):
-        self.changeX = 7
-        self.lookat = "right"
+    def update(self):
+        self.direction()
 
-    def goLeft(self):
-        self.changeX = -7
-        self.lookat = "left"
+        self.grav()
 
-    def direction(self):
-        pass
+        self.rect.x += self.changeX
+        #Collisions X blocs
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeX > 0:
+                self.rect.right = block.rect.left
+                self.direct = 0
+            elif self.changeX < 0:
+                self.rect.left = block.rect.right
+                self.direct = 1
+
+        self.rect.y += self.changeY
+        #Collisions Y blocs
+        block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
+        for block in block_hit_list:
+            if self.changeY > 0:
+                self.rect.bottom = block.rect.top
+                self.rect.y -= 15
+                self.changeY = -1
+                if block.deadly == 1:
+                    self.death()
+            elif self.changeY < 0:
+                self.rect.top = block.rect.bottom
+
+            self.changeY = 0
+
+        hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
+        for item in hit_list:
+            if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
+                active_sprite_list.remove(item)
+                monstres_list.remove(item)
+                active_sprite_list.remove(self)
+                item_list.remove(self)
+                goomba_stomp_play()
+
 
 
 
@@ -521,7 +581,7 @@ class Flag(Block):
         self.fin = 0
 
 
-class Niveau:
+class Niveau():
     def __init__(self, fichier):
         self.fichier = fichier
         self.structure = 0
@@ -616,6 +676,7 @@ class Niveau:
                     self.mario.isMario = 1
                     self.mario.rect.x = x
                     self.mario.rect.y = y
+                    marioGroup.add(self.mario)
                     active_sprite_list.add(self.mario)
 
                 elif sprite == 'f':
