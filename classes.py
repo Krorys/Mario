@@ -31,6 +31,10 @@ class Perso(pygame.sprite.Sprite):
         self.isScrolling = 0
         self.speed = 3
         self.direct = 1
+        self.isShuriken = 0
+        self.gmush = 0
+        self.isFlower = 0
+        self.isMario = 0
 
     def update(self):
         self.direction()
@@ -60,6 +64,7 @@ class Perso(pygame.sprite.Sprite):
                 self.rect.top = block.rect.bottom
 
             self.changeY = 0
+
 
     def grav(self):
         if self.changeY == 0:  #Si il ne tombe pas
@@ -126,6 +131,7 @@ class Mario(Perso):
         self.reset = 0
         self.time = 210
         self.hp = 3
+        self.recharge = 3
         self.killEnnemy = 0
         self.willDie = 0
         self.pick = 0
@@ -133,7 +139,7 @@ class Mario(Perso):
         self.killed = None
         self.deadOn = 0
         self.upgraded = 0
-        self.isMario = 0
+        self.isMario = 1
         self.niveauScroll = 0
         self.isScrolling = 0
         self.isCoin = 0
@@ -272,7 +278,7 @@ class Mario(Perso):
                 else:
                     self.reset = 1
 
-            item_hit_list = pygame.sprite.spritecollide(self, item_list, False)                        #Collisions items
+            item_hit_list = pygame.sprite.spritecollide(self, active_sprite_list, False)               #Collisions items
             for item in item_hit_list:
                 if item.mush == 1:
                     item_list.remove(item)
@@ -290,6 +296,14 @@ class Mario(Perso):
                     upgrade_sound_play()
                     self.upgraded = 1
                     self.onFire = 1
+                if item.isShuriken == 1:
+                    boomerang_return_sound.stop()
+                    item_list.remove(item)
+                    active_sprite_list.remove(item)
+                    shuriken_list.remove(item)
+                    if item.isBlade == 1:
+                        self.recharge += 1
+                        shuriken_list2.remove(item)
 
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
             for goomba in monstres_hit_list:
@@ -470,15 +484,15 @@ class Item(Perso):
         item_list.add(self)
 
     def grav(self):
-        if self not in coin_list:
-            if self.changeY == 0:  # Si il est au sol
-                self.changeY = 1
+            if self not in coin_list:
+                if self.changeY == 0:  # Si il est au sol
+                    self.changeY = 1
+                else:
+                    if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                        self.changeY += 0.40
             else:
-                if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
-                    self.changeY += 0.40
-        else:
-            if self.changeY <= 10:
-                    self.changeY -= 0.35
+                if self.changeY <= 10:
+                        self.changeY -= 0.35
 
 class FireBall(Item):
     def __init__(self, image):
@@ -534,7 +548,77 @@ class FireBall(Item):
                 item_list.remove(self)
                 goomba_stomp_play()
 
+class Shuriken(Item):
+    def __init__(self, image):
+        super().__init__(image)
+        spriteSheet = SpriteImage("images/ice_shuriken2.png", blancFond, 0)
 
+        self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)),
+                       (spriteSheet.get_imageXY(72, 172, 89, 189)),
+                       (spriteSheet.get_imageXY(53, 172, 69, 189)),
+                       (spriteSheet.get_imageXY(32, 172, 49, 189))]
+
+        self.walk_r = [(spriteSheet.get_imageXY(32, 194, 49, 211)),
+                       (spriteSheet.get_imageXY(53, 194, 69, 211)),
+                       (spriteSheet.get_imageXY(72, 194, 88, 211)),
+                       (spriteSheet.get_imageXY(92, 194, 109, 211))]
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.direct = 1
+        self.nodirection = 1
+        self.isFireBall = 0
+        self.time = 30
+        self.isCoin = 0
+        self.isBlade = 0
+        self.speed = 6
+        self.yes = 1
+        self.isShuriken = 1
+        item_list.add(self)
+
+    def direction(self):
+        if self.lookat == "right":  # Si il regardre à droite
+            if self.isScrolling == 1:
+
+                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_r)
+            else:
+                frame = (self.rect.x // 20) % len(self.walk_r)
+            self.image = self.walk_r[frame]
+        else:  # Si il regarde à gauche
+            if self.isScrolling == 1:
+                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_l)
+            else:
+                frame = (self.rect.x // 20) % len(self.walk_l)
+            self.image = self.walk_l[frame]
+
+    def update(self):
+        if self.yes == 1:
+            self.direction()
+
+            if self.isBlade == 1:
+                block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions X blocs
+                for block in block_hit_list:
+                    if self.changeX > 0:
+                        self.rect.right = block.rect.left
+                        wall_sound_play()
+                        self.yes = 0
+                        item_list.remove(self)
+                        shuriken_list2.remove(self)
+                        self.rect.x += 5
+                    elif self.changeX < 0:
+                        self.rect.left = block.rect.right
+                        wall_sound_play()
+                        self.yes = 0
+                        item_list.remove(self)
+                        shuriken_list2.remove(self)
+                        self.rect.x -= 5
+            self.rect.x += self.changeX
+
+            shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
+            for hit in shuriken_hit_list:
+                if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
+                    chainsaw_sound_play()
+                    active_sprite_list.remove(hit)
+                    monstres_list.remove(hit)
 
 
 class Block(pygame.sprite.Sprite):
@@ -691,6 +775,7 @@ class Niveau():
         monstres_list.empty()
         item_list.empty()
         active_sprite_list.empty()
+        shuriken_list.empty()
         levelSelectionDraw()
         screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
         music_menu()

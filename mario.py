@@ -38,7 +38,7 @@ while continuer:
             if event.type == KEYDOWN and event.key == K_RETURN:
                 menu, levelSelection, jeu, levelCurrent = 0, 0, 1, levelCurseurPos
         elif jeu:
-            jeuFonct(event, niveau.mario, SpriteImage, FireBall)
+            jeuFonct(event, niveau.mario, SpriteImage, FireBall, Shuriken)
 
     if jeu:
         choix = "n" + str(levelCurrent + 1) + ".txt"

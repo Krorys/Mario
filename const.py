@@ -15,9 +15,8 @@ blancFond = (255, 255, 255)
 taille_sprite = 29
 block_list, monstres_list, item_list, flag_list, coin_list, fireball_list = pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group()
 marioGroup = pygame.sprite.GroupSingle()
-active_sprite_list = pygame.sprite.Group()
+active_sprite_list, shuriken_list, shuriken_list2 = pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group()
 volume_default, volume = 0.3, 3
-
 
 # Coordonnées
 menu_Curseur_Coord = [(195, 160), (195, 195), (195, 230)]
@@ -31,6 +30,8 @@ bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.
            (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
 levelselection_list = [(pygame.image.load("images/levelselection_stage_1_1.png")), (pygame.image.load("images/levelselection_stage_1_2.png")),
                        (pygame.image.load("images/levelselection_stage_1_3.png")), (pygame.image.load("images/levelselection_stage_1_4.png"))]
+shuri_list = [(pygame.image.load("images/shuri_on0.png")), (pygame.image.load("images/shuri_on1.png")),
+              (pygame.image.load("images/shuri_on2.png")), (pygame.image.load("images/shuri_on3.png")), ]
 volume_redsquare = pygame.image.load("images/vol_redsquare.png")
 volume_bar = pygame.image.load("images/vol_bar.jpg")
 levelselection_bg = pygame.image.load("images/levelselection_bg.png")
@@ -38,6 +39,7 @@ menuImage = pygame.image.load("images/menu.png")
 menuCurseurImage = pygame.image.load("images/curseur.png")
 options = pygame.image.load("images/options.png")
 icon = pygame.image.load("images/icon.png")
+shuri_ghost_on, shuri_ghost_off = pygame.image.load('images/shuri_ghost_on.png'), pygame.image.load('images/shuri_ghost_off.png')
 
 
 # Musiques/sons
@@ -54,6 +56,11 @@ liveUp_sound = pygame.mixer.Sound('sons/liveUp_sound.wav')
 coin_sound = pygame.mixer.Sound('sons/coin_sound.wav')
 deUpgrade_sound = pygame.mixer.Sound('sons/deUpgrade_sound.wav')
 fireball_sound = pygame.mixer.Sound('sons/fireball_sound.wav')
+mario_sound = pygame.mixer.Sound('sons/mario_sound.wav')
+boomerang_sound = pygame.mixer.Sound('sons/boomerang_sound.wav')
+boomerang_return_sound = pygame.mixer.Sound('sons/boomerang_return_sound.wav')
+chainsaw_sound = pygame.mixer.Sound('sons/chainsaw_sound.wav')
+wall_sound = pygame.mixer.Sound('sons/wall_sound.wav')
 
 
 # Variables

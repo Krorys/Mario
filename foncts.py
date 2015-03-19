@@ -95,6 +95,31 @@ def death_sound_play():
     death_sound.set_volume(volume_default)
     death_sound.play()
 
+def chainsaw_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    chainsaw_sound.set_volume(volume_default)
+    chainsaw_sound.play()
+
+def mario_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    mario_sound.set_volume(volume_default)
+    mario_sound.play()
+
+def boomerang_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    boomerang_sound.set_volume(volume_default)
+    boomerang_sound.play()
+
+def boomerang_return_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    boomerang_return_sound.set_volume(volume_default)
+    boomerang_return_sound.play()
+
+def wall_sound_play():
+    volume_default = pygame.mixer.Sound.get_volume(menu_music)
+    wall_sound.set_volume(volume_default)
+    wall_sound.play()
+
 
 def levelSelectionDraw():
     screen.blit(levelselection_bg, (0, 0))
@@ -142,6 +167,34 @@ def choixLevel(event, pos):
             pos = (pos + 1) % 4
     return pos
 
+def shuriken():
+    for shuriken in item_list:
+        if shuriken.isShuriken == 1:
+            if shuriken.isBlade == 0:
+                if shuriken.time > 0:
+                    shuriken.time -= 1
+                if shuriken.time == 200:
+                    active_sprite_list.remove(shuriken)
+                    item_list.remove(shuriken)
+                    shuriken_list.remove(shuriken)
+                if shuriken.time < 15:
+                    if shuriken.direct == 1:
+                        shuriken.changeX -= 3
+                    else:
+                        shuriken.changeX += 3
+                if shuriken.time < 5:
+                    if shuriken.direct == 1:
+                        shuriken.changeX -= 3
+                    else:
+                        shuriken.changeX += 3
+                if shuriken.time == 0:
+                    boomerang_return_sound_play()
+                    if shuriken.direct == 1:
+                        shuriken.direct = 0
+                        shuriken.time = 280
+                    elif shuriken.direct == 0:
+                        shuriken.direct = 1
+                        shuriken.time = 280
 
 def nomarioMovement(monstres_list, item_list):
     for monstres in monstres_list:
@@ -179,7 +232,7 @@ def itemDisparition():
 
 
 
-def jeuFonct(event, mario, SpriteImage, FireBall):
+def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
     if event.type == KEYDOWN:
         if event.key == K_RIGHT:
             mario.goRight()
@@ -200,12 +253,49 @@ def jeuFonct(event, mario, SpriteImage, FireBall):
             else:
                 fireball.direct = 0
             active_sprite_list.add(fireball)
+        if event.key == K_r and mario.time == 210 and len(shuriken_list) == 0:
+            mario_sound_play()
+            boomerang_sound_play()
+            spriteSheet = SpriteImage("images/ice_shuriken2.png", blancFond, 0)
+            shuriken = Shuriken(spriteSheet.get_imageXY(32, 172, 49, 189))
+            shuriken_list.add(shuriken)
+            shuriken.rect.y = mario.rect.y - 1
+            if mario.lookat == 'right':
+                shuriken.rect.x = mario.rect.x + 30
+                shuriken.direct = 1
+            else:
+                shuriken.direct = 0
+                shuriken.rect.x = mario.rect.x - 49
+            active_sprite_list.add(shuriken)
+        if event.key == K_t and mario.time == 210 and (len(shuriken_list2)!=3 and mario.recharge > 0):
+            mario.recharge -= 1
+            mario_sound_play()
+            boomerang_sound_play()
+            spriteSheet = SpriteImage("images/ice_shuriken2.png", blancFond, 0)
+            shuriken = Shuriken(spriteSheet.get_imageXY(32, 131, 49, 148))
+            shuriken_list2.add(shuriken)
+            shuriken.walk_l = [(spriteSheet.get_imageXY(92, 131, 109, 148)),
+                               (spriteSheet.get_imageXY(72, 131, 89, 148)),
+                               (spriteSheet.get_imageXY(53, 131, 69, 148)),
+                               (spriteSheet.get_imageXY(32, 131, 49, 148))]
+            shuriken.walk_r = [(spriteSheet.get_imageXY(32, 153, 49, 170)),
+                               (spriteSheet.get_imageXY(53, 153, 69, 170)),
+                               (spriteSheet.get_imageXY(72, 153, 88, 170)),
+                               (spriteSheet.get_imageXY(92, 153, 109, 170))]
+            shuriken.isBlade = 1
+            shuriken.rect.y = mario.rect.y - 1
+            if mario.lookat == 'right':
+                shuriken.rect.x = mario.rect.x + 30
+                shuriken.direct = 1
+            else:
+                shuriken.direct = 0
+                shuriken.rect.x = mario.rect.x - 49
+            active_sprite_list.add(shuriken)
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:
             mario.stop()
         if event.key == K_DOWN:
             mario.duckOn = 0
-
 
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
