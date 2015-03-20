@@ -33,6 +33,7 @@ class Perso(pygame.sprite.Sprite):
         self.direct = 1
         self.isShuriken = 0
         self.gmush = 0
+        self.mush = 0
         self.isFlower = 0
         self.isMario = 0
 
@@ -124,10 +125,8 @@ class Mario(Perso):
         self.stand = 0
         self.changeX = 0
         self.changeY = 0
-        self.image = image
         self.lookat = "right"
         self.duckOn = 0
-        self.rect = self.image.get_rect()
         self.reset = 0
         self.time = 210
         self.hp = 3
@@ -447,10 +446,9 @@ class Monstres(Perso):
         self.stomp = spriteSheet.get_imageXY(157, 87, 182, 94)
         self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
-        self.image = image
-        self.rect = self.image.get_rect()
         self.speed = 1
         self.coin = 0
+        self.direct = 1
         self.isFireBall = 0
 
     def direction(self):
@@ -472,12 +470,11 @@ class Monstres(Perso):
 class Item(Perso):
     def __init__(self, image):
         super().__init__(image)
-        self.image = image
-        self.rect = self.image.get_rect()
         self.speed = 1
         self.mush = 0
         self.gmush = 0
         self.coin = 0
+        self.isCoin = 0
         self.isFlower = 0
         self.time = 15
         self.isFireBall = 0
@@ -500,8 +497,6 @@ class FireBall(Item):
         spriteSheet = SpriteImage("images/item sheet.png", blancFond, 0)
         self.walk_r = spriteSheet.get_imageXY(69, 77, 82, 92)
         self.jump_r = self.walk_r
-        self.image = image
-        self.rect = self.image.get_rect()
         self.direct = 1
         self.speed = 7
         self.time = 180
@@ -551,27 +546,18 @@ class FireBall(Item):
 class Shuriken(Item):
     def __init__(self, image):
         super().__init__(image)
-        spriteSheet = SpriteImage("images/ice_shuriken2.png", blancFond, 0)
-
-        self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)),
-                       (spriteSheet.get_imageXY(72, 172, 89, 189)),
-                       (spriteSheet.get_imageXY(53, 172, 69, 189)),
-                       (spriteSheet.get_imageXY(32, 172, 49, 189))]
-
-        self.walk_r = [(spriteSheet.get_imageXY(32, 194, 49, 211)),
-                       (spriteSheet.get_imageXY(53, 194, 69, 211)),
-                       (spriteSheet.get_imageXY(72, 194, 88, 211)),
-                       (spriteSheet.get_imageXY(92, 194, 109, 211))]
-        self.image = image
-        self.rect = self.image.get_rect()
+        spriteSheet = SpriteImage("images/Shuriken.png", blancFond, 0)
+        self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)), (spriteSheet.get_imageXY(72, 172, 89, 189)),
+                       (spriteSheet.get_imageXY(53, 172, 69, 189)), (spriteSheet.get_imageXY(32, 172, 49, 189))]
+        self.walk_r = [(spriteSheet.get_imageXY(32, 194, 49, 211)), (spriteSheet.get_imageXY(53, 194, 69, 211)),
+                       (spriteSheet.get_imageXY(72, 194, 88, 211)), (spriteSheet.get_imageXY(92, 194, 109, 211))]
         self.direct = 1
         self.nodirection = 1
-        self.isFireBall = 0
         self.time = 30
-        self.isCoin = 0
-        self.isBlade = 0
         self.speed = 6
-        self.yes = 1
+        self.willUpdate = 1
+        self.isGhost = 0
+        self.isBlade = 0
         self.isShuriken = 1
         item_list.add(self)
 
@@ -591,25 +577,19 @@ class Shuriken(Item):
             self.image = self.walk_l[frame]
 
     def update(self):
-        if self.yes == 1:
+        if self.willUpdate == 1:
             self.direction()
 
             if self.isBlade == 1:
                 block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions X blocs
                 for block in block_hit_list:
                     if self.changeX > 0:
-                        self.rect.right = block.rect.left
-                        wall_sound_play()
-                        self.yes = 0
-                        item_list.remove(self)
-                        shuriken_list2.remove(self)
+                        self.rect.right, self.willUpdate = block.rect.left, 0
+                        item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
                         self.rect.x += 5
                     elif self.changeX < 0:
-                        self.rect.left = block.rect.right
-                        wall_sound_play()
-                        self.yes = 0
-                        item_list.remove(self)
-                        shuriken_list2.remove(self)
+                        self.rect.left, self.willUpdate = block.rect.right, 0
+                        item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
                         self.rect.x -= 5
             self.rect.x += self.changeX
 
@@ -770,17 +750,11 @@ class Niveau():
 
     def reset(self, levelCurseurPos):
         Flag.flag = []
-        flag_list.empty()
-        block_list.empty()
-        monstres_list.empty()
-        item_list.empty()
-        active_sprite_list.empty()
-        shuriken_list.empty()
+        flag_list.empty(), block_list.empty(), monstres_list.empty(), item_list.empty(), active_sprite_list.empty()
+        shuriken_list.empty(), shuriken_list2.empty()
         levelSelectionDraw()
         screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
         music_menu()
         jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
         self.mario.reset, self.mario.time = 0, 210
-        for monstres in monstres_list:
-            monstres.direct = 1
         return jeu, levelSelection, levelCurrent, generation_level

@@ -8,14 +8,15 @@ pygame.init()
 clock = pygame.time.Clock()
 screenX, screenY = 516, 435
 screen = pygame.display.set_mode((screenX, screenY))
-pygame.display.set_caption("Mariolike")
+pygame.display.set_caption("MarioNinjalike")
 vertFond = (166, 177, 65)
 noirFond = (0, 4, 0)
 blancFond = (255, 255, 255)
 taille_sprite = 29
-block_list, monstres_list, item_list, flag_list, coin_list, fireball_list = pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group()
+block_list, monstres_list, item_list, flag_list, coin_list, active_sprite_list, shuriken_list, shuriken_list2, fireball_list = \
+pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),\
+pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group()
 marioGroup = pygame.sprite.GroupSingle()
-active_sprite_list, shuriken_list, shuriken_list2 = pygame.sprite.Group(), pygame.sprite.Group(), pygame.sprite.Group()
 volume_default, volume = 0.3, 3
 
 # Coordonnées
@@ -39,7 +40,8 @@ menuImage = pygame.image.load("images/menu.png")
 menuCurseurImage = pygame.image.load("images/curseur.png")
 options = pygame.image.load("images/options.png")
 icon = pygame.image.load("images/icon.png")
-shuri_ghost_on, shuri_ghost_off = pygame.image.load('images/shuri_ghost_on.png'), pygame.image.load('images/shuri_ghost_off.png')
+shuri_ghost_on = pygame.image.load('images/shuri_ghost_on.png')
+item_off = pygame.image.load('images/item_off.png')
 
 
 # Musiques/sons
@@ -65,7 +67,6 @@ wall_sound = pygame.mixer.Sound('sons/wall_sound.wav')
 
 # Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
-reset, willRespawn, on_level = 0, 0, 0
 
 
 #Init n°2
