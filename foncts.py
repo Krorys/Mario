@@ -259,8 +259,11 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 shuriken.rect.x = mario.rect.x + 30
                 shuriken.direct = 1
             else:
-                shuriken.rect.x = mario.rect.x - 49
+                shuriken.rect.x = mario.rect.x - 50
                 shuriken.direct = 0
+
+        #
+        #if event.key == K_y and mario.time == 210:
 
     if event.type == KEYUP:
         if event.key == K_RIGHT or event.key == K_LEFT:

@@ -581,16 +581,14 @@ class Shuriken(Item):
             self.direction()
 
             if self.isBlade == 1:
-                block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions X blocs
+                block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
                 for block in block_hit_list:
                     if self.changeX > 0:
                         self.rect.right, self.willUpdate = block.rect.left, 0
                         item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
-                        self.rect.x += 5
                     elif self.changeX < 0:
                         self.rect.left, self.willUpdate = block.rect.right, 0
                         item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
-                        self.rect.x -= 5
             self.rect.x += self.changeX
 
             shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
