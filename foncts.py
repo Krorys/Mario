@@ -100,6 +100,8 @@ def levelSelectionDraw():
 
 
 def doubleImage(image, perso):
+    if perso == -1:
+        return image
     if perso == 1:
         imagex2 = pygame.transform.scale(image, (27, 48))
     elif perso == 2:
@@ -179,16 +181,21 @@ def itemUpdate():
                     item_list.remove(item)
                     shuriken_list.remove(item)
 
-def nomarioMovement(monstres_list, item_list):
+def nomarioMovement(monstres_list, item_list, mario):
 
     #Déplacements monstres
     for monstres in monstres_list:
+        #print(monstres.rect.x, mario.rect.x - mario.niveauScroll)
         if monstres.direct == 1: #direct = 1 -> droite
             monstres.goRight()
         if monstres.direct == 0: #direct = 0 -> gauche
             monstres.goLeft()
         if monstres.direct == 2:
             monstres.stop()
+        if monstres.rect.x > mario.rect.x - mario.niveauScroll -300 and monstres.seen == 0:
+            monstres.stop()
+        if not monstres.rect.x > mario.rect.x - mario.niveauScroll -300:
+            monstres.seen = 1
 
     #Déplacements items
     for item in item_list:
@@ -199,7 +206,6 @@ def nomarioMovement(monstres_list, item_list):
                 item.goLeft()
             if item.direct == 2:
                 item.stop()
-
 
 def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
     if event.type == KEYDOWN:
@@ -228,11 +234,11 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         #Ghost Razorblade
         if event.key == K_r and mario.time == 210 and (len(shuriken_list) == 0):
             mario_sound_play(), boomerang_sound_play()
-            spriteSheet = SpriteImage("images/Shuriken.png", blancFond, 0)
+            spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
             shuriken = Shuriken(spriteSheet.get_imageXY(32, 172, 49, 189))
             shuriken_list.add(shuriken)
             active_sprite_list.add(shuriken)
-            shuriken.rect.y = mario.rect.y - 1
+            shuriken.rect.y = mario.rect.y + 15
             shuriken.isGhost = 1
             if mario.lookat == 'right':
                 shuriken.direct = 1
@@ -245,7 +251,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         if event.key == K_t and mario.time == 210 and (len(shuriken_list2) != 3 and mario.recharge > 0):
             mario.recharge -= 1
             mario_sound_play(), boomerang_sound_play()
-            spriteSheet = SpriteImage("images/Shuriken.png", blancFond, 0)
+            spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
             shuriken = Shuriken(spriteSheet.get_imageXY(32, 131, 49, 148))
             shuriken_list2.add(shuriken)
             active_sprite_list.add(shuriken)
@@ -254,7 +260,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
             shuriken.walk_r = [(spriteSheet.get_imageXY(32, 153, 49, 170)), (spriteSheet.get_imageXY(53, 153, 69, 170)),
                                (spriteSheet.get_imageXY(72, 153, 88, 170)), (spriteSheet.get_imageXY(92, 153, 109, 170))]
             shuriken.isBlade = 1
-            shuriken.rect.y = mario.rect.y - 1
+            shuriken.rect.y = mario.rect.y + 15
             if mario.lookat == 'right':
                 shuriken.rect.x = mario.rect.x + 30
                 shuriken.direct = 1

@@ -67,7 +67,7 @@ wall_sound = pygame.mixer.Sound('sons/wall_sound.wav')
 
 # Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
-
+font = pygame.font.SysFont("Arial", 10)
 
 #Init n°2
 pygame.display.set_icon(icon)

@@ -255,6 +255,7 @@ class Mario(Perso):
                         block.gmushroom_activation = 0
                         block.used = 1
                     elif block.giveCoin == 1:                                                                     #Pièce
+                        self.recharge += 1
                         coinStand = self.itemSheet.get_imageXY(69, 172, 82, 187)
                         coin = Item(coinStand)
                         block.image = pygame.image.load("images/usedBlock.jpg")
@@ -448,6 +449,7 @@ class Monstres(Perso):
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
         self.speed = 1
         self.coin = 0
+        self.seen = 0
         self.direct = 1
         self.isFireBall = 0
 
@@ -546,7 +548,7 @@ class FireBall(Item):
 class Shuriken(Item):
     def __init__(self, image):
         super().__init__(image)
-        spriteSheet = SpriteImage("images/Shuriken.png", blancFond, 0)
+        spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
         self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)), (spriteSheet.get_imageXY(72, 172, 89, 189)),
                        (spriteSheet.get_imageXY(53, 172, 69, 189)), (spriteSheet.get_imageXY(32, 172, 49, 189))]
         self.walk_r = [(spriteSheet.get_imageXY(32, 194, 49, 211)), (spriteSheet.get_imageXY(53, 194, 69, 211)),
@@ -564,16 +566,15 @@ class Shuriken(Item):
     def direction(self):
         if self.lookat == "right":  # Si il regardre à droite
             if self.isScrolling == 1:
-
-                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_r)
+                frame = (self.rect.x + self.niveauScroll // 10) % len(self.walk_r)
             else:
-                frame = (self.rect.x // 20) % len(self.walk_r)
+                frame = (self.rect.x // 10) % len(self.walk_r)
             self.image = self.walk_r[frame]
         else:  # Si il regarde à gauche
             if self.isScrolling == 1:
-                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_l)
+                frame = (self.rect.x + self.niveauScroll // 10) % len(self.walk_l)
             else:
-                frame = (self.rect.x // 20) % len(self.walk_l)
+                frame = (self.rect.x // 10) % len(self.walk_l)
             self.image = self.walk_l[frame]
 
     def update(self):
@@ -586,9 +587,15 @@ class Shuriken(Item):
                     if self.changeX > 0:
                         self.rect.right, self.willUpdate = block.rect.left, 0
                         item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
+                        plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
+                        block_list.add(plateforme)
+                        active_sprite_list.remove(self)
                     elif self.changeX < 0:
                         self.rect.left, self.willUpdate = block.rect.right, 0
                         item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
+                        plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
+                        block_list.add(plateforme)
+                        active_sprite_list.remove(self)
             self.rect.x += self.changeX
 
             shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)

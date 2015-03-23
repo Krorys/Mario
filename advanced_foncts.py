@@ -8,16 +8,19 @@ def itemBlit():
     #Razorblade
     screen.blit(item_off, (49, 0))
     for x in active_sprite_list:
-        if x.isMario == 1: screen.blit(shuri_list[x.recharge], (49, 0))
+        if x.isMario == 1:
+            screen.blit(pygame.image.load("images/shuri_on.png"), (49, 0))
+            text = font.render(str(x.recharge), True, (0,0,0))
+            screen.blit(text, (49+40, 38))
 
-def boucle_jeu(levelCurrent):
+def boucle_jeu(levelCurrent, niveau):
     screen.blit(bg_list[levelCurrent], (0, 0))
     itemBlit()
     block_list.update()
     active_sprite_list.draw(screen)
     block_list.draw(screen)
     flag_list.draw(screen)
-    nomarioMovement(monstres_list, item_list)
+    nomarioMovement(monstres_list, item_list, niveau.mario)
     itemUpdate()
     active_sprite_list.update()
 

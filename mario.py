@@ -47,7 +47,7 @@ while continuer:
             generation_level = 0
 
         if niveau.mario.time == 210: #Tant que Mario n'est pas mouru
-            boucle_jeu(levelCurrent)
+            boucle_jeu(levelCurrent, niveau)
         else:
             mort(niveau, levelCurrent)
 
