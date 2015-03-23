@@ -21,7 +21,7 @@ def boucle_jeu(levelCurrent, niveau):
     block_list.draw(screen)
     flag_list.draw(screen)
     nomarioMovement(monstres_list, item_list, niveau.mario)
-    itemUpdate()
+    itemUpdate(SpriteImage, FireBall, niveau.mario)
     active_sprite_list.update()
 
 def mort(niveau, levelCurrent):

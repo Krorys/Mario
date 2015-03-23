@@ -59,8 +59,6 @@ class Perso(pygame.sprite.Sprite):
         for block in block_hit_list:
             if self.changeY > 0:
                 self.rect.bottom = block.rect.top
-                if block.deadly == 1:
-                    self.death()
             elif self.changeY < 0:
                 self.rect.top = block.rect.bottom
 
@@ -128,6 +126,8 @@ class Mario(Perso):
         self.lookat = "right"
         self.duckOn = 0
         self.reset = 0
+        self.time_tornado = -1
+        self.isControlable = 1
         self.time = 210
         self.hp = 3
         self.recharge = 3
@@ -173,7 +173,7 @@ class Mario(Perso):
                 self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
                 self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
                 self.duck_l = pygame.transform.flip(self.duck_r, True, False)
-            else:
+            elif self.onFire == 0:
                 spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
                 self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
                                spriteSheet.get_imageXY(104, 36, 120, 62),
@@ -502,6 +502,7 @@ class FireBall(Item):
         self.direct = 1
         self.speed = 7
         self.time = 180
+        #self.time_tornado = 240
         fireball_list.add(self)
         item_list.add(self)
 
@@ -549,8 +550,8 @@ class Shuriken(Item):
     def __init__(self, image):
         super().__init__(image)
         spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
-        self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)), (spriteSheet.get_imageXY(72, 172, 89, 189)),
-                       (spriteSheet.get_imageXY(53, 172, 69, 189)), (spriteSheet.get_imageXY(32, 172, 49, 189))]
+        self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)), (spriteSheet.get_imageXY(73, 172, 89, 189)),
+                       (spriteSheet.get_imageXY(52, 172, 69, 189)), (spriteSheet.get_imageXY(32, 172, 49, 189))]
         self.walk_r = [(spriteSheet.get_imageXY(32, 194, 49, 211)), (spriteSheet.get_imageXY(53, 194, 69, 211)),
                        (spriteSheet.get_imageXY(72, 194, 88, 211)), (spriteSheet.get_imageXY(92, 194, 109, 211))]
         self.direct = 1
@@ -731,6 +732,7 @@ class Niveau():
                     goomba = Monstres(goombaStand)
                     goomba.rect.x = x
                     goomba.rect.y = y - 9
+                    goomba.direct = 0
                     monstres_list.add(goomba)
                     active_sprite_list.add(goomba)
 

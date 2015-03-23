@@ -12,6 +12,7 @@ pygame.display.set_caption("MarioNinjalike")
 vertFond = (166, 177, 65)
 noirFond = (0, 4, 0)
 blancFond = (255, 255, 255)
+kakiFond = (0, 64, 64)
 taille_sprite = 29
 block_list, monstres_list, item_list, flag_list, coin_list, active_sprite_list, shuriken_list, shuriken_list2, fireball_list = \
 pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),pygame.sprite.Group(),\
@@ -31,8 +32,6 @@ bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.
            (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
 levelselection_list = [(pygame.image.load("images/levelselection_stage_1_1.png")), (pygame.image.load("images/levelselection_stage_1_2.png")),
                        (pygame.image.load("images/levelselection_stage_1_3.png")), (pygame.image.load("images/levelselection_stage_1_4.png"))]
-shuri_list = [(pygame.image.load("images/shuri_on0.png")), (pygame.image.load("images/shuri_on1.png")),
-              (pygame.image.load("images/shuri_on2.png")), (pygame.image.load("images/shuri_on3.png")), ]
 volume_redsquare = pygame.image.load("images/vol_redsquare.png")
 volume_bar = pygame.image.load("images/vol_bar.jpg")
 levelselection_bg = pygame.image.load("images/levelselection_bg.png")
@@ -63,6 +62,8 @@ boomerang_sound = pygame.mixer.Sound('sons/boomerang_sound.wav')
 boomerang_return_sound = pygame.mixer.Sound('sons/boomerang_return_sound.wav')
 chainsaw_sound = pygame.mixer.Sound('sons/chainsaw_sound.wav')
 wall_sound = pygame.mixer.Sound('sons/wall_sound.wav')
+tornado_sound = pygame.mixer.Sound('sons/tornado_sound.wav')
+phoenyx_sound = pygame.mixer.Sound('sons/phoenyx_sound.wav')
 
 
 # Variables
