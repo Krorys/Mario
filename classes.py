@@ -144,6 +144,8 @@ class Mario(Perso):
         self.isCoin = 0
         self.onFire = 0
         self.canBreak = 0
+        self.isTornado = 0
+        self.frameSpeed = 30
 
     def update(self):
         if self.deadOn == 0:
@@ -199,20 +201,22 @@ class Mario(Perso):
 
             block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions X blocs
             for block in block_hit_list:
-                if self.changeX > 0:
-                    self.rect.right = block.rect.left
-                elif self.changeX < 0:
-                    self.rect.left = block.rect.right
+                if self.isTornado == 0:
+                    if self.changeX > 0:
+                        self.rect.right = block.rect.left
+                    elif self.changeX < 0:
+                        self.rect.left = block.rect.right
 
             self.rect.y += self.changeY
 
             block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions Y blocs
             for block in block_hit_list:
-                if self.changeY > 0:
+                if self.changeY > 0 or (self.isTornado == 1 and not block.isTraversable):
                     self.rect.bottom = block.rect.top
                     if block.deadly == 1:
                         self.death()
-                elif self.changeY < 0:
+
+                elif self.changeY < 0 and self.isTornado == 0:
                     self.rect.top = block.rect.bottom
                     if block.isBreakable == 1 and (self.upgraded == 1 or self.onFire == 1):
                         block_list.remove(block)
@@ -307,26 +311,30 @@ class Mario(Perso):
 
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
             for goomba in monstres_hit_list:
-                if self.changeY > 0:
-                    self.rect.y -= 5
-                    self.changeY = -5
-                    goomba_stomp_play()
-                    monstres_list.remove(goomba)
-                    active_sprite_list.remove(goomba)
-                else:
-                    if self.onFire == 1:
-                        deUpgrade_sound_play()
+                if self.isTornado == 0:
+                    if self.changeY > 0:
+                        self.rect.y -= 5
+                        self.changeY = -5
+                        goomba_stomp_play()
                         monstres_list.remove(goomba)
                         active_sprite_list.remove(goomba)
-                        self.onFire = 0
                     else:
-                        if self.upgraded == 1:
+                        if self.onFire == 1:
                             deUpgrade_sound_play()
                             monstres_list.remove(goomba)
                             active_sprite_list.remove(goomba)
-                            self.upgraded = 0
+                            self.onFire = 0
                         else:
-                            self.death()
+                            if self.upgraded == 1:
+                                deUpgrade_sound_play()
+                                monstres_list.remove(goomba)
+                                active_sprite_list.remove(goomba)
+                                self.upgraded = 0
+                            else:
+                                self.death()
+                elif self.isTornado == 1:
+                    monstres_list.remove(goomba)
+                    active_sprite_list.remove(goomba)
 
             if self.rect.y >= screenY:
                 self.death()
@@ -368,9 +376,9 @@ class Mario(Perso):
                     self.stand += 1
                 else:  #Si il marche
                     if self.isScrolling == 1:
-                        frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_r)
+                        frame = (self.rect.x + self.niveauScroll // self.frameSpeed) % len(self.walk_r)
                     else:
-                        frame = (self.rect.x  // 30) % len(self.walk_r)
+                        frame = (self.rect.x  // self.frameSpeed) % len(self.walk_r)
                     self.image = self.walk_r[frame]
             else:  #Si il est en l'air
                 if self.changeY >= 5:  #Si Mario tombe
@@ -385,9 +393,9 @@ class Mario(Perso):
                     self.stand += 1
                 else:  #Si il marche
                     if self.isScrolling == 1:
-                        frame = (self.rect.x + self.niveauScroll // 30) % len(self.walk_l)
+                        frame = (self.rect.x + self.niveauScroll // self.frameSpeed) % len(self.walk_l)
                     else:
-                        frame = (self.rect.x // 30) % len(self.walk_l)
+                        frame = (self.rect.x // self.frameSpeed) % len(self.walk_l)
                     self.image = self.walk_l[frame]
             else:  #Si il est en l'air
                 if self.changeY >= 5:  #Si Mario tombe
@@ -621,6 +629,7 @@ class Block(pygame.sprite.Sprite):
         self.deadly = 0
         self.giveCoin = 0
         self.isBreakable = 0
+        self.isTraversable = 0
         self.gmushroom_activation = 0
 
 
@@ -693,18 +702,22 @@ class Niveau():
 
                 elif sprite == 'p':
                     invisibleBlock = Sol("images/pipe_lb.png", x, y)
+                    invisibleBlock.isTraversable = 1
                     block_list.add(invisibleBlock)
 
                 elif sprite == 'P':
                     invisibleBlock = Sol("images/pipe_lt.png", x, y)
+                    invisibleBlock.isTraversable = 1
                     block_list.add(invisibleBlock)
 
                 elif sprite == 't':
                     invisibleBlock = Sol("images/pipe_rb.png", x, y)
+                    invisibleBlock.isTraversable = 1
                     block_list.add(invisibleBlock)
 
                 elif sprite == 'T':
                     invisibleBlock = Sol("images/pipe_rt.png", x, y)
+                    invisibleBlock.isTraversable = 1
                     block_list.add(invisibleBlock)
 
                 elif sprite == 'i':

@@ -192,6 +192,7 @@ def itemUpdate(SpriteImage, FireBall, mario):
 
     if mario.time_tornado > 0:
         #mario.rect.y = 250
+        x,y = mario.rect.x, mario.rect.y
         mario.time_tornado -= 1
         if mario.lookat == "right":
             mario.changeX = 1
@@ -214,11 +215,18 @@ def itemUpdate(SpriteImage, FireBall, mario):
         mario.isControlable = 1
         mario.time_tornado = -1
         spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+        marioSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+        mario.image = marioSheet.get_imageXY(72, 5, 87, 31)
         mario.walkHold_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
                        spriteSheet.get_imageXY(104, 36, 120, 62),
                        spriteSheet.get_imageXY(136, 37, 151, 63),
                        spriteSheet.get_imageXY(168, 37, 183, 63)]
         mario.onFire = 1
+        mario.rect = mario.image.get_rect()
+        mario.rect.x = x - 20
+        mario.rect.y = 0
+        mario.isTornado = 0
+        mario.frameSpeed = 30
 
 def nomarioMovement(monstres_list, item_list, mario):
 
@@ -318,15 +326,30 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
 
     #Phoenyx Ballet
     if (event.type == KEYDOWN and event.key == K_y) and mario.time == 210:
+        x,y = mario.rect.x, mario.rect.y
         spriteSheet = SpriteImage("images/tornado_sheet.png", kakiFond, 0)
-        mario.walk_r = [spriteSheet.get_imageXY(9, 10, 64, 55),
-                       spriteSheet.get_imageXY(77, 11, 126, 56),
-                       spriteSheet.get_imageXY(144, 11, 190, 57),
-                       spriteSheet.get_imageXY(210, 12, 254, 59)]
-        mario.time_tornado = 270
+        mario.walk_r = [spriteSheet.get_imageXY(9, 15, 50, 56),
+                       spriteSheet.get_imageXY(77, 15, 122, 56),
+                       spriteSheet.get_imageXY(144, 15, 186, 56),
+                       spriteSheet.get_imageXY(210, 15, 248, 56)]
+        mario.jump_r = mario.walk_r
+        mario.walk_l = [pygame.transform.flip(x, True, False) for x in mario.walk_r]
+        mario.jump_l = [pygame.transform.flip(x, True, False) for x in mario.jump_r]
+        mario.image = spriteSheet.get_imageXY(9, 15, 50, 56)
+        mario.rect = mario.image.get_rect()
+        if mario.lookat == "right":
+            mario.rect.x = x
+            mario.rect.y = y - 10
+        else:
+            mario.rect.x = x -10
+            mario.rect.y = y - 10
+        mario.time_tornado = 241
         tornado_sound_play(), phoenyx_sound_play()
         mario.isControlable = 0
         mario.onFire = 2
+        mario.frameSpeed = 15
+        mario.upgraded = 1
+        mario.isTornado = 1
         mario.stop()
 
 def niveauFonct(niveau, choix, screen, fonct):
