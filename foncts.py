@@ -123,13 +123,13 @@ def doubleImage(image, perso):
 
 def choixMenu(event, pos):
     if event.type == KEYDOWN:
-        if event.key == K_DOWN and pos < 2: pos += 1  # On peut descendre qu'en étant en haut
+        if event.key == K_DOWN and pos < 3: pos += 1  # On peut descendre qu'en étant en haut
         if event.key == K_UP and pos > 0: pos -= 1    # Et inversement
     return pos
 
 
 def menuTo(pos):
-    valeurs = [0, 0, 1]
+    valeurs = [0, 0, 1, 0]
     valeurs[pos] = abs(valeurs[pos] - 1)  # si c'est à 0 -> 1, si c'est à 1->0
     return valeurs  # [levelSelection, optionsOn, continuer]
 

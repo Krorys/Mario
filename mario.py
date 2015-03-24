@@ -9,7 +9,7 @@ while continuer:
             menuCurseurPos = choixMenu(event, menuCurseurPos)
             screen.blit(menuCurseurImage, menu_Curseur_Coord[menuCurseurPos])
             if event.type == KEYDOWN and event.key == K_RETURN:
-                levelSelection, optionsOn, continuer = menuTo(menuCurseurPos)
+                levelSelection, optionsOn, continuer, controlsOn = menuTo(menuCurseurPos)
                 menu = 0
         elif optionsOn:
             screen.blit(options, (0, 0))
@@ -28,7 +28,10 @@ while continuer:
                 menu_music.set_volume(volume_default)
                 pygame.mixer.unpause()
                 break
-
+        elif controlsOn:
+            screen.blit(controls, (0,0))
+            if event.type == KEYDOWN and event.key == K_RETURN:
+                menu, controlsOn = 1, 0
         elif levelSelection:
             levelSelectionDraw()
             levelCurseurPos = choixLevel(event, levelCurseurPos)

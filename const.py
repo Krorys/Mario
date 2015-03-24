@@ -21,7 +21,7 @@ marioGroup = pygame.sprite.GroupSingle()
 volume_default, volume = 0.3, 3
 
 # Coordonnées
-menu_Curseur_Coord = [(195, 160), (195, 195), (195, 230)]
+menu_Curseur_Coord = [(195, 160), (195, 195), (195, 230), (195, 275)]
 levelSelection_Curseur_Coord = [(80, 100), (270, 100), (80, 300), (270, 300)]
 levelSelection_Stages_Coord = [(110, 100), (300, 100), (110, 300), (300, 300)]
 menuCurseurPos, levelCurseurPos = 0, 0
@@ -41,6 +41,7 @@ options = pygame.image.load("images/options.png")
 icon = pygame.image.load("images/icon.png")
 shuri_ghost_on = pygame.image.load('images/shuri_ghost_on.png')
 item_off = pygame.image.load('images/item_off.png')
+controls = pygame.image.load('images/controls.png')
 
 
 # Musiques/sons
@@ -68,6 +69,7 @@ phoenyx_sound = pygame.mixer.Sound('sons/phoenyx_sound.wav')
 
 # Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
+controlsOn = 0
 font = pygame.font.SysFont("Arial", 10)
 
 #Init n°2
