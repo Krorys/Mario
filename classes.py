@@ -284,30 +284,31 @@ class Mario(Perso):
 
             item_hit_list = pygame.sprite.spritecollide(self, active_sprite_list, False)               #Collisions items
             for item in item_hit_list:
-                if item.mush == 1:
-                    item_list.remove(item)
-                    active_sprite_list.remove(item)
-                    upgrade_sound_play()
-                    self.upgraded = 1
-                if item.gmush == 1:
-                    item_list.remove(item)
-                    active_sprite_list.remove(item)
-                    liveUp_sound_play()
-                    #faire gagner une vie
-                if item.isFlower == 1:
-                    item_list.remove(item)
-                    active_sprite_list.remove(item)
-                    upgrade_sound_play()
-                    self.upgraded = 1
-                    self.onFire = 1
-                if item.isShuriken == 1:
-                    boomerang_return_sound.stop()
-                    item_list.remove(item)
-                    active_sprite_list.remove(item)
-                    shuriken_list.remove(item)
-                    if item.isBlade == 1:
-                        self.recharge += 1
-                        shuriken_list2.remove(item)
+                if self.isTornado == 0:
+                    if item.mush == 1:
+                        item_list.remove(item)
+                        active_sprite_list.remove(item)
+                        upgrade_sound_play()
+                        self.upgraded = 1
+                    if item.gmush == 1:
+                        item_list.remove(item)
+                        active_sprite_list.remove(item)
+                        liveUp_sound_play()
+                        #faire gagner une vie
+                    if item.isFlower == 1:
+                        item_list.remove(item)
+                        active_sprite_list.remove(item)
+                        upgrade_sound_play()
+                        self.upgraded = 1
+                        self.onFire = 1
+                    if item.isShuriken == 1:
+                        boomerang_return_sound.stop()
+                        item_list.remove(item)
+                        active_sprite_list.remove(item)
+                        shuriken_list.remove(item)
+                        if item.isBlade == 1:
+                            self.recharge += 1
+                            shuriken_list2.remove(item)
 
             monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
             for goomba in monstres_hit_list:
@@ -341,11 +342,14 @@ class Mario(Perso):
 
 
     def grav(self):
-        if self.changeY == 0:  # Si il est au sol
-            self.changeY = 1
+        if self.isTornado == 0:
+            if self.changeY == 0:  # Si il est au sol
+                self.changeY = 1
+            else:
+                if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
+                    self.changeY += 0.40
         else:
-            if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
-                self.changeY += 0.40
+            self.changeY = 0
 
     def goLeft(self):
         super().goLeft()
@@ -686,10 +690,13 @@ class Niveau():
                 if sprite == 'b':
                     Block = Sol("images/Block.jpg", x, y)
                     Block.isBreakable = 1
+                    if y < 270:
+                        Block.isTraversable = 1
                     block_list.add(Block)
 
                 elif sprite == 'B':
                     Block = Sol("images/Block2.jpg", x, y)
+                    Block.isTraversable = 1
                     block_list.add(Block)
 
                 elif sprite == 'x':
@@ -701,14 +708,14 @@ class Niveau():
                     block_list.add(invisibleBlock)
 
                 elif sprite == 'p':
-                    invisibleBlock = Sol("images/pipe_lb.png", x, y)
-                    invisibleBlock.isTraversable = 1
-                    block_list.add(invisibleBlock)
+                    pipeBlock = Sol("images/pipe_lb.png", x, y)
+                    pipeBlock.isTraversable = 1
+                    block_list.add(pipeBlock)
 
                 elif sprite == 'P':
-                    invisibleBlock = Sol("images/pipe_lt.png", x, y)
-                    invisibleBlock.isTraversable = 1
-                    block_list.add(invisibleBlock)
+                    pipeBlock = Sol("images/pipe_lt.png", x, y)
+                    pipeBlock.isTraversable = 1
+                    block_list.add(pipeBlock)
 
                 elif sprite == 't':
                     invisibleBlock = Sol("images/pipe_rb.png", x, y)
@@ -723,16 +730,19 @@ class Niveau():
                 elif sprite == 'i':
                     mushBlock = Sol("images/itemBlock.jpg", x, y)
                     mushBlock.mushroom_activation = 1
+                    mushBlock.isTraversable = 1
                     block_list.add(mushBlock)
 
                 elif sprite == 'I':
                     gmushBlock = Sol("images/itemBlock.jpg", x, y)
                     gmushBlock.gmushroom_activation = 1
+                    gmushBlock.isTraversable = 1
                     block_list.add(gmushBlock)
 
                 elif sprite == 'c':
                     coinBlock = Sol("images/itemBlock.jpg", x, y)
                     coinBlock.giveCoin = 1
+                    coinBlock.isTraversable = 1
                     block_list.add(coinBlock)
 
                 elif sprite == 'l':

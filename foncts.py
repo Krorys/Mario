@@ -204,15 +204,16 @@ def itemUpdate(SpriteImage, FireBall, mario):
         fireball.rect.x = mario.rect.x + 40
         fireball.rect.y = mario.rect.y + 30
         fireball.direct = 1
+        fireball.changeY = -5
         active_sprite_list.add(fireball)
         fireball2 = FireBall(itemSheet.get_imageXY(104, 84, 111, 91))
         fireball2.rect.x = mario.rect.x + 35
         fireball2.rect.y = mario.rect.y + 30
         fireball2.direct = 0
+        fireball2.changeY = -5
         active_sprite_list.add(fireball2)
     if mario.time_tornado == 0:
         mario.stop()
-        mario.isControlable = 1
         mario.time_tornado = -1
         spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
         marioSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
@@ -223,7 +224,10 @@ def itemUpdate(SpriteImage, FireBall, mario):
                        spriteSheet.get_imageXY(168, 37, 183, 63)]
         mario.onFire = 1
         mario.rect = mario.image.get_rect()
-        mario.rect.x = x - 20
+        if mario.lookat == "right":
+            mario.rect.x = x - 20
+        else:
+            mario.rect.x = x + 20
         mario.rect.y = 0
         mario.isTornado = 0
         mario.frameSpeed = 30
@@ -255,7 +259,7 @@ def nomarioMovement(monstres_list, item_list, mario):
                 item.stop()
 
 def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
-    if mario.isControlable == 1:
+    if mario.isTornado == 0:
         if event.type == KEYDOWN:
             if event.key == K_RIGHT:
                 mario.goRight()
@@ -325,7 +329,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 mario.duckOn = 0
 
     #Phoenyx Ballet
-    if (event.type == KEYDOWN and event.key == K_y) and mario.time == 210:
+    if (event.type == KEYDOWN and event.key == K_y) and mario.time == 210 and mario.isTornado == 0:
         x,y = mario.rect.x, mario.rect.y
         spriteSheet = SpriteImage("images/tornado_sheet.png", kakiFond, 0)
         mario.walk_r = [spriteSheet.get_imageXY(9, 15, 50, 56),
@@ -339,15 +343,13 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         mario.rect = mario.image.get_rect()
         if mario.lookat == "right":
             mario.rect.x = x
-            mario.rect.y = y - 10
         else:
             mario.rect.x = x -10
-            mario.rect.y = y - 10
+        mario.rect.y = y - 35
         mario.time_tornado = 241
         tornado_sound_play(), phoenyx_sound_play()
-        mario.isControlable = 0
         mario.onFire = 2
-        mario.frameSpeed = 15
+        mario.frameSpeed = 4
         mario.upgraded = 1
         mario.isTornado = 1
         mario.stop()
