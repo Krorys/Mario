@@ -30,11 +30,12 @@ menuCurseurPos, levelCurseurPos = 0, 0
 # Images
 bg_list = [(pygame.image.load("images/bg.png")), (pygame.image.load("images/bg2.png")),
            (pygame.image.load("images/bg3.png")), (pygame.image.load("images/bg4.png"))]
+fond_menu = pygame.image.load("images/etoile.jpg")
 levelselection_list = [(pygame.image.load("images/levelselection_stage_1_1.png")), (pygame.image.load("images/levelselection_stage_1_2.png")),
                        (pygame.image.load("images/levelselection_stage_1_3.png")), (pygame.image.load("images/levelselection_stage_1_4.png"))]
 volume_redsquare = pygame.image.load("images/vol_redsquare.png")
 volume_bar = pygame.image.load("images/vol_bar.jpg")
-levelselection_bg = pygame.image.load("images/levelselection_bg.png")
+levelselection_bg = pygame.image.load("images/bg_vide_esc.png")
 menuImage = pygame.image.load("images/menu.png")
 menuCurseurImage = pygame.image.load("images/curseur.png")
 options = pygame.image.load("images/options.png")
@@ -59,8 +60,8 @@ sound_list = [(pygame.mixer.Sound('sons/jump.wav')), (pygame.mixer.Sound('sons/d
               (pygame.mixer.Sound('sons/phoenyx_sound.wav'))]
 
 # Variables
-continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1
-controlsOn = 0
+continuer, menu, jeu, levelCurrent, generation_level = 1, 1, 0, -1, 1
+controlsOn, optionsOn, levelSelectionOn = 0, 0, 0
 font = pygame.font.SysFont("Arial", 10)
 
 #Init n°2

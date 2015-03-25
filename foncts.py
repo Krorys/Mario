@@ -1,5 +1,16 @@
 from const import *
 
+def choixMenu(event, pos):
+    if event.type == KEYDOWN:
+        if event.key == K_DOWN and pos < 3: pos += 1  # On peut descendre qu'en étant en haut
+        if event.key == K_UP and pos > 0: pos -= 1    # Et inversement
+    return pos
+def menuTo(pos):
+    valeurs = [0, 0, 0, 1]
+    valeurs[pos] = abs(valeurs[pos] - 1)  # si c'est à 0 -> 1, si c'est à 1->0
+    return valeurs  # [levelSelection, optionsOn, continuer]
+
+
 def volume_down(volume_default, volume):
     pygame.mixer.pause()
     if volume_default > 0.05 and volume_default < 1.05:
@@ -14,8 +25,10 @@ def volume_up(volume_default, volume):
     if volume > -1 and volume < 10:
         volume += 1
     return (volume_default, volume)
-
-
+def volumeApply(volume_default, volume):
+    affichage_volume(volume)
+    menu_music.set_volume(volume_default)
+    pygame.mixer.unpause()
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
         screen.blit(volume_bar, (329, 174))
@@ -29,13 +42,11 @@ def music_levels(levelCurrent):
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
-
 def music_menu():
     pygame.mixer.stop()
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     menu_music.set_volume(volume_default)
     menu_music.play()
-
 def sound_play(x):
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     sound_list[x].set_volume(volume_default)
@@ -43,9 +54,23 @@ def sound_play(x):
 
 
 def levelSelectionDraw():
-    screen.blit(levelselection_bg, (0, 0))
+    screen.blit(fond_menu, (0, 0)), screen.blit(levelselection_bg, (0, 0))
     for x in range (0,4):
         screen.blit(levelselection_list[x], levelSelection_Stages_Coord[x])
+def levelSelectionBlit(levelCurseurPos):
+    levelSelectionDraw()
+    screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
+def choixLevel(event, pos):
+    if event.type == KEYDOWN:
+        if event.key == K_DOWN and pos < 3:
+            pos = (pos + 2) % 4
+        if event.key == K_UP and pos > 0:
+            pos = (pos - 2) % 4
+        if event.key == K_LEFT:
+            pos = (pos - 1) % 4
+        if event.key == K_RIGHT:
+            pos = (pos + 1) % 4
+    return pos
 
 
 def doubleImage(image, perso):
@@ -61,31 +86,6 @@ def doubleImage(image, perso):
         imagex2 = pygame.transform.scale2x(image)  # Double la taille du truc
     return imagex2
 
-
-def choixMenu(event, pos):
-    if event.type == KEYDOWN:
-        if event.key == K_DOWN and pos < 3: pos += 1  # On peut descendre qu'en étant en haut
-        if event.key == K_UP and pos > 0: pos -= 1    # Et inversement
-    return pos
-
-
-def menuTo(pos):
-    valeurs = [0, 0, 0, 1]
-    valeurs[pos] = abs(valeurs[pos] - 1)  # si c'est à 0 -> 1, si c'est à 1->0
-    return valeurs  # [levelSelection, optionsOn, continuer]
-
-
-def choixLevel(event, pos):
-    if event.type == KEYDOWN:
-        if event.key == K_DOWN and pos < 3:
-            pos = (pos + 2) % 4
-        if event.key == K_UP and pos > 0:
-            pos = (pos - 2) % 4
-        if event.key == K_LEFT:
-            pos = (pos - 1) % 4
-        if event.key == K_RIGHT:
-            pos = (pos + 1) % 4
-    return pos
 
 def itemUpdate(SpriteImage, FireBall, mario):
     for item in item_list:
@@ -173,6 +173,7 @@ def itemUpdate(SpriteImage, FireBall, mario):
         mario.isTornado = 0
         mario.frameSpeed = 30
 
+
 def nomarioMovement(monstres_list, item_list, mario):
 
     #Déplacements monstres
@@ -198,6 +199,7 @@ def nomarioMovement(monstres_list, item_list, mario):
                 item.goLeft()
             if item.direct == 2:
                 item.stop()
+
 
 def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
     if mario.isTornado == 0:
@@ -294,7 +296,6 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         mario.upgraded = 1
         mario.isTornado = 1
         mario.stop()
-
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
         niveau.generer()

@@ -438,8 +438,6 @@ class Mario(Perso):
         for x in active_sprite_list:
             x.rect.x += sens
             x.niveauScroll += sens
-
-
 class Monstres(Perso):
     def __init__(self, image):
         super().__init__(image)
@@ -475,7 +473,6 @@ class Monstres(Perso):
                 frame = (self.rect.x // 20) % len(self.walk_l)
             self.image = self.walk_l[frame]
 
-
 class Item(Perso):
     def __init__(self, image):
         super().__init__(image)
@@ -499,7 +496,6 @@ class Item(Perso):
             else:
                 if self.changeY <= 10:
                         self.changeY -= 0.35
-
 class FireBall(Item):
     def __init__(self, image):
         super().__init__(image)
@@ -552,7 +548,6 @@ class FireBall(Item):
                 active_sprite_list.remove(self)
                 item_list.remove(self)
                 sound_play(4)
-
 class Shuriken(Item):
     def __init__(self, image):
         super().__init__(image)
@@ -565,7 +560,7 @@ class Shuriken(Item):
         self.nodirection = 1
         self.time = 30
         self.speed = 6
-        self.willUpdate = 1
+        self.UpdateOn = 1
         self.isGhost = 0
         self.isBlade = 0
         self.isShuriken = 1
@@ -586,20 +581,20 @@ class Shuriken(Item):
             self.image = self.walk_l[frame]
 
     def update(self):
-        if self.willUpdate == 1:
+        if self.UpdateOn == 1:
             self.direction()
 
             if self.isBlade == 1:
                 block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
                 for block in block_hit_list:
                     if self.changeX > 0:
-                        self.rect.right, self.willUpdate = block.rect.left, 0
+                        self.rect.right, self.UpdateOn = block.rect.left, 0
                         item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
                         plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
                         block_list.add(plateforme)
                         active_sprite_list.remove(self)
                     elif self.changeX < 0:
-                        self.rect.left, self.willUpdate = block.rect.right, 0
+                        self.rect.left, self.UpdateOn = block.rect.right, 0
                         item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
                         plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
                         block_list.add(plateforme)
@@ -607,11 +602,11 @@ class Shuriken(Item):
             self.rect.x += self.changeX
 
             shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
-            for hit in shuriken_hit_list:
+            for monstre in shuriken_hit_list:
                 if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
                     sound_play(13)
-                    active_sprite_list.remove(hit)
-                    monstres_list.remove(hit)
+                    active_sprite_list.remove(monstre)
+                    monstres_list.remove(monstre)
 
 
 class Block(pygame.sprite.Sprite):
@@ -631,15 +626,12 @@ class Block(pygame.sprite.Sprite):
         self.isTraversable = 0
         self.gmushroom_activation = 0
 
-
 class Sol(Block):
     def __init__(self, image, x, y):
         Block.__init__(self, image)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
-
 class Flag(Block):
     flag = []
     def __init__(self, image, x, y):
@@ -780,6 +772,6 @@ class Niveau():
         levelSelectionDraw()
         screen.blit(menuCurseurImage, levelSelection_Curseur_Coord[levelCurseurPos])
         music_menu()
-        jeu, levelSelection, levelCurrent, generation_level = 0, 1, -1, 1
+        jeu, levelSelectionOn, levelCurrent, generation_level = 0, 1, -1, 1
         self.mario.reset, self.mario.time = 0, 210
-        return jeu, levelSelection, levelCurrent, generation_level
+        return jeu, levelSelectionOn, levelCurrent, generation_level

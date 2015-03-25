@@ -1,0 +1,17 @@
+0 - jump
+1 - death
+2 - block break
+3 - bloc_item
+4 - goomba death
+5 - item pick
+6 - liveUP
+7 - coin
+8 - deUpgrade
+9 - fireball
+10 - mario sound
+11 - boomerang
+12 - boomerang return
+13 - chainsaw
+14 - wall pierced
+15 - tornado
+16 - phoenix
