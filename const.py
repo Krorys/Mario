@@ -21,9 +21,9 @@ marioGroup = pygame.sprite.GroupSingle()
 volume_default, volume = 0.3, 3
 
 # Coordonnées
-menu_Curseur_Coord = [(195, 160), (195, 195), (195, 230), (195, 275)]
-levelSelection_Curseur_Coord = [(80, 100), (270, 100), (80, 300), (270, 300)]
-levelSelection_Stages_Coord = [(110, 100), (300, 100), (110, 300), (300, 300)]
+menu_Curseur_Coord = [(193, 160), (193, 195), (193, 230), (193, 265)]
+levelSelection_Curseur_Coord = [(90, 200), (280, 200), (90, 250), (280, 250)]
+levelSelection_Stages_Coord = [(110, 200), (300, 200), (110, 250), (300, 250)]
 menuCurseurPos, levelCurseurPos = 0, 0
 
 
@@ -48,24 +48,15 @@ controls = pygame.image.load('images/controls.png')
 levels_music = [(pygame.mixer.Sound('sons/level1_music.wav')), (pygame.mixer.Sound('sons/level2_music.wav')),
                 (pygame.mixer.Sound('sons/level3_music.wav')), (pygame.mixer.Sound('sons/level4_music.wav'))]
 menu_music = pygame.mixer.Sound('sons/menu_music.wav')
-jump_sound = pygame.mixer.Sound('sons/jump.wav')
-death_sound = pygame.mixer.Sound('sons/death.wav')
-bloc_break_sound = pygame.mixer.Sound('sons/bloc_break.wav')
-bloc_item_sound = pygame.mixer.Sound('sons/bloc_item.wav')
-goomba_stomp_sound = pygame.mixer.Sound('sons/goomba_stomp.wav')
-upgrade_sound = pygame.mixer.Sound('sons/item_pick_sound.wav')
-liveUp_sound = pygame.mixer.Sound('sons/liveUp_sound.wav')
-coin_sound = pygame.mixer.Sound('sons/coin_sound.wav')
-deUpgrade_sound = pygame.mixer.Sound('sons/deUpgrade_sound.wav')
-fireball_sound = pygame.mixer.Sound('sons/fireball_sound.wav')
-mario_sound = pygame.mixer.Sound('sons/mario_sound.wav')
-boomerang_sound = pygame.mixer.Sound('sons/boomerang_sound.wav')
-boomerang_return_sound = pygame.mixer.Sound('sons/boomerang_return_sound.wav')
-chainsaw_sound = pygame.mixer.Sound('sons/chainsaw_sound.wav')
-wall_sound = pygame.mixer.Sound('sons/wall_sound.wav')
-tornado_sound = pygame.mixer.Sound('sons/tornado_sound.wav')
-phoenyx_sound = pygame.mixer.Sound('sons/phoenyx_sound.wav')
-
+sound_list = [(pygame.mixer.Sound('sons/jump.wav')), (pygame.mixer.Sound('sons/death.wav')),
+              (pygame.mixer.Sound('sons/bloc_break.wav')), (pygame.mixer.Sound('sons/bloc_item.wav')),
+              (pygame.mixer.Sound('sons/goomba_stomp.wav')), (pygame.mixer.Sound('sons/item_pick_sound.wav')),
+              (pygame.mixer.Sound('sons/liveUp_sound.wav')), (pygame.mixer.Sound('sons/coin_sound.wav')),
+              (pygame.mixer.Sound('sons/deUpgrade_sound.wav')), (pygame.mixer.Sound('sons/fireball_sound.wav')),
+              (pygame.mixer.Sound('sons/mario_sound.wav')), (pygame.mixer.Sound('sons/boomerang_sound.wav')),
+              (pygame.mixer.Sound('sons/boomerang_return_sound.wav')), (pygame.mixer.Sound('sons/chainsaw_sound.wav')),
+              (pygame.mixer.Sound('sons/wall_sound.wav')), (pygame.mixer.Sound('sons/tornado_sound.wav')),
+              (pygame.mixer.Sound('sons/phoenyx_sound.wav'))]
 
 # Variables
 continuer, menu, optionsOn, levelSelection, jeu, levelCurrent, generation_level = 1, 1, 0, 0, 0, -1, 1

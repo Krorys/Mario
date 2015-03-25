@@ -18,10 +18,10 @@ def volume_up(volume_default, volume):
 
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
-        screen.blit(volume_bar, (404, 159))
+        screen.blit(volume_bar, (329, 174))
         for x in range(0, volume):
-            coordX = 406 + 7 * x
-            screen.blit(volume_redsquare, (coordX, 161))
+            coordX = 331 + 7 * x
+            screen.blit(volume_redsquare, (coordX, 176))
 
 
 def music_levels(levelCurrent):
@@ -29,76 +29,17 @@ def music_levels(levelCurrent):
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     levels_music[levelCurrent].set_volume(volume_default)
     levels_music[levelCurrent].play()
+
 def music_menu():
     pygame.mixer.stop()
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
     menu_music.set_volume(volume_default)
     menu_music.play()
-def jump_sound_play():
+
+def sound_play(x):
     volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    jump_sound.set_volume(volume_default)
-    jump_sound.play()
-def upgrade_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    upgrade_sound.set_volume(volume_default)
-    upgrade_sound.play()
-def deUpgrade_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    deUpgrade_sound.set_volume(volume_default)
-    deUpgrade_sound.play()
-def liveUp_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    liveUp_sound.set_volume(volume_default)
-    liveUp_sound.play()
-def coin_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    coin_sound.set_volume(volume_default)
-    coin_sound.play()
-def goomba_stomp_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    goomba_stomp_sound.set_volume(volume_default)
-    goomba_stomp_sound.play()
-def item_block_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    bloc_item_sound.set_volume(volume_default)
-    bloc_item_sound.play()
-def fireball_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    fireball_sound.set_volume(volume_default)
-    fireball_sound.play()
-def death_sound_play():
-    pygame.mixer.stop()
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    death_sound.set_volume(volume_default)
-    death_sound.play()
-def chainsaw_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    chainsaw_sound.set_volume(volume_default)
-    chainsaw_sound.play()
-def mario_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    mario_sound.set_volume(volume_default)
-    mario_sound.play()
-def boomerang_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    boomerang_sound.set_volume(volume_default)
-    boomerang_sound.play()
-def boomerang_return_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    boomerang_return_sound.set_volume(volume_default)
-    boomerang_return_sound.play()
-def wall_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    wall_sound.set_volume(volume_default)
-    wall_sound.play()
-def tornado_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    tornado_sound.set_volume(volume_default)
-    tornado_sound.play()
-def phoenyx_sound_play():
-    volume_default = pygame.mixer.Sound.get_volume(menu_music)
-    phoenyx_sound.set_volume(volume_default)
-    phoenyx_sound.play()
+    sound_list[x].set_volume(volume_default)
+    sound_list[x].play()
 
 
 def levelSelectionDraw():
@@ -129,7 +70,7 @@ def choixMenu(event, pos):
 
 
 def menuTo(pos):
-    valeurs = [0, 0, 1, 0]
+    valeurs = [0, 0, 0, 1]
     valeurs[pos] = abs(valeurs[pos] - 1)  # si c'est à 0 -> 1, si c'est à 1->0
     return valeurs  # [levelSelection, optionsOn, continuer]
 
@@ -180,7 +121,7 @@ def itemUpdate(SpriteImage, FireBall, mario):
                     else: item.changeX += 3
 
                 if item.time == 0: #Fin de l'aller
-                    boomerang_return_sound_play()
+                    sound_play(12)
                     item.time = 130
                     if item.direct == 1: item.direct = 0
                     elif item.direct == 0: item.direct = 1
@@ -272,7 +213,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
 
             #FireBall
             if event.key == K_e and mario.onFire == 1:
-                fireball_sound_play()
+                sound_play(9)
                 itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
                 fireball = FireBall(itemSheet.get_imageXY(104, 84, 111, 91))
                 fireball.rect.x = mario.rect.x + 10
@@ -285,7 +226,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
 
             #Ghost Razorblade
             if event.key == K_r and mario.time == 210 and (len(shuriken_list) == 0):
-                mario_sound_play(), boomerang_sound_play()
+                sound_play(10), sound_play(11)
                 spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
                 shuriken = Shuriken(spriteSheet.get_imageXY(32, 172, 49, 189))
                 shuriken_list.add(shuriken)
@@ -300,9 +241,9 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                     shuriken.rect.x = mario.rect.x - 49
 
             #Razorblade
-            if event.key == K_t and mario.time == 210 and (len(shuriken_list2) != 3 and mario.recharge > 0):
+            if event.key == K_t and mario.time == 210 and mario.recharge > 0:
                 mario.recharge -= 1
-                mario_sound_play(), boomerang_sound_play()
+                sound_play(10), sound_play(11)
                 spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
                 shuriken = Shuriken(spriteSheet.get_imageXY(32, 131, 49, 148))
                 shuriken_list2.add(shuriken)
@@ -347,7 +288,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
             mario.rect.x = x -10
         mario.rect.y = y - 35
         mario.time_tornado = 241
-        tornado_sound_play(), phoenyx_sound_play()
+        sound_play(15), sound_play(16)
         mario.onFire = 2
         mario.frameSpeed = 4
         mario.upgraded = 1

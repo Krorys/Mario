@@ -43,7 +43,6 @@ class Perso(pygame.sprite.Sprite):
         self.grav()
 
         self.rect.x += self.changeX
-        #Collisions X blocs
         block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
         for block in block_hit_list:
             if self.changeX > 0:
@@ -54,7 +53,6 @@ class Perso(pygame.sprite.Sprite):
                 self.direct = 1
 
         self.rect.y += self.changeY
-        #Collisions Y blocs
         block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
         for block in block_hit_list:
             if self.changeY > 0:
@@ -127,11 +125,10 @@ class Mario(Perso):
         self.duckOn = 0
         self.reset = 0
         self.time_tornado = -1
-        self.isControlable = 1
         self.time = 210
         self.hp = 3
         self.recharge = 3
-        self.killEnnemy = 0
+        #self.killEnnemy = 0
         self.willDie = 0
         self.pick = 0
         self.mush = 0
@@ -220,9 +217,7 @@ class Mario(Perso):
                     self.rect.top = block.rect.bottom
                     if block.isBreakable == 1 and (self.upgraded == 1 or self.onFire == 1):
                         block_list.remove(block)
-                        volume_default = pygame.mixer.Sound.get_volume(menu_music)
-                        bloc_break_sound.set_volume(volume_default)
-                        bloc_break_sound.play()
+                        sound_play(2)
                     elif block.mushroom_activation == 1:                                       #Champigon rouge et fleur
                         if self.upgraded == 0:
                             mushroomStand = self.itemSheet.get_imageXY(146, 43, 161, 58)
@@ -232,7 +227,7 @@ class Mario(Perso):
                             mushroom.rect.y = block.rect.y - 30
                             mushroom.rect.x = block.rect.x
                             block.image = pygame.image.load("images/usedBlock.jpg")
-                            item_block_play()
+                            sound_play(3)
                             block.mushroom_activation = 0
                             block.used = 1
                         elif self.upgraded > 0:
@@ -244,7 +239,7 @@ class Mario(Perso):
                             flower.rect.y = block.rect.y - 30
                             flower.rect.x = block.rect.x
                             block.image = pygame.image.load("images/usedBlock.jpg")
-                            item_block_play()
+                            sound_play(3)
                             block.mushroom_activation = 0
                             block.used = 1
                     elif block.gmushroom_activation == 1:                                               #Champignon vert
@@ -255,7 +250,7 @@ class Mario(Perso):
                         gmushroom.rect.y = block.rect.y - 30
                         gmushroom.rect.x = block.rect.x
                         block.image = pygame.image.load("images/usedBlock.jpg")
-                        item_block_play()
+                        sound_play(3)
                         block.gmushroom_activation = 0
                         block.used = 1
                     elif block.giveCoin == 1:                                                                     #Pièce
@@ -266,7 +261,7 @@ class Mario(Perso):
                         coin_list.add(coin)
                         item_list.add(coin)
                         active_sprite_list.add(coin)
-                        coin_sound_play()
+                        sound_play(7)
                         block.used = 1
                         coin.rect.y = block.rect.y - 30
                         coin.rect.x = block.rect.x
@@ -276,7 +271,7 @@ class Mario(Perso):
 
             flag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
             for flag in flag_hit_list:
-                print(flag.flag, flag.pos, flag.fin)
+                #print(flag.flag, flag.pos, flag.fin)
                 if flag.fin != len(flag_hit_list):
                     self.lastCheckpoint = flag.pos
                 else:
@@ -288,21 +283,21 @@ class Mario(Perso):
                     if item.mush == 1:
                         item_list.remove(item)
                         active_sprite_list.remove(item)
-                        upgrade_sound_play()
+                        sound_play(5)
                         self.upgraded = 1
                     if item.gmush == 1:
                         item_list.remove(item)
                         active_sprite_list.remove(item)
-                        liveUp_sound_play()
+                        sound_play(6)
                         #faire gagner une vie
                     if item.isFlower == 1:
                         item_list.remove(item)
                         active_sprite_list.remove(item)
-                        upgrade_sound_play()
+                        sound_play(5)
                         self.upgraded = 1
                         self.onFire = 1
                     if item.isShuriken == 1:
-                        boomerang_return_sound.stop()
+                        sound_list[12].stop()
                         item_list.remove(item)
                         active_sprite_list.remove(item)
                         shuriken_list.remove(item)
@@ -316,18 +311,18 @@ class Mario(Perso):
                     if self.changeY > 0:
                         self.rect.y -= 5
                         self.changeY = -5
-                        goomba_stomp_play()
+                        sound_play(4)
                         monstres_list.remove(goomba)
                         active_sprite_list.remove(goomba)
                     else:
                         if self.onFire == 1:
-                            deUpgrade_sound_play()
+                            sound_play(8)
                             monstres_list.remove(goomba)
                             active_sprite_list.remove(goomba)
                             self.onFire = 0
                         else:
                             if self.upgraded == 1:
-                                deUpgrade_sound_play()
+                                sound_play(8)
                                 monstres_list.remove(goomba)
                                 active_sprite_list.remove(goomba)
                                 self.upgraded = 0
@@ -411,7 +406,7 @@ class Mario(Perso):
         if self.changeY == 0:
             self.rect.y -= 5
             self.changeY = -10
-            jump_sound_play()
+            sound_play(0)
 
     def death(self):
 
@@ -425,7 +420,7 @@ class Mario(Perso):
         for monstre in monstres_list:
             monstre.direct = 2
         self.deadOn = 1
-        if self.time == 210: death_sound_play()
+        if self.time == 210: pygame.mixer.stop(), sound_play(1)
         if self.time > 0:
             self.time -= 1
         if self.time == 0:
@@ -556,7 +551,7 @@ class FireBall(Item):
                 monstres_list.remove(item)
                 active_sprite_list.remove(self)
                 item_list.remove(self)
-                goomba_stomp_play()
+                sound_play(4)
 
 class Shuriken(Item):
     def __init__(self, image):
@@ -599,13 +594,13 @@ class Shuriken(Item):
                 for block in block_hit_list:
                     if self.changeX > 0:
                         self.rect.right, self.willUpdate = block.rect.left, 0
-                        item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
+                        item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
                         plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
                         block_list.add(plateforme)
                         active_sprite_list.remove(self)
                     elif self.changeX < 0:
                         self.rect.left, self.willUpdate = block.rect.right, 0
-                        item_list.remove(self), shuriken_list2.remove(self), wall_sound_play()
+                        item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
                         plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
                         block_list.add(plateforme)
                         active_sprite_list.remove(self)
@@ -614,7 +609,7 @@ class Shuriken(Item):
             shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
             for hit in shuriken_hit_list:
                 if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
-                    chainsaw_sound_play()
+                    sound_play(13)
                     active_sprite_list.remove(hit)
                     monstres_list.remove(hit)
 
