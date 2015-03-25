@@ -5,26 +5,24 @@ while continuer:
         if event.type == QUIT:
             continuer = 0
         if menu:
-            screen.blit(fond_menu, (0, 0)), screen.blit(menuImage, (0, 0))
+            ecran_menu_blit(0)
             menuCurseurPos = choixMenu(event, menuCurseurPos)
             screen.blit(menuCurseurImage, menu_Curseur_Coord[menuCurseurPos])
             if event.type == KEYDOWN and event.key == K_RETURN:
                 levelSelectionOn, optionsOn, controlsOn, continuer = menuTo(menuCurseurPos)
                 menu = 0
         elif optionsOn:
-            screen.blit(fond_menu, (0, 0)), screen.blit(options, (0, 0)), affichage_volume(volume)
+            volumeApply(volume_default, volume)
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 menu, optionsOn = 1, 0
-            if event.type == KEYDOWN and event.key == K_LEFT:  # Baisser le son
-                volume_default, volume = volume_down(volume_default, volume)
-                volumeApply(volume_default, volume)
-                break
             if event.type == KEYDOWN and event.key == K_RIGHT: # Augmenter le son
                 volume_default, volume = volume_up(volume_default, volume)
-                volumeApply(volume_default, volume)
+                break
+            if event.type == KEYDOWN and event.key == K_LEFT:  # Baisser le son
+                volume_default, volume = volume_down(volume_default, volume)
                 break
         elif controlsOn:
-            screen.blit(fond_menu, (0, 0)), screen.blit(controls, (0,0))
+            ecran_menu_blit(2)
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 menu, controlsOn = 1, 0
         elif levelSelectionOn:

@@ -551,29 +551,29 @@ class FireBall(Item):
 class Shuriken(Item):
     def __init__(self, image):
         super().__init__(image)
-        spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
-        self.walk_l = [(spriteSheet.get_imageXY(92, 172, 109, 189)), (spriteSheet.get_imageXY(73, 172, 89, 189)),
-                       (spriteSheet.get_imageXY(52, 172, 69, 189)), (spriteSheet.get_imageXY(32, 172, 49, 189))]
-        self.walk_r = [(spriteSheet.get_imageXY(32, 194, 49, 211)), (spriteSheet.get_imageXY(53, 194, 69, 211)),
-                       (spriteSheet.get_imageXY(72, 194, 88, 211)), (spriteSheet.get_imageXY(92, 194, 109, 211))]
+        Sheet = SpriteImage("images/Shuriken.png", blancFond, -1)
+        self.walk_l = [(Sheet.get_imageXY(92, 172, 109, 189)), (Sheet.get_imageXY(73, 172, 89, 189)),
+                       (Sheet.get_imageXY(52, 172, 69, 189)), (Sheet.get_imageXY(32, 172, 49, 189))]
+        self.walk_r = [(Sheet.get_imageXY(32, 194, 49, 211)), (Sheet.get_imageXY(53, 194, 69, 211)),
+                       (Sheet.get_imageXY(72, 194, 88, 211)), (Sheet.get_imageXY(92, 194, 109, 211))]
         self.direct = 1
         self.nodirection = 1
         self.time = 30
         self.speed = 6
         self.UpdateOn = 1
-        self.isGhost = 0
+        self.isBoomerang = 0
         self.isBlade = 0
         self.isShuriken = 1
         item_list.add(self)
 
     def direction(self):
-        if self.lookat == "right":  # Si il regardre à droite
+        if self.lookat == "right":
             if self.isScrolling == 1:
                 frame = (self.rect.x + self.niveauScroll // 10) % len(self.walk_r)
             else:
                 frame = (self.rect.x // 10) % len(self.walk_r)
             self.image = self.walk_r[frame]
-        else:  # Si il regarde à gauche
+        elif self.lookat == 'left':
             if self.isScrolling == 1:
                 frame = (self.rect.x + self.niveauScroll // 10) % len(self.walk_l)
             else:
@@ -591,12 +591,14 @@ class Shuriken(Item):
                         self.rect.right, self.UpdateOn = block.rect.left, 0
                         item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
                         plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
+                        plateforme.isShuriken = 1
                         block_list.add(plateforme)
                         active_sprite_list.remove(self)
                     elif self.changeX < 0:
                         self.rect.left, self.UpdateOn = block.rect.right, 0
                         item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
                         plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
+                        plateforme.isShuriken = 1
                         block_list.add(plateforme)
                         active_sprite_list.remove(self)
             self.rect.x += self.changeX
@@ -623,8 +625,9 @@ class Block(pygame.sprite.Sprite):
         self.deadly = 0
         self.giveCoin = 0
         self.isBreakable = 0
-        self.isTraversable = 0
+        self.isTraversable = 1
         self.gmushroom_activation = 0
+        self.isShuriken = 0
 
 class Sol(Block):
     def __init__(self, image, x, y):
@@ -650,7 +653,6 @@ class Niveau():
         self.structure = 0
         self.goombaSheet = SpriteImage("images/goomba sheet.png", blancFond, 2)
         self.marioSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
-        self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
         self.mario = Mario(self.marioSheet.get_imageXY(72, 5, 87, 31))
 
 
@@ -676,14 +678,12 @@ class Niveau():
 
                 if sprite == 'b':
                     Block = Sol("images/Block.jpg", x, y)
-                    Block.isBreakable = 1
-                    if y < 270:
-                        Block.isTraversable = 1
+                    if y > 270:
+                        Block.isTraversable = 0
                     block_list.add(Block)
 
                 elif sprite == 'B':
                     Block = Sol("images/Block2.jpg", x, y)
-                    Block.isTraversable = 1
                     block_list.add(Block)
 
                 elif sprite == 'x':
@@ -692,44 +692,30 @@ class Niveau():
 
                 elif sprite == 'X':
                     invisibleBlock = Sol("images/invisibleBlock.png", x, y)
+                    invisibleBlock.isTraversable = 0
                     block_list.add(invisibleBlock)
 
                 elif sprite == 'p':
-                    pipeBlock = Sol("images/pipe_lb.png", x, y)
-                    pipeBlock.isTraversable = 1
+                    pipeBlock = Sol("images/pipe_bot.png", x, y)
                     block_list.add(pipeBlock)
 
                 elif sprite == 'P':
-                    pipeBlock = Sol("images/pipe_lt.png", x, y)
-                    pipeBlock.isTraversable = 1
+                    pipeBlock = Sol("images/pipe_top.png", x, y)
                     block_list.add(pipeBlock)
-
-                elif sprite == 't':
-                    invisibleBlock = Sol("images/pipe_rb.png", x, y)
-                    invisibleBlock.isTraversable = 1
-                    block_list.add(invisibleBlock)
-
-                elif sprite == 'T':
-                    invisibleBlock = Sol("images/pipe_rt.png", x, y)
-                    invisibleBlock.isTraversable = 1
-                    block_list.add(invisibleBlock)
 
                 elif sprite == 'i':
                     mushBlock = Sol("images/itemBlock.jpg", x, y)
                     mushBlock.mushroom_activation = 1
-                    mushBlock.isTraversable = 1
                     block_list.add(mushBlock)
 
                 elif sprite == 'I':
                     gmushBlock = Sol("images/itemBlock.jpg", x, y)
                     gmushBlock.gmushroom_activation = 1
-                    gmushBlock.isTraversable = 1
                     block_list.add(gmushBlock)
 
                 elif sprite == 'c':
                     coinBlock = Sol("images/itemBlock.jpg", x, y)
                     coinBlock.giveCoin = 1
-                    coinBlock.isTraversable = 1
                     block_list.add(coinBlock)
 
                 elif sprite == 'l':

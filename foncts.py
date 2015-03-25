@@ -1,5 +1,9 @@
 from const import *
 
+def ecran_menu_blit(x):
+    screen.blit(menu_fond, (0, 0))
+    screen.blit(images_menu_list[x], (0, 0))
+
 def choixMenu(event, pos):
     if event.type == KEYDOWN:
         if event.key == K_DOWN and pos < 3: pos += 1  # On peut descendre qu'en étant en haut
@@ -12,29 +16,29 @@ def menuTo(pos):
 
 
 def volume_down(volume_default, volume):
-    pygame.mixer.pause()
     if volume_default > 0.05 and volume_default < 1.05:
         volume_default -= 0.1
     if volume > 0 and volume < 11:
         volume -= 1
     return (volume_default, volume)
 def volume_up(volume_default, volume):
-    pygame.mixer.pause()
     if volume_default > -0.5 and volume_default < 0.95:
         volume_default += 0.1
     if volume > -1 and volume < 10:
         volume += 1
     return (volume_default, volume)
-def volumeApply(volume_default, volume):
-    affichage_volume(volume)
-    menu_music.set_volume(volume_default)
-    pygame.mixer.unpause()
 def affichage_volume(volume):
     if volume > -1 and volume < 11:
         screen.blit(volume_bar, (329, 174))
         for x in range(0, volume):
             coordX = 331 + 7 * x
             screen.blit(volume_redsquare, (coordX, 176))
+def volumeApply(volume_default, volume):
+    screen.blit(fond_menu, (0, 0))
+    screen.blit(images_menu_list[1], (0, 0))
+    affichage_volume(volume)
+    menu_music.set_volume(volume_default)
+
 
 
 def music_levels(levelCurrent):
@@ -54,7 +58,7 @@ def sound_play(x):
 
 
 def levelSelectionDraw():
-    screen.blit(fond_menu, (0, 0)), screen.blit(levelselection_bg, (0, 0))
+    ecran_menu_blit(3)
     for x in range (0,4):
         screen.blit(levelselection_list[x], levelSelection_Stages_Coord[x])
 def levelSelectionBlit(levelCurseurPos):
@@ -90,7 +94,7 @@ def doubleImage(image, perso):
 def itemUpdate(SpriteImage, FireBall, mario):
     for item in item_list:
 
-        #Pièce
+    #Pièce
         if item in coin_list:
             if item.time > 0:
                 item.time -= 1
@@ -98,7 +102,7 @@ def itemUpdate(SpriteImage, FireBall, mario):
                 active_sprite_list.remove(item)
                 item_list.remove(item)
 
-        #FireBall
+    #FireBall
         if item in fireball_list:
             if item.time > 0:
                 item.time -= 1
@@ -107,9 +111,8 @@ def itemUpdate(SpriteImage, FireBall, mario):
                 active_sprite_list.remove(item)
                 item_list.remove(item)
 
-
-        #Ghost Razorblade
-        if item.isShuriken and item.isGhost:
+    #Shuriken-boomerang
+        if item.isShuriken and item.isBoomerang:
                 if item.time > 0:
                     item.time -= 1
 
@@ -131,57 +134,39 @@ def itemUpdate(SpriteImage, FireBall, mario):
                     item_list.remove(item)
                     shuriken_list.remove(item)
 
+    #Phoenix dance
     if mario.time_tornado > 0:
-        #mario.rect.y = 250
-        x,y = mario.rect.x, mario.rect.y
+        x, y = mario.rect.x, mario.rect.y
         mario.time_tornado -= 1
-        if mario.lookat == "right":
-            mario.changeX = 1
-        else:
-            mario.changeX = -1
+        if mario.lookat == "right": mario.changeX = 1
+        elif mario.lookat == 'left': mario.changeX = -1
+
     if mario.time_tornado % 30 == 0 and mario.time_tornado > 0:
-        itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
-        fireball = FireBall(itemSheet.get_imageXY(104, 84, 111, 91))
-        fireball.rect.x = mario.rect.x + 40
-        fireball.rect.y = mario.rect.y + 30
-        fireball.direct = 1
-        fireball.changeY = -5
-        active_sprite_list.add(fireball)
-        fireball2 = FireBall(itemSheet.get_imageXY(104, 84, 111, 91))
-        fireball2.rect.x = mario.rect.x + 35
-        fireball2.rect.y = mario.rect.y + 30
-        fireball2.direct = 0
-        fireball2.changeY = -5
-        active_sprite_list.add(fireball2)
+        Sheet = SpriteImage("images/item sheet.png", blancFond, 0)
+        fireball1, fireball2 = FireBall(Sheet.get_imageXY(104, 84, 111, 91)), FireBall(Sheet.get_imageXY(104, 84, 111, 91))
+        fireball1.rect.x, fireball2.rect.x = mario.rect.x + 40, mario.rect.x + 35
+        fireball1.rect.y, fireball2.rect.y = mario.rect.y + 30, mario.rect.y + 30
+        fireball1.changeY, fireball2.changeY = -5, -5
+        fireball1.direct, fireball2.direct = 1, 0
+        active_sprite_list.add(fireball1, fireball2)
+
     if mario.time_tornado == 0:
         mario.stop()
-        mario.time_tornado = -1
-        spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
-        marioSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
-        mario.image = marioSheet.get_imageXY(72, 5, 87, 31)
-        mario.walkHold_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
-                       spriteSheet.get_imageXY(104, 36, 120, 62),
-                       spriteSheet.get_imageXY(136, 37, 151, 63),
-                       spriteSheet.get_imageXY(168, 37, 183, 63)]
-        mario.onFire = 1
+        Sheet = SpriteImage("images/mario sheet.png", vertFond, 1)
+        mario.image = Sheet.get_imageXY(72, 5, 87, 31)
         mario.rect = mario.image.get_rect()
-        if mario.lookat == "right":
-            mario.rect.x = x - 20
-        else:
-            mario.rect.x = x + 20
-        mario.rect.y = 0
-        mario.isTornado = 0
-        mario.frameSpeed = 30
+        if mario.lookat == "right": mario.rect.x = x - 20
+        elif mario.lookat == 'left': mario.rect.x = x + 20
+        mario.time_tornado, mario.onFire, mario.rect.y, mario.isTornado, mario.frameSpeed = -1, 1, 0, 0, 30
 
 
 def nomarioMovement(monstres_list, item_list, mario):
 
     #Déplacements monstres
     for monstres in monstres_list:
-        #print(monstres.rect.x, mario.rect.x - mario.niveauScroll)
-        if monstres.direct == 1: #direct = 1 -> droite
+        if monstres.direct == 1:
             monstres.goRight()
-        if monstres.direct == 0: #direct = 0 -> gauche
+        if monstres.direct == 0:
             monstres.goLeft()
         if monstres.direct == 2:
             monstres.stop()
@@ -216,44 +201,42 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
             #FireBall
             if event.key == K_e and mario.onFire == 1:
                 sound_play(9)
-                itemSheet = SpriteImage("images/item sheet.png", blancFond, 0)
-                fireball = FireBall(itemSheet.get_imageXY(104, 84, 111, 91))
+                Sheet = SpriteImage("images/item sheet.png", blancFond, 0)
+                fireball = FireBall(Sheet.get_imageXY(104, 84, 111, 91))
                 fireball.rect.x = mario.rect.x + 10
                 fireball.rect.y = mario.rect.y
-                if mario.lookat == 'right':
-                    fireball.direct = 1
-                else:
-                    fireball.direct = 0
                 active_sprite_list.add(fireball)
+                if mario.lookat == 'right': fireball.direct = 1
+                elif mario.lookat == 'left': fireball.direct = 0
 
-            #Ghost Razorblade
+            #Shuriken-boomerang
             if event.key == K_r and mario.time == 210 and (len(shuriken_list) == 0):
                 sound_play(10), sound_play(11)
-                spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
-                shuriken = Shuriken(spriteSheet.get_imageXY(32, 172, 49, 189))
+                Sheet = SpriteImage("images/Shuriken.png", blancFond, -1)
+                shuriken = Shuriken(Sheet.get_imageXY(32, 172, 49, 189))
                 shuriken_list.add(shuriken)
                 active_sprite_list.add(shuriken)
                 shuriken.rect.y = mario.rect.y + 15
-                shuriken.isGhost = 1
+                shuriken.isBoomerang = 1
                 if mario.lookat == 'right':
                     shuriken.direct = 1
                     shuriken.rect.x = mario.rect.x + 30
-                else:
+                elif mario.lookat == 'left':
                     shuriken.direct = 0
                     shuriken.rect.x = mario.rect.x - 49
 
-            #Razorblade
+            #Shuriken
             if event.key == K_t and mario.time == 210 and mario.recharge > 0:
                 mario.recharge -= 1
                 sound_play(10), sound_play(11)
-                spriteSheet = SpriteImage("images/Shuriken.png", blancFond, -1)
-                shuriken = Shuriken(spriteSheet.get_imageXY(32, 131, 49, 148))
+                Sheet = SpriteImage("images/Shuriken.png", blancFond, -1)
+                shuriken = Shuriken(Sheet.get_imageXY(32, 131, 49, 148))
                 shuriken_list2.add(shuriken)
                 active_sprite_list.add(shuriken)
-                shuriken.walk_l = [(spriteSheet.get_imageXY(92, 131, 109, 148)), (spriteSheet.get_imageXY(73, 131, 89, 148)),
-                                   (spriteSheet.get_imageXY(52, 131, 69, 148)), (spriteSheet.get_imageXY(32, 131, 49, 148))]
-                shuriken.walk_r = [(spriteSheet.get_imageXY(32, 153, 49, 170)), (spriteSheet.get_imageXY(53, 153, 69, 170)),
-                                   (spriteSheet.get_imageXY(72, 153, 88, 170)), (spriteSheet.get_imageXY(92, 153, 109, 170))]
+                shuriken.walk_l = [(Sheet.get_imageXY(92, 131, 109, 148)), (Sheet.get_imageXY(73, 131, 89, 148)),
+                                   (Sheet.get_imageXY(52, 131, 69, 148)), (Sheet.get_imageXY(32, 131, 49, 148))]
+                shuriken.walk_r = [(Sheet.get_imageXY(32, 153, 49, 170)), (Sheet.get_imageXY(53, 153, 69, 170)),
+                                   (Sheet.get_imageXY(72, 153, 88, 170)), (Sheet.get_imageXY(92, 153, 109, 170))]
                 shuriken.isBlade = 1
                 shuriken.rect.y = mario.rect.y + 15
                 if mario.lookat == 'right':
@@ -284,10 +267,8 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         mario.jump_l = [pygame.transform.flip(x, True, False) for x in mario.jump_r]
         mario.image = spriteSheet.get_imageXY(9, 15, 50, 56)
         mario.rect = mario.image.get_rect()
-        if mario.lookat == "right":
-            mario.rect.x = x
-        else:
-            mario.rect.x = x -10
+        if mario.lookat == 'right': mario.rect.x = x
+        elif mario.lookat == 'left': mario.rect.x = x -10
         mario.rect.y = y - 35
         mario.time_tornado = 241
         sound_play(15), sound_play(16)
