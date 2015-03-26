@@ -95,29 +95,7 @@ class Perso(pygame.sprite.Sprite):
 class Mario(Perso):
     def __init__(self, image):
         super().__init__(image)
-        spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
         self.itemSheet = SpriteImage("images/item sheet.png", blancFond, 3)
-        self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
-                       spriteSheet.get_imageXY(104, 36, 120, 62),
-                       spriteSheet.get_imageXY(136, 37, 151, 63),
-                       spriteSheet.get_imageXY(168, 37, 183, 63)]
-        self.walkHold_r = [spriteSheet.get_imageXY(72, 69, 88, 95),
-                           spriteSheet.get_imageXY(103, 68, 120, 94),
-                           spriteSheet.get_imageXY(136, 69, 152, 95),
-                           spriteSheet.get_imageXY(168, 69, 184, 95)]
-        self.stand_r = [spriteSheet.get_imageXY(72, 5, 87, 31),
-                        spriteSheet.get_imageXY(104, 4, 119, 31),
-                        spriteSheet.get_imageXY(136, 3, 151, 31),
-                        spriteSheet.get_imageXY(168, 4, 183, 31),
-                        spriteSheet.get_imageXY(200, 5, 215, 31)]
-        self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126),
-                       spriteSheet.get_imageXY(104, 100, 121, 126)]
-        self.duck_r = spriteSheet.get_imageXY(73, 165, 88, 191)
-        self.dead = spriteSheet.get_imageXY(67, 242, 92, 271)
-        self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
-        self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
-        self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
-        self.duck_l = pygame.transform.flip(self.duck_r, True, False)
         self.stand = 0
         self.changeX = 0
         self.changeY = 0
@@ -128,7 +106,6 @@ class Mario(Perso):
         self.time = 210
         self.hp = 3
         self.recharge = 3
-        #self.killEnnemy = 0
         self.willDie = 0
         self.pick = 0
         self.mush = 0
@@ -151,51 +128,18 @@ class Mario(Perso):
                 self.isScrolling = 1
             else:
                 self.isScrolling = 0
-            self.direction()
             if self.duckOn == 1: self.duck()
-            self.grav()
             if self.onFire == 1:
-                spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
-                self.stand_r = [spriteSheet.get_imageXY(316, 6, 331, 32),
-                                spriteSheet.get_imageXY(348, 5, 363, 32),
-                                spriteSheet.get_imageXY(380, 4, 395, 32),
-                                spriteSheet.get_imageXY(412, 5, 427, 32),
-                                spriteSheet.get_imageXY(444, 6, 459, 32)]
-                self.walk_r = [spriteSheet.get_imageXY(317, 43, 332, 69),
-                               spriteSheet.get_imageXY(349, 42, 365, 68),
-                               spriteSheet.get_imageXY(381, 43, 396, 69),
-                               spriteSheet.get_imageXY(413, 43, 428, 69)]
-                self.jump_r = [spriteSheet.get_imageXY(317, 78, 334, 105),
-                                spriteSheet.get_imageXY(349, 79, 366, 105)]
-                self.duck_r = spriteSheet.get_imageXY(318, 114, 333, 140)
-                self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
-                self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
-                self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
-                self.duck_l = pygame.transform.flip(self.duck_r, True, False)
+                MarioActualSheet(self, SpriteImage, 1)
             elif self.onFire == 0:
-                spriteSheet = SpriteImage("images/mario sheet.png", vertFond, 1)
-                self.walk_r = [spriteSheet.get_imageXY(72, 37, 87, 63),
-                               spriteSheet.get_imageXY(104, 36, 120, 62),
-                               spriteSheet.get_imageXY(136, 37, 151, 63),
-                               spriteSheet.get_imageXY(168, 37, 183, 63)]
-                self.stand_r = [spriteSheet.get_imageXY(72, 5, 87, 31),
-                                spriteSheet.get_imageXY(104, 4, 119, 31),
-                                spriteSheet.get_imageXY(136, 3, 151, 31),
-                                spriteSheet.get_imageXY(168, 4, 183, 31),
-                                spriteSheet.get_imageXY(200, 5, 215, 31)]
-                self.jump_r = [spriteSheet.get_imageXY(72, 99, 89, 126),
-                               spriteSheet.get_imageXY(104, 100, 121, 126)]
-                self.duck_r = spriteSheet.get_imageXY(73, 165, 88, 191)
-                self.dead = spriteSheet.get_imageXY(67, 242, 92, 271)
-                self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
-                self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
-                self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
-                self.duck_l = pygame.transform.flip(self.duck_r, True, False)
+                MarioActualSheet(self, SpriteImage, 0)
+            elif self.isTornado == 1:
+                MarioActualSheet(self, SpriteImage, 2)
 
-
+            self.direction()
+            self.grav()
 
             self.rect.x += self.changeX
-
             block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions X blocs
             for block in block_hit_list:
                 if self.isTornado == 0:
@@ -205,7 +149,6 @@ class Mario(Perso):
                         self.rect.left = block.rect.right
 
             self.rect.y += self.changeY
-
             block_hit_list = pygame.sprite.spritecollide(self, block_list, False)                    #Collisions Y blocs
             for block in block_hit_list:
                 if self.changeY > 0 or (self.isTornado == 1 and not block.isTraversable):
@@ -216,69 +159,57 @@ class Mario(Perso):
                 elif self.changeY < 0 and self.isTornado == 0:
                     self.rect.top = block.rect.bottom
                     if block.isBreakable == 1 and (self.upgraded == 1 or self.onFire == 1):
-                        block_list.remove(block)
-                        sound_play(2)
-                    elif block.mushroom_activation == 1:                                       #Champigon rouge et fleur
+                        block_list.remove(block), sound_play(2)
+                    elif block.mushroom_activation == 1:                                                #Champigon rouge
                         if self.upgraded == 0:
-                            mushroomStand = self.itemSheet.get_imageXY(146, 43, 161, 58)
-                            mushroom = Item(mushroomStand)
+                            Sheet = self.itemSheet.get_imageXY(146, 43, 161, 58)
+                            mushroom = Item(Sheet)
                             mushroom.mush = 1
-                            active_sprite_list.add(mushroom)
                             mushroom.rect.y = block.rect.y - 30
                             mushroom.rect.x = block.rect.x
+                            active_sprite_list.add(mushroom), sound_play(3)
                             block.image = pygame.image.load("images/usedBlock.jpg")
-                            sound_play(3)
-                            block.mushroom_activation = 0
-                            block.used = 1
-                        elif self.upgraded > 0:
-                            flowerStand = self.itemSheet.get_imageXY(214, 43, 227, 58)
-                            flower = Item(flowerStand)
-                            flower.isFlower = 1
-                            flower.direct = 2
-                            active_sprite_list.add(flower)
+                            block.mushroom_activation, block.used = 0, 1
+                        elif self.upgraded > 0:                                                                   #Fleur
+                            Sheet = self.itemSheet.get_imageXY(214, 43, 227, 58)
+                            flower = Item(Sheet)
+                            flower.isFlower, flower.direct = 1, 2
                             flower.rect.y = block.rect.y - 30
                             flower.rect.x = block.rect.x
+                            active_sprite_list.add(flower), sound_play(3)
                             block.image = pygame.image.load("images/usedBlock.jpg")
-                            sound_play(3)
-                            block.mushroom_activation = 0
-                            block.used = 1
+                            block.mushroom_activation, block.used = 0, 1
                     elif block.gmushroom_activation == 1:                                               #Champignon vert
-                        gmushroomStand = self.itemSheet.get_imageXY(197, 43, 212, 58)
-                        gmushroom = Item(gmushroomStand)
+                        Sheet = self.itemSheet.get_imageXY(197, 43, 212, 58)
+                        gmushroom = Item(Sheet)
                         gmushroom.gmush = 1
-                        active_sprite_list.add(gmushroom)
                         gmushroom.rect.y = block.rect.y - 30
                         gmushroom.rect.x = block.rect.x
+                        active_sprite_list.add(gmushroom), sound_play(3)
                         block.image = pygame.image.load("images/usedBlock.jpg")
-                        sound_play(3)
-                        block.gmushroom_activation = 0
-                        block.used = 1
+                        block.gmushroom_activation, block.used = 0, 1
                     elif block.giveCoin == 1:                                                                     #Pièce
                         self.recharge += 1
-                        coinStand = self.itemSheet.get_imageXY(69, 172, 82, 187)
-                        coin = Item(coinStand)
-                        block.image = pygame.image.load("images/usedBlock.jpg")
-                        coin_list.add(coin)
-                        item_list.add(coin)
-                        active_sprite_list.add(coin)
-                        sound_play(7)
-                        block.used = 1
+                        Sheet = self.itemSheet.get_imageXY(69, 172, 82, 187)
+                        coin = Item(Sheet)
+                        coin_list.add(coin), item_list.add(coin)
                         coin.rect.y = block.rect.y - 30
                         coin.rect.x = block.rect.x
-                        block.giveCoin = 0
-
+                        active_sprite_list.add(coin), sound_play(7)
+                        block.image = pygame.image.load("images/usedBlock.jpg")
+                        block.giveCoin, block.used = 0, 1
                 self.changeY = 0
 
-            flag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
-            for flag in flag_hit_list:
+            MarioFlag_hit_list = pygame.sprite.spritecollide(self, flag_list, False)
+            for flag in MarioFlag_hit_list:
                 #print(flag.flag, flag.pos, flag.fin)
-                if flag.fin != len(flag_hit_list):
+                if flag.fin != len(MarioFlag_hit_list):
                     self.lastCheckpoint = flag.pos
                 else:
                     self.reset = 1
 
-            item_hit_list = pygame.sprite.spritecollide(self, active_sprite_list, False)               #Collisions items
-            for item in item_hit_list:
+            MarioItem_hit_list = pygame.sprite.spritecollide(self, active_sprite_list, False)          #Collisions items
+            for item in MarioItem_hit_list:
                 if self.isTornado == 0:
                     if item.mush == 1:
                         item_list.remove(item)
@@ -301,36 +232,33 @@ class Mario(Perso):
                         item_list.remove(item)
                         active_sprite_list.remove(item)
                         shuriken_list.remove(item)
-                        if item.isBlade == 1:
-                            self.recharge += 1
-                            shuriken_list2.remove(item)
 
-            monstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
-            for goomba in monstres_hit_list:
+            MarioMonstres_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)             #Collisions monstres
+            for monstre in MarioMonstres_hit_list:
                 if self.isTornado == 0:
-                    if self.changeY > 0:
+                    if self.changeY > 0: #Si il arrive par le dessus
                         self.rect.y -= 5
                         self.changeY = -5
                         sound_play(4)
-                        monstres_list.remove(goomba)
-                        active_sprite_list.remove(goomba)
+                        monstres_list.remove(monstre)
+                        active_sprite_list.remove(monstre)
                     else:
                         if self.onFire == 1:
                             sound_play(8)
-                            monstres_list.remove(goomba)
-                            active_sprite_list.remove(goomba)
+                            monstres_list.remove(monstre)
+                            active_sprite_list.remove(monstre)
                             self.onFire = 0
                         else:
                             if self.upgraded == 1:
                                 sound_play(8)
-                                monstres_list.remove(goomba)
-                                active_sprite_list.remove(goomba)
+                                monstres_list.remove(monstre)
+                                active_sprite_list.remove(monstre)
                                 self.upgraded = 0
                             else:
                                 self.death()
                 elif self.isTornado == 1:
-                    monstres_list.remove(goomba)
-                    active_sprite_list.remove(goomba)
+                    monstres_list.remove(monstre)
+                    active_sprite_list.remove(monstre)
 
             if self.rect.y >= screenY:
                 self.death()
@@ -343,7 +271,7 @@ class Mario(Perso):
             else:
                 if self.changeY <= 10:  # Pour cap la vitesse maximale en tombant
                     self.changeY += 0.40
-        else:
+        elif self.isTornado == 1:
             self.changeY = 0
 
     def goLeft(self):
@@ -357,10 +285,8 @@ class Mario(Perso):
     def duck(self):
         if self.changeY == 0:
             self.changeX = 0
-            if self.lookat == "right":
-                self.image = self.duck_r
-            else:
-                self.image = self.duck_l
+            if self.lookat == "right": self.image = self.duck_r
+            elif self.lookat == "left": self.image = self.duck_l
 
     def stop(self):
         self.changeX = 0
@@ -411,15 +337,15 @@ class Mario(Perso):
     def death(self):
 
         self.image = self.dead
-        gameOverSprite = SpriteImage("images/game over.png", noirFond, 0)
-        gameOver = gameOverSprite.get_imageXY(93, 111, 172, 126)
+        self.deadOn = 1
+        Sheet = SpriteImage("images/game over.png", noirFond, 0)
+        gameOver = Sheet.get_imageXY(93, 111, 172, 126)
         GOrect = gameOver.get_rect()
         centerX = int((screenX / 2) - GOrect.centerx)
         centerY = int((screenY / 2) - GOrect.centery)
         screen.blit(gameOver, (centerX, centerY))
         for monstre in monstres_list:
             monstre.direct = 2
-        self.deadOn = 1
         if self.time == 210: pygame.mixer.stop(), sound_play(1)
         if self.time > 0:
             self.time -= 1
@@ -678,6 +604,7 @@ class Niveau():
 
                 if sprite == 'b':
                     Block = Sol("images/Block.jpg", x, y)
+                    Block.isBreakable = 1
                     if y > 270:
                         Block.isTraversable = 0
                     block_list.add(Block)
