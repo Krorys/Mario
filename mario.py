@@ -23,6 +23,9 @@ while continuer:
                 break
         elif controlsOn:
             ecran_menu_blit(2)
+            controlsCurseurPos = choixControls(event, controlsCurseurPos)
+            screen.blit(menuCurseurImage, controls_Curseur_Coord[controlsCurseurPos])
+            controlsBlit(controlsCurseurPos)
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 menu, controlsOn = 1, 0
         elif levelSelectionOn:

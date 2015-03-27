@@ -9,6 +9,18 @@ def choixMenu(event, pos):
         if event.key == K_DOWN and pos < 3: pos += 1  # On peut descendre qu'en étant en haut
         if event.key == K_UP and pos > 0: pos -= 1    # Et inversement
     return pos
+
+def choixControls(event, pos):
+    if event.type == KEYDOWN:
+        if event.key == K_RIGHT and pos < 3: pos += 1
+        if event.key == K_LEFT and pos > 0: pos -= 1
+    return pos
+
+def controlsBlit(pos):
+    for x in range (0,4):
+        if pos == x:
+            screen.blit(description_skills[x], (60, 210))
+
 def menuTo(pos):
     valeurs = [0, 0, 0, 1]
     valeurs[pos] = abs(valeurs[pos] - 1)  # si c'est à 0 -> 1, si c'est à 1->0

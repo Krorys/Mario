@@ -23,8 +23,9 @@ volume_default, volume = 0.3, 3
 # Coordonnées
 menu_Curseur_Coord = [(193, 160), (193, 195), (193, 230), (193, 265)]
 levelSelection_Curseur_Coord = [(90, 200), (280, 200), (90, 250), (280, 250)]
+controls_Curseur_Coord = [(40, 165), (155, 165), (270, 165), (385, 165)]
 levelSelection_Stages_Coord = [(110, 200), (300, 200), (110, 250), (300, 250)]
-menuCurseurPos, levelCurseurPos = 0, 0
+menuCurseurPos, levelCurseurPos, controlsCurseurPos = 0, 0, 0
 
 
 # Images
@@ -34,6 +35,8 @@ levelselection_list = [(pygame.image.load("images/levelselection_stage_1_1.png")
                        (pygame.image.load("images/levelselection_stage_1_3.png")), (pygame.image.load("images/levelselection_stage_1_4.png"))]
 images_menu_list = [(pygame.image.load("images/menu_menu.png")), (pygame.image.load("images/menu_options.png")),
                        (pygame.image.load("images/menu_controls.png")), (pygame.image.load("images/menu_levelSelect.png"))]
+description_skills = [(pygame.image.load("images/controls_a.png")), (pygame.image.load("images/controls_z.png")),
+                       (pygame.image.load("images/controls_e.png")), (pygame.image.load("images/controls_r.png"))]
 menu_fond = pygame.image.load("images/menu_fond.jpg")
 volume_redsquare = pygame.image.load("images/vol_redsquare.png")
 volume_bar = pygame.image.load("images/vol_bar.jpg")
