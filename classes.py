@@ -444,25 +444,27 @@ class FireBall(Item):
         #Collisions X blocs
         block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
         for block in block_hit_list:
-            if self.changeX > 0:
-                self.rect.right = block.rect.left
-                self.direct = 0
-            elif self.changeX < 0:
-                self.rect.left = block.rect.right
-                self.direct = 1
+            if block.isTraversable == 1:
+                if self.changeX > 0:
+                    self.rect.right = block.rect.left
+                    self.direct = 0
+                elif self.changeX < 0:
+                    self.rect.left = block.rect.right
+                    self.direct = 1
 
         self.rect.y += self.changeY
         #Collisions Y blocs
         block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
         for block in block_hit_list:
-            if self.changeY > 0:
-                self.rect.bottom = block.rect.top
-                self.rect.y -= 15
-                self.changeY = -1
-                if block.deadly == 1:
-                    self.death()
-            elif self.changeY < 0:
-                self.rect.top = block.rect.bottom
+            if block.isTraversable == 1:
+                if self.changeY > 0:
+                    self.rect.bottom = block.rect.top
+                    self.rect.y -= 15
+                    self.changeY = -1
+                    if block.deadly == 1:
+                        self.death()
+                elif self.changeY < 0:
+                    self.rect.top = block.rect.bottom
 
             self.changeY = 0
 
@@ -513,20 +515,21 @@ class Shuriken(Item):
             if self.isBlade == 1:
                 block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
                 for block in block_hit_list:
-                    if self.changeX > 0:
-                        self.rect.right, self.UpdateOn = block.rect.left, 0
-                        item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
-                        plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
-                        plateforme.isShuriken = 1
-                        block_list.add(plateforme)
-                        active_sprite_list.remove(self)
-                    elif self.changeX < 0:
-                        self.rect.left, self.UpdateOn = block.rect.right, 0
-                        item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
-                        plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
-                        plateforme.isShuriken = 1
-                        block_list.add(plateforme)
-                        active_sprite_list.remove(self)
+                    if block.isTraversable == 1:
+                        if self.changeX > 0:
+                            self.rect.right, self.UpdateOn = block.rect.left, 0
+                            item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
+                            plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
+                            plateforme.isShuriken = 1
+                            block_list.add(plateforme)
+                            active_sprite_list.remove(self)
+                        elif self.changeX < 0:
+                            self.rect.left, self.UpdateOn = block.rect.right, 0
+                            item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
+                            plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
+                            plateforme.isShuriken = 1
+                            block_list.add(plateforme)
+                            active_sprite_list.remove(self)
             self.rect.x += self.changeX
 
             shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
@@ -605,7 +608,7 @@ class Niveau():
                 if sprite == 'b':
                     Block = Sol("images/Block.jpg", x, y)
                     Block.isBreakable = 1
-                    if y > 270:
+                    if y > 406:
                         Block.isTraversable = 0
                     block_list.add(Block)
 
