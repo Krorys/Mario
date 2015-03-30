@@ -1,7 +1,5 @@
 Bug: Sauter sur 2goomba superposés nous tue
-Faire stoper les goomba tant qu'ils sont pas proche de la vision de mario
 Faire les checkpoints (-> +fonction retry au lieu de reset)
-Que les goomba (ou monstres en général) nous suivent
 Fix les frames chelou des goombas
 Rendre les tuyaux utile (= tp vers un autre lvl)
 Nerf les fireball

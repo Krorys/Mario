@@ -44,6 +44,8 @@ menuCurseurImage = pygame.image.load("images/curseur.png")
 icon = pygame.image.load("images/icon.png")
 shuri_ghost_on = pygame.image.load('images/shuri_ghost_on.png')
 item_off = pygame.image.load('images/item_off.png')
+rage_bar_on = pygame.image.load('images/rage_bar_on.png')
+rage_bar_off = pygame.image.load('images/rage_bar_off.png')
 
 
 # Musiques/sons

@@ -232,7 +232,6 @@ def nomarioMovement(monstres_list, item_list, mario):
             if item.direct == 2:
                 item.stop()
 
-
 def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
     if mario.isTornado == 0:
         if event.type == KEYDOWN:
@@ -265,12 +264,13 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 active_sprite_list.add(shuriken)
                 shuriken.rect.y = mario.rect.y + 15
                 shuriken.isBoomerang = 1
+                mario.rage += 5
                 if mario.lookat == 'right':
                     shuriken.direct = 1
                     shuriken.rect.x = mario.rect.x + 30
                 elif mario.lookat == 'left':
                     shuriken.direct = 0
-                    shuriken.rect.x = mario.rect.x - 49
+                    shuriken.rect.x = mario.rect.x - 25
 
             #Shuriken
             if event.key == K_w and mario.time == 210 and mario.recharge > 0:
@@ -301,8 +301,8 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
             if event.key == K_DOWN:
                 mario.duckOn = 0
 
-    #Phoenyx Ballet
-    if (event.type == KEYDOWN and event.key == K_r) and mario.time == 210 and mario.isTornado == 0:
+    #Phoenix dance
+    if (event.type == KEYDOWN and event.key == K_r) and mario.time == 210 and mario.isTornado == 0 and mario.rage > 9:
         x,y = mario.rect.x, mario.rect.y
         mario.rect = mario.image.get_rect()
         if mario.lookat == 'right': mario.rect.x = x
@@ -311,7 +311,8 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         mario.time_tornado = 241
         sound_play(15), sound_play(16)
         mario.frameSpeed, mario.onFire, mario.upgraded, mario.isTornado = 4, 2, 1, 1
-        mario.stop()
+        mario.rage -= 10
+        #mario.stop()
 def niveauFonct(niveau, choix, screen, fonct):
     if fonct == 0:
         niveau.generer()

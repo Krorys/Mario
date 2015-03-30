@@ -120,6 +120,7 @@ class Mario(Perso):
         self.canBreak = 0
         self.isTornado = 0
         self.frameSpeed = 30
+        self.rage = 0
 
     def update(self):
         if self.deadOn == 0:
@@ -238,11 +239,13 @@ class Mario(Perso):
                 if self.isTornado == 0:
                     if self.changeY > 0: #Si il arrive par le dessus
                         self.rect.y -= 5
+                        if self.rage < 20: self.rage += 1
                         self.changeY = -5
                         sound_play(4)
                         monstres_list.remove(monstre)
                         active_sprite_list.remove(monstre)
                     else:
+                        if self.rage < 20: self.rage += 3
                         if self.onFire == 1:
                             sound_play(8)
                             monstres_list.remove(monstre)
@@ -256,9 +259,9 @@ class Mario(Perso):
                                 self.upgraded = 0
                             else:
                                 self.death()
-                elif self.isTornado == 1:
+                """elif self.isTornado == 1:
                     monstres_list.remove(monstre)
-                    active_sprite_list.remove(monstre)
+                    active_sprite_list.remove(monstre)"""
 
             if self.rect.y >= screenY:
                 self.death()
@@ -484,8 +487,8 @@ class Shuriken(Item):
                        (Sheet.get_imageXY(52, 172, 69, 189)), (Sheet.get_imageXY(32, 172, 49, 189))]
         self.walk_r = [(Sheet.get_imageXY(32, 194, 49, 211)), (Sheet.get_imageXY(53, 194, 69, 211)),
                        (Sheet.get_imageXY(72, 194, 88, 211)), (Sheet.get_imageXY(92, 194, 109, 211))]
-        self.direct = 1
-        self.nodirection = 1
+        #self.direct = 1
+        #self.nodirection = 1
         self.time = 30
         self.speed = 6
         self.UpdateOn = 1
@@ -516,20 +519,21 @@ class Shuriken(Item):
                 block_hit_list = pygame.sprite.spritecollide(self, block_list, False)
                 for block in block_hit_list:
                     if block.isTraversable == 1:
-                        if self.changeX > 0:
-                            self.rect.right, self.UpdateOn = block.rect.left, 0
-                            item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
-                            plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
-                            plateforme.isShuriken = 1
-                            block_list.add(plateforme)
-                            active_sprite_list.remove(self)
-                        elif self.changeX < 0:
-                            self.rect.left, self.UpdateOn = block.rect.right, 0
-                            item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
-                            plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
-                            plateforme.isShuriken = 1
-                            block_list.add(plateforme)
-                            active_sprite_list.remove(self)
+                        if block.isShuriken == 0:
+                            if self.changeX > 0:
+                                self.rect.right, self.UpdateOn = block.rect.left, 0
+                                item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
+                                plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
+                                plateforme.isShuriken = 1
+                                block_list.add(plateforme)
+                                active_sprite_list.remove(self)
+                            elif self.changeX < 0:
+                                self.rect.left, self.UpdateOn = block.rect.right, 0
+                                item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
+                                plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
+                                plateforme.isShuriken = 1
+                                block_list.add(plateforme)
+                                active_sprite_list.remove(self)
             self.rect.x += self.changeX
 
             shuriken_hit_list = pygame.sprite.spritecollide(self, monstres_list, False)
@@ -538,6 +542,10 @@ class Shuriken(Item):
                     sound_play(13)
                     active_sprite_list.remove(monstre)
                     monstres_list.remove(monstre)
+                    if self.isBlade == 1:
+                        active_sprite_list.remove(self)
+                        shuriken_list2.remove(self)
+                        item_list.remove(self)
 
 
 class Block(pygame.sprite.Sprite):
