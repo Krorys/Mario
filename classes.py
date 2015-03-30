@@ -239,13 +239,14 @@ class Mario(Perso):
                 if self.isTornado == 0:
                     if self.changeY > 0: #Si il arrive par le dessus
                         self.rect.y -= 5
-                        if self.rage < 20: self.rage += 1
+                        if self.rage < 19: self.rage += 1
                         self.changeY = -5
                         sound_play(4)
                         monstres_list.remove(monstre)
                         active_sprite_list.remove(monstre)
                     else:
-                        if self.rage < 20: self.rage += 3
+                        if self.rage < 16: self.rage += 3
+                        else: self.rage = 19
                         if self.onFire == 1:
                             sound_play(8)
                             monstres_list.remove(monstre)
