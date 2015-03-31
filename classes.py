@@ -524,14 +524,14 @@ class Shuriken(Item):
                             if self.changeX > 0:
                                 self.rect.right, self.UpdateOn = block.rect.left, 0
                                 item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
-                                plateforme = Sol("images/shuri.jpg", self.rect.x+5, self.rect.y)
+                                plateforme = Sol("images/shuri.jpg", self.rect.x+3, self.rect.y)
                                 plateforme.isShuriken = 1
                                 block_list.add(plateforme)
                                 active_sprite_list.remove(self)
                             elif self.changeX < 0:
                                 self.rect.left, self.UpdateOn = block.rect.right, 0
                                 item_list.remove(self), shuriken_list2.remove(self), sound_play(14)
-                                plateforme = Sol("images/shuri.jpg", self.rect.x-5, self.rect.y)
+                                plateforme = Sol("images/shuri.jpg", self.rect.x-3, self.rect.y)
                                 plateforme.isShuriken = 1
                                 block_list.add(plateforme)
                                 active_sprite_list.remove(self)

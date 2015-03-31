@@ -18,10 +18,8 @@ def itemBlit():
         if x.isMario == 1:
             if x.rage < 10: screen.blit(rage_bar_off, (98, 0))
             else: screen.blit(rage_bar_on, (98, 0))
-            for y in range (0, x.rage):
-                coordX = 98 + 7 * y
-                coordY = 0
-                screen.blit(volume_redsquare, (coordX, coordY))
+            text = font.render(str(x.rage), True, (0,0,0))
+            screen.blit(text, (97+40, 38))
 
 def boucle_jeu(levelCurrent, niveau):
     screen.blit(bg_list[levelCurrent], (0, 0))

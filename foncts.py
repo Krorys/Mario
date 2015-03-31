@@ -264,7 +264,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 active_sprite_list.add(shuriken)
                 shuriken.rect.y = mario.rect.y + 15
                 shuriken.isBoomerang = 1
-                mario.rage += 5
+                #mario.rage += 5
                 if mario.lookat == 'right':
                     shuriken.direct = 1
                     shuriken.rect.x = mario.rect.x + 30
@@ -285,12 +285,12 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 shuriken.walk_r = [(Sheet.get_imageXY(32, 153, 49, 170)), (Sheet.get_imageXY(53, 153, 69, 170)),
                                    (Sheet.get_imageXY(72, 153, 88, 170)), (Sheet.get_imageXY(92, 153, 109, 170))]
                 shuriken.isBlade = 1
-                shuriken.rect.y = mario.rect.y + 15
+                shuriken.rect.y = mario.rect.y + 13
                 if mario.lookat == 'right':
                     shuriken.rect.x = mario.rect.x + 30
                     shuriken.direct = 1
                 else:
-                    shuriken.rect.x = mario.rect.x - 22
+                    shuriken.rect.x = mario.rect.x - 21
                     shuriken.direct = 0
 
 
