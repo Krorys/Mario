@@ -151,10 +151,18 @@ def itemUpdate(SpriteImage, FireBall, mario):
                 active_sprite_list.remove(item)
                 item_list.remove(item)
 
-    #FireBall
+    #Twin-blaze
         if item in fireball_list:
             if item.time > 0:
                 item.time -= 1
+            if item.time == 175 and len(fireball_list) == 1 and item.isTrigger == 1:
+                Sheet = SpriteImage("images/item sheet.png", blancFond, 0)
+                fireball = FireBall(Sheet.get_imageXY(104, 84, 111, 91))
+                fireball.rect.x = mario.rect.x + 10
+                fireball.rect.y = mario.rect.y
+                active_sprite_list.add(fireball)
+                if mario.lookat == 'right': fireball.direct = 1
+                elif mario.lookat == 'left': fireball.direct = 0
             if item.time == 0:
                 fireball_list.remove(item)
                 active_sprite_list.remove(item)
@@ -244,14 +252,18 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
             if event.key == K_DOWN:
                 mario.duckOn = 1
 
-            #FireBall
-            if event.key == K_q and mario.onFire == 1:
+            #Twin-blaze
+            if event.key == K_q and mario.onFire == 1 and len(fireball_list)==0:
+                """for item in item_list:
+                    if item in fireball_list:
+                        """
                 sound_play(9)
                 Sheet = SpriteImage("images/item sheet.png", blancFond, 0)
                 fireball = FireBall(Sheet.get_imageXY(104, 84, 111, 91))
                 fireball.rect.x = mario.rect.x + 10
                 fireball.rect.y = mario.rect.y
                 active_sprite_list.add(fireball)
+                fireball.isTrigger = 1
                 if mario.lookat == 'right': fireball.direct = 1
                 elif mario.lookat == 'left': fireball.direct = 0
 
@@ -264,7 +276,7 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 active_sprite_list.add(shuriken)
                 shuriken.rect.y = mario.rect.y + 15
                 shuriken.isBoomerang = 1
-                #mario.rage += 5
+                mario.rage += 5
                 if mario.lookat == 'right':
                     shuriken.direct = 1
                     shuriken.rect.x = mario.rect.x + 30

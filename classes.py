@@ -435,6 +435,7 @@ class FireBall(Item):
         self.direct = 1
         self.speed = 7
         self.time = 180
+        self.isTrigger = 0 #Pour les skills
         #self.time_tornado = 240
         fireball_list.add(self)
         item_list.add(self)
@@ -477,6 +478,7 @@ class FireBall(Item):
             if self.changeX > 0 or self.changeX < 0 or self.changeY > 0 or self.changeY < 0:
                 active_sprite_list.remove(item)
                 monstres_list.remove(item)
+                fireball_list.remove(self)
                 active_sprite_list.remove(self)
                 item_list.remove(self)
                 sound_play(4)
