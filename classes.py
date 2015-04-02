@@ -427,6 +427,7 @@ class Item(Perso):
             else:
                 if self.changeY <= 10:
                         self.changeY -= 0.35
+
 class FireBall(Item):
     def __init__(self, image):
         super().__init__(image)
@@ -436,8 +437,9 @@ class FireBall(Item):
         self.direct = 1
         self.speed = 5
         self.time = 180
+        self.isRight = 0
+        self.isLeft = 0
         self.isTrigger = 0 #Pour les skills
-        #self.time_tornado = 240
         fireball_list.add(self)
         item_list.add(self)
 
@@ -569,6 +571,9 @@ class Block(pygame.sprite.Sprite):
         self.isTraversable = 1
         self.gmushroom_activation = 0
         self.isShuriken = 0
+        self.isFramed = 0
+        self.stand = 0
+
 
 class Sol(Block):
     def __init__(self, image, x, y):
@@ -576,6 +581,18 @@ class Sol(Block):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        spriteSheet = SpriteImage("images/item sheet.png", blancFond, 4)
+        self.standFrame = [spriteSheet.get_imageXY(69, 104, 84, 119),
+                               spriteSheet.get_imageXY(86, 104, 101, 119),
+                               spriteSheet.get_imageXY(103, 104, 118, 119),
+                               spriteSheet.get_imageXY(120, 104, 135, 119)]
+
+    def update(self):
+        if self.isFramed == 1 and self.used == 0:
+            frame = (self.stand // 10) % len(self.standFrame)
+            self.image = self.standFrame[frame]
+            self.stand += 1
+
 class Flag(Block):
     flag = []
     def __init__(self, image, x, y):
@@ -646,18 +663,21 @@ class Niveau():
                     block_list.add(pipeBlock)
 
                 elif sprite == 'i':
-                    mushBlock = Sol("images/itemBlock.jpg", x, y)
-                    mushBlock.mushroom_activation = 1
-                    block_list.add(mushBlock)
+                    itemBlock = Sol("images/itemBlock.jpg", x, y)
+                    itemBlock.mushroom_activation = 1
+                    itemBlock.isFramed = 1
+                    block_list.add(itemBlock)
 
                 elif sprite == 'I':
                     gmushBlock = Sol("images/itemBlock.jpg", x, y)
                     gmushBlock.gmushroom_activation = 1
+                    gmushBlock.isFramed = 1
                     block_list.add(gmushBlock)
 
                 elif sprite == 'c':
                     coinBlock = Sol("images/itemBlock.jpg", x, y)
                     coinBlock.giveCoin = 1
+                    coinBlock.isFramed = 1
                     block_list.add(coinBlock)
 
                 elif sprite == 'l':

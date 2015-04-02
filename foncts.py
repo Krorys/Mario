@@ -130,11 +130,13 @@ def doubleImage(image, perso):
     if perso == -1:
         return image
     if perso == 1:
-        imagex2 = pygame.transform.scale(image, (27, 48))
+        imagex2 = pygame.transform.scale(image, (27, 48)) #Mario
     elif perso == 2:
-        imagex2 = pygame.transform.scale(image, (33, 27))
+        imagex2 = pygame.transform.scale(image, (33, 27)) #Goomba
     elif perso == 3:
-        imagex2 = pygame.transform.scale(image, (27, 27))
+        imagex2 = pygame.transform.scale(image, (27, 27)) #Item
+    elif perso == 4:
+        imagex2 = pygame.transform.scale(image, (29, 29)) #Bloc
     else:
         imagex2 = pygame.transform.scale2x(image)  # Double la taille du truc
     return imagex2
@@ -161,8 +163,9 @@ def itemUpdate(SpriteImage, FireBall, mario):
                 fireball.rect.x = mario.rect.x + 10
                 fireball.rect.y = mario.rect.y
                 active_sprite_list.add(fireball)
-                if mario.lookat == 'right': fireball.direct = 1
-                elif mario.lookat == 'left': fireball.direct = 0
+                if item.isRight == 1: fireball.direct = 1
+                else: fireball.direct = 0
+                fireball_list.add(fireball)
             if item.time == 0:
                 fireball_list.remove(item)
                 active_sprite_list.remove(item)
@@ -225,9 +228,9 @@ def nomarioMovement(monstres_list, item_list, mario):
             monstres.goLeft()
         if monstres.direct == 2:
             monstres.stop()
-        if monstres.rect.x > mario.rect.x - mario.niveauScroll -300 and monstres.seen == 0:
+        if monstres.rect.x > mario.rect.x - mario.niveauScroll -250 and monstres.seen == 0:
             monstres.stop()
-        if not monstres.rect.x > mario.rect.x - mario.niveauScroll -300:
+        if not monstres.rect.x > mario.rect.x - mario.niveauScroll -250:
             monstres.seen = 1
 
     #Déplacements items
@@ -254,9 +257,6 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
 
             #Twin-blaze
             if event.key == K_q and mario.onFire == 1 and len(fireball_list)==0:
-                """for item in item_list:
-                    if item in fireball_list:
-                        """
                 sound_play(9)
                 Sheet = SpriteImage("images/item sheet.png", blancFond, 0)
                 fireball = FireBall(Sheet.get_imageXY(104, 84, 111, 91))
@@ -264,8 +264,8 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
                 fireball.rect.y = mario.rect.y
                 active_sprite_list.add(fireball)
                 fireball.isTrigger = 1
-                if mario.lookat == 'right': fireball.direct = 1
-                elif mario.lookat == 'left': fireball.direct = 0
+                if mario.lookat == 'right': fireball.direct, fireball.isRight = 1, 1
+                elif mario.lookat == 'left': fireball.direct, fireball.isLeft = 0, 1
 
             #Shuriken-boomerang
             if event.key == K_e and mario.time == 210 and (len(shuriken_list) == 0):
