@@ -343,8 +343,8 @@ class Mario(Perso):
     def death(self):
         self.image = self.dead
         self.deadOn = 1
-        if self.lookat == "right": self.rect.x -= 4
-        else: self.rect.x += 4
+        if self.lookat == "right": self.rect.x -= 3
+        else: self.rect.x += 3
         self.rect.y -= 5
         self.isTornado = 1
         Sheet = SpriteImage("images/game over.png", noirFond, 0)
