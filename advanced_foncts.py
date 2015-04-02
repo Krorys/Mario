@@ -23,7 +23,6 @@ def itemBlit():
 
 def boucle_jeu(levelCurrent, niveau):
     screen.blit(bg_list[levelCurrent], (0, 0))
-    itemBlit()
     block_list.update()
     active_sprite_list.draw(screen)
     block_list.draw(screen)
@@ -31,6 +30,7 @@ def boucle_jeu(levelCurrent, niveau):
     nomarioMovement(monstres_list, item_list, niveau.mario)
     itemUpdate(SpriteImage, FireBall, niveau.mario)
     active_sprite_list.update()
+    itemBlit()
 
 def mort(niveau, levelCurrent):
     screen.blit(bg_list[levelCurrent], (0, 0))

@@ -97,7 +97,7 @@ def MarioActualSheet(self, SpriteImage, x):
                        Sheet.get_imageXY(136, 37, 151, 63), Sheet.get_imageXY(168, 37, 183, 63)]
         self.jump_r = [Sheet.get_imageXY(72, 99, 89, 126), Sheet.get_imageXY(104, 100, 121, 126)]
         self.duck_r = Sheet.get_imageXY(73, 165, 88, 191)
-        self.dead = Sheet.get_imageXY(67, 242, 92, 271)
+        self.dead = SpriteImage("images/mario sheet.png", vertFond, 0).get_imageXY(67, 242, 92, 271)
         self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
         self.stand_l = [pygame.transform.flip(x, True, False) for x in self.stand_r]
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]

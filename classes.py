@@ -28,6 +28,7 @@ class Perso(pygame.sprite.Sprite):
         self.lookat = "right"
         self.rect = self.image.get_rect()
         self.niveauScroll = 0
+        self.frameSpeed = 30
         self.isScrolling = 0
         self.speed = 3
         self.direct = 1
@@ -36,6 +37,7 @@ class Perso(pygame.sprite.Sprite):
         self.mush = 0
         self.isFlower = 0
         self.isMario = 0
+        self.stand = 0
 
     def update(self):
         self.direction()
@@ -118,6 +120,7 @@ class Mario(Perso):
         self.isCoin = 0
         self.onFire = 0
         self.canBreak = 0
+        self.antiSuperposable = 2
         self.isTornado = 0
         self.frameSpeed = 30
         self.rage = 0
@@ -240,7 +243,7 @@ class Mario(Perso):
                     if self.changeY > 0: #Si il arrive par le dessus
                         self.rect.y -= 5
                         if self.rage < 19: self.rage += 1
-                        self.changeY = -5
+                        self.antiSuperposable = 1
                         sound_play(4)
                         monstres_list.remove(monstre)
                         active_sprite_list.remove(monstre)
@@ -260,9 +263,8 @@ class Mario(Perso):
                                 self.upgraded = 0
                             else:
                                 self.death()
-                """elif self.isTornado == 1:
-                    monstres_list.remove(monstre)
-                    active_sprite_list.remove(monstre)"""
+            if self.antiSuperposable == 1: self.antiSuperposable -= 1
+            if self.antiSuperposable == 0: self.changeY, self.antiSuperposable = -5, 2
 
             if self.rect.y >= screenY:
                 self.death()
@@ -339,9 +341,11 @@ class Mario(Perso):
             sound_play(0)
 
     def death(self):
-
         self.image = self.dead
         self.deadOn = 1
+        if self.changeX > 0: self.rect.x -= 4
+        else: self.rect.x += 4
+        self.rect.y -= 7
         Sheet = SpriteImage("images/game over.png", noirFond, 0)
         gameOver = Sheet.get_imageXY(93, 111, 172, 126)
         GOrect = gameOver.get_rect()
@@ -368,6 +372,7 @@ class Mario(Perso):
         for x in active_sprite_list:
             x.rect.x += sens
             x.niveauScroll += sens
+
 class Monstres(Perso):
     def __init__(self, image):
         super().__init__(image)
@@ -383,6 +388,7 @@ class Monstres(Perso):
         self.walk_l = [pygame.transform.flip(x, True, False) for x in self.walk_r]
         self.jump_l = [pygame.transform.flip(x, True, False) for x in self.jump_r]
         self.speed = 1
+        self.frameSpeed = 20
         self.coin = 0
         self.seen = 0
         self.direct = 1
@@ -390,18 +396,13 @@ class Monstres(Perso):
 
     def direction(self):
         if self.lookat == "right":  # Si il regardre à droite
-            if self.isScrolling == 1:
-
-                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_r)
-            else:
-                frame = (self.rect.x // 20) % len(self.walk_r)
+            frame = (self.stand // self.frameSpeed) % len(self.walk_r)
             self.image = self.walk_r[frame]
+            self.stand += 1
         else:  # Si il regarde à gauche
-            if self.isScrolling == 1:
-                frame = (self.rect.x + self.niveauScroll // 20) % len(self.walk_l)
-            else:
-                frame = (self.rect.x // 20) % len(self.walk_l)
+            frame = (self.stand // self.frameSpeed) % len(self.walk_l)
             self.image = self.walk_l[frame]
+            self.stand += 1
 
 class Item(Perso):
     def __init__(self, image):
@@ -433,7 +434,7 @@ class FireBall(Item):
         self.walk_r = spriteSheet.get_imageXY(69, 77, 82, 92)
         self.jump_r = self.walk_r
         self.direct = 1
-        self.speed = 7
+        self.speed = 5
         self.time = 180
         self.isTrigger = 0 #Pour les skills
         #self.time_tornado = 240
