@@ -40,7 +40,6 @@ def mort(niveau, levelCurrent):
     niveau.mario.death()
 
 def generation(choix, levelCurrent):
-    pygame.key.set_repeat(0, 0)
     music_levels(levelCurrent)
     niveau = Niveau(choix)
     niveau.generer()

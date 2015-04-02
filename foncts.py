@@ -326,10 +326,3 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
         sound_play(15), sound_play(16)
         mario.frameSpeed, mario.onFire, mario.upgraded, mario.isTornado = 4, 2, 1, 1
         mario.rage -= 10
-        #mario.stop()
-def niveauFonct(niveau, choix, screen, fonct):
-    if fonct == 0:
-        niveau.generer()
-    else:
-        screen.blit(bg, (0, 0))
-        niveau.afficher(screen)
