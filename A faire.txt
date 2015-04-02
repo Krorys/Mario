@@ -1,6 +1,5 @@
+Bug: Sauter sur 2goomba superposés nous tue
 Faire les checkpoints (-> +fonction retry au lieu de reset)
 Fix les frames chelou des goombas
 Rendre les tuyaux utile (= tp vers un autre lvl)
 Pouvoir s'accroupir "correctement" (=faire en sorte que le self.rect soit correctement placé autour de juste mario sans prendre le vide)
-Pouvoir choisir entre des variations du même skill:
-twin-blaze: balancer une boule à droite et à gauche au lieu de 2 à droite

@@ -254,6 +254,9 @@ def jeuFonct(event, mario, SpriteImage, FireBall, Shuriken):
 
             #Twin-blaze
             if event.key == K_q and mario.onFire == 1 and len(fireball_list)==0:
+                """for item in item_list:
+                    if item in fireball_list:
+                        """
                 sound_play(9)
                 Sheet = SpriteImage("images/item sheet.png", blancFond, 0)
                 fireball = FireBall(Sheet.get_imageXY(104, 84, 111, 91))
