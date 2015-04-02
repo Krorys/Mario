@@ -1,5 +1,6 @@
 import sys
 import pygame
+from random import randint
 from pygame.locals import *
 pygame.mixer.pre_init(frequency=22050, size=-16, channels=8, buffer=256)
 

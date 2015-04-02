@@ -104,6 +104,7 @@ class Mario(Perso):
         self.reset = 0
         self.time_tornado = -1
         self.time = 210
+        self.antiSuperposable = 2
         self.hp = 3
         self.recharge = 3
         self.willDie = 0
@@ -240,10 +241,11 @@ class Mario(Perso):
                     if self.changeY > 0: #Si il arrive par le dessus
                         self.rect.y -= 5
                         if self.rage < 19: self.rage += 1
-                        self.changeY = -5
+                        #self.changeY = -5
                         sound_play(4)
                         monstres_list.remove(monstre)
                         active_sprite_list.remove(monstre)
+                        self.antiSuperposable = 1
                     else:
                         if self.rage < 16: self.rage += 3
                         else: self.rage = 19
@@ -260,12 +262,15 @@ class Mario(Perso):
                                 self.upgraded = 0
                             else:
                                 self.death()
-                """elif self.isTornado == 1:
-                    monstres_list.remove(monstre)
-                    active_sprite_list.remove(monstre)"""
 
             if self.rect.y >= screenY:
                 self.death()
+
+            if self.antiSuperposable == 1:
+                self.antiSuperposable -= 1
+            if self.antiSuperposable == 0:
+                self.changeY = -5
+                self.antiSuperposable = 2
 
 
     def grav(self):
@@ -433,7 +438,7 @@ class FireBall(Item):
         self.walk_r = spriteSheet.get_imageXY(69, 77, 82, 92)
         self.jump_r = self.walk_r
         self.direct = 1
-        self.speed = 7
+        self.speed = 5
         self.time = 180
         self.isTrigger = 0 #Pour les skills
         #self.time_tornado = 240
