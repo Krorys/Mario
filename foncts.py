@@ -138,7 +138,7 @@ def doubleImage(image, perso):
     elif perso == 4:
         imagex2 = pygame.transform.scale(image, (29, 29)) #Bloc
     elif perso == 5:
-        imagex2 = pygame.transform.scale(image, (43, 53)) #Mario game over
+        imagex2 = pygame.transform.scale(image, (40, 50)) #Mario game over
     else:
         imagex2 = pygame.transform.scale2x(image)  # Double la taille du truc
     return imagex2
